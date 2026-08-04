@@ -1,0 +1,1872 @@
+{
+  "vendor": {
+    "ref": "slack",
+    "name": "Slack",
+    "domain": "slack.com"
+  },
+  "results": [
+    {
+      "source": "dns",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:14.346385Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "slack.com",
+        "dmarc_txt": [
+          "v=DMARC1;p=reject;fo=1:d:s;pct=100;rua=mailto:dmarc_agg@vali.email,mailto:0e5a5c34@inbox.ondmarc.com;ruf=mailto:0e5a5c34@inbox.ondmarc.com"
+        ],
+        "dmarc_policy": "p_reject",
+        "root_txt": [
+          "google-site-verification=kB1KvgpSk9YkHsFmsj1VPI5YmDvfKctPxnplhGjyqtE",
+          "google-site-verification=o2grd1TLmZZ8GrqbhVIFtzO2MRLTtSUpBBIBYfhQVCQ",
+          "google-site-verification=v-LLB__IhraaI7ZzuE3jvRFIm2vERPLzWoepAEZJtKQ",
+          "hubspot-developer-verification=OTE4NzYxYTgtMDUwZi00MzgzLTk2YTUtZDAwNjBlODg1MWM0",
+          "spycloud-domain-verification=02e4c0be-cf43-44e4-beaf-4f99702ca632",
+          "v=spf1 include:_spf.qualtrics.com include:mail.zendesk.com include:_spfextra.slack.com -all",
+          "00DT0000000Dpvc=1TBEE00000003Qx",
+          "OSSRH-54733",
+          "_0vidyxobp6x350odqhb4fo7fdxhmtq3",
+          "google-site-verification=2PK67oVPNyEtS1avSlr3PhH5nSiFuticbQv_bT4pM2k",
+          "google-site-verification=KqX3Ngw0XEjz_0GVx_xwFFlCoO-bskhqU_lxv0Q77mk",
+          "google-site-verification=QvelFPjIOe3Vavw0q-aAVYaAPKmWCRjmmVVEAjgfjQc",
+          "google-site-verification=efuXt5-oMr2CdNmVi6A9IO29KMKifpseD1qokxjWwcE"
+        ],
+        "spf_state": "hardfail_all",
+        "dkim_selector": null,
+        "dkim_note": "no DKIM found via common selectors \u2014 inconclusive, not scored",
+        "dnssec_dnskey_present": true,
+        "caa_present": true,
+        "mx": [
+          "5 alt2.aspmx.l.google.com.",
+          "1 aspmx.l.google.com.",
+          "10 aspmx2.googlemail.com.",
+          "10 aspmx3.googlemail.com.",
+          "5 alt1.aspmx.l.google.com."
+        ]
+      },
+      "findings": [
+        {
+          "source": "dns",
+          "signal": "dmarc",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "p_reject",
+          "value": {
+            "policy": "p_reject",
+            "record": "v=DMARC1;p=reject;fo=1:d:s;pct=100;rua=mailto:dmarc_agg@vali.email,mailto:0e5a5c34@inbox.ondmarc.com;ruf=mailto:0e5a5c34@inbox.ondmarc.com"
+          },
+          "event_date": null,
+          "locator": "_dmarc.slack.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "spf",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "hardfail_all",
+          "value": {
+            "state": "hardfail_all",
+            "record": "v=spf1 include:_spf.qualtrics.com include:mail.zendesk.com include:_spfextra.slack.com -all"
+          },
+          "event_date": null,
+          "locator": "slack.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dnssec",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "valid",
+          "value": {
+            "dnskey_present": true
+          },
+          "event_date": null,
+          "locator": "slack.com DNSKEY",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "caa",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true
+          },
+          "event_date": null,
+          "locator": "slack.com CAA",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "tls",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:14.717106Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "slack.com",
+        "port": 443,
+        "version": "TLSv1.3",
+        "cipher": "TLS_AES_256_GCM_SHA384",
+        "not_after_raw": "Sep  3 09:48:09 2026 GMT",
+        "not_after_iso": "2026-09-03T09:48:09+00:00",
+        "days_to_expiry": 42,
+        "legacy_offered": []
+      },
+      "findings": [
+        {
+          "source": "tls",
+          "signal": "tls_version",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "TLSv1.3",
+          "value": {
+            "band": "tls_13",
+            "negotiated": "TLSv1.3",
+            "legacy_offered": []
+          },
+          "event_date": null,
+          "locator": "slack.com:443",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "tls",
+          "signal": "cert_validity",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "valid (42d)",
+          "value": {
+            "band": "valid",
+            "days_to_expiry": 42
+          },
+          "event_date": "2026-09-03T09:48:09Z",
+          "locator": "slack.com:443 leaf cert",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "headers",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:15.680528Z",
+      "source_version": "live",
+      "raw": {
+        "url": "https://slack.com/",
+        "status_code": 200,
+        "headers": {
+          "date": "Thu, 23 Jul 2026 08:54:13 GMT",
+          "server": "Apache",
+          "vary": "Accept-Encoding",
+          "x-xss-protection": "0",
+          "content-type": "text/html; charset=utf-8",
+          "cross-origin-opener-policy": "same-origin",
+          "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+          "referrer-policy": "no-referrer",
+          "x-slack-unique-id": "amHWtXtQFcqYwwpDj_jTdQAAABc",
+          "x-frame-options": "SAMEORIGIN",
+          "set-cookie": "utm=%7B%7D; expires=Thu, 06-Aug-2026 08:54:13 GMT; Max-Age=1209600; path=/; domain=.slack.com; secure; SameSite=None, b=7ba485987831ad5f7f57867ac56344e2; expires=Wed, 23-Jul-2036 08:54:13 GMT; Max-Age=315619200; path=/; domain=.slack.com; secure; SameSite=None, x=7ba485987831ad5f7f57867ac56344e2.1784796853; expires=Thu, 23-Jul-2026 09:09:13 GMT; Max-Age=900; path=/; domain=.slack.com; secure; SameSite=None",
+          "via": "1.1 slack-prod.tinyspeck.com, ingress-www-iad-external-prod-03cd0d4f320779430,envoy-edge-bom-gpdempbi",
+          "content-encoding": "gzip",
+          "content-length": "33570",
+          "x-envoy-upstream-service-time": "333",
+          "x-backend": "main_normal",
+          "x-server": "slack-www-hhvm-main-iad-yjj9u9nwlvja",
+          "x-slack-shared-secret-outcome": "no-match",
+          "x-edge-backend": "envoy-www",
+          "timing-allow-origin": "*",
+          "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000, quic=\":443\"; ma=2592000",
+          "x-slack-edge-shared-secret-outcome": "no-match"
+        },
+        "security_txt_present": true
+      },
+      "findings": [
+        {
+          "source": "headers",
+          "signal": "hsts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "max-age=31536000; includeSubDomains; preload"
+          },
+          "event_date": null,
+          "locator": "https://slack.com/ [strict-transport-security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "csp",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "absent",
+          "value": {
+            "present": false,
+            "value": null
+          },
+          "event_date": null,
+          "locator": "https://slack.com/ [content-security-policy]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "x_frame_opts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "SAMEORIGIN"
+          },
+          "event_date": null,
+          "locator": "https://slack.com/ [x-frame-options]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "security_txt",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true
+          },
+          "event_date": null,
+          "locator": "https://slack.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "vd_program",
+          "subcategory": "vuln_disclosure_program",
+          "category": "vendor_transparency_gov",
+          "observed": "security_txt_only",
+          "value": {
+            "band": "security_txt_only",
+            "security_txt": true
+          },
+          "event_date": null,
+          "locator": "https://slack.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "published vulnerability-disclosure path inferred from security.txt (RFC 9116)"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "ct",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:21.765324Z",
+      "source_version": "certspotter",
+      "raw": {
+        "domain": "slack.com",
+        "ct_source": "certspotter",
+        "raw_names": 8853,
+        "unique_subdomains": 4326,
+        "stale_candidates": [
+          "dev.slack.com",
+          "dev.status.slack.com",
+          "enterprise.staging-sandbox.slack.com",
+          "slack-infra-uberproxy-staging.slack.com",
+          "staging-sandbox.slack.com"
+        ],
+        "wildcard_seen": true,
+        "subdomains_sample": [
+          "dev.slack.com",
+          "dev.status.slack.com",
+          "dev1.slack.com",
+          "dev10.slack.com",
+          "dev11.slack.com",
+          "dev1125.slack.com",
+          "dev1126.slack.com",
+          "dev1127.slack.com",
+          "dev1128.slack.com",
+          "dev1129.slack.com",
+          "dev1130.slack.com",
+          "dev1131.slack.com",
+          "dev1132.slack.com",
+          "dev1133.slack.com",
+          "dev1134.slack.com",
+          "dev1135.slack.com",
+          "dev1136.slack.com",
+          "dev1137.slack.com",
+          "dev1138.slack.com",
+          "dev1139.slack.com",
+          "dev1140.slack.com",
+          "dev1141.slack.com",
+          "dev1142.slack.com",
+          "dev1143.slack.com",
+          "dev1144.slack.com",
+          "dev1145.slack.com",
+          "dev1146.slack.com",
+          "dev1147.slack.com",
+          "dev1148.slack.com",
+          "dev1149.slack.com",
+          "dev1175.slack.com",
+          "dev1176.slack.com",
+          "dev1177.slack.com",
+          "dev1178.slack.com",
+          "dev1179.slack.com",
+          "dev1180.slack.com",
+          "dev1181.slack.com",
+          "dev1182.slack.com",
+          "dev1183.slack.com",
+          "dev1184.slack.com",
+          "dev1185.slack.com",
+          "dev1186.slack.com",
+          "dev1187.slack.com",
+          "dev1188.slack.com",
+          "dev1189.slack.com",
+          "dev1190.slack.com",
+          "dev1191.slack.com",
+          "dev1192.slack.com",
+          "dev1193.slack.com",
+          "dev1194.slack.com",
+          "dev1195.slack.com",
+          "dev1196.slack.com",
+          "dev1197.slack.com",
+          "dev1198.slack.com",
+          "dev1199.slack.com",
+          "dev12.slack.com",
+          "dev1200.slack.com",
+          "dev1201.slack.com",
+          "dev1202.slack.com",
+          "dev1203.slack.com",
+          "dev1204.slack.com",
+          "dev1205.slack.com",
+          "dev1206.slack.com",
+          "dev1207.slack.com",
+          "dev1208.slack.com",
+          "dev1209.slack.com",
+          "dev1210.slack.com",
+          "dev1211.slack.com",
+          "dev1212.slack.com",
+          "dev1213.slack.com",
+          "dev1214.slack.com",
+          "dev1215.slack.com",
+          "dev1216.slack.com",
+          "dev1217.slack.com",
+          "dev1218.slack.com",
+          "dev1219.slack.com",
+          "dev1220.slack.com",
+          "dev1221.slack.com",
+          "dev1222.slack.com",
+          "dev1223.slack.com",
+          "dev1224.slack.com",
+          "dev1225.slack.com",
+          "dev1226.slack.com",
+          "dev1227.slack.com",
+          "dev1228.slack.com",
+          "dev1229.slack.com",
+          "dev1230.slack.com",
+          "dev1231.slack.com",
+          "dev1232.slack.com",
+          "dev1233.slack.com",
+          "dev1234.slack.com",
+          "dev1235.slack.com",
+          "dev1236.slack.com",
+          "dev1237.slack.com",
+          "dev1238.slack.com",
+          "dev1239.slack.com",
+          "dev1240.slack.com",
+          "dev1241.slack.com",
+          "dev1242.slack.com",
+          "dev1243.slack.com",
+          "dev1244.slack.com",
+          "dev1245.slack.com",
+          "dev1246.slack.com",
+          "dev1247.slack.com",
+          "dev1248.slack.com",
+          "dev1249.slack.com",
+          "dev1250.slack.com",
+          "dev1251.slack.com",
+          "dev1252.slack.com",
+          "dev1253.slack.com",
+          "dev1254.slack.com",
+          "dev1255.slack.com",
+          "dev1256.slack.com",
+          "dev1257.slack.com",
+          "dev1258.slack.com",
+          "dev1259.slack.com",
+          "dev1260.slack.com",
+          "dev1261.slack.com",
+          "dev1262.slack.com",
+          "dev1263.slack.com",
+          "dev1264.slack.com",
+          "dev1265.slack.com",
+          "dev1266.slack.com",
+          "dev1267.slack.com",
+          "dev1268.slack.com",
+          "dev1269.slack.com",
+          "dev1270.slack.com",
+          "dev1271.slack.com",
+          "dev1272.slack.com",
+          "dev1273.slack.com",
+          "dev1274.slack.com",
+          "dev1275.slack.com",
+          "dev1276.slack.com",
+          "dev1277.slack.com",
+          "dev1278.slack.com",
+          "dev1279.slack.com",
+          "dev1280.slack.com",
+          "dev1281.slack.com",
+          "dev1282.slack.com",
+          "dev1283.slack.com",
+          "dev1284.slack.com",
+          "dev1285.slack.com",
+          "dev1286.slack.com",
+          "dev1287.slack.com",
+          "dev1288.slack.com",
+          "dev1289.slack.com",
+          "dev1290.slack.com",
+          "dev1291.slack.com",
+          "dev1292.slack.com",
+          "dev1293.slack.com",
+          "dev1294.slack.com",
+          "dev1295.slack.com",
+          "dev1296.slack.com",
+          "dev1297.slack.com",
+          "dev1298.slack.com",
+          "dev1299.slack.com",
+          "dev1300.slack.com",
+          "dev1301.slack.com",
+          "dev1302.slack.com",
+          "dev1303.slack.com",
+          "dev1304.slack.com",
+          "dev1305.slack.com",
+          "dev1306.slack.com",
+          "dev1307.slack.com",
+          "dev1308.slack.com",
+          "dev1309.slack.com",
+          "dev1310.slack.com",
+          "dev1311.slack.com",
+          "dev1312.slack.com",
+          "dev1313.slack.com",
+          "dev1314.slack.com",
+          "dev1315.slack.com",
+          "dev1316.slack.com",
+          "dev1317.slack.com",
+          "dev1318.slack.com",
+          "dev1319.slack.com",
+          "dev1320.slack.com",
+          "dev1321.slack.com",
+          "dev1322.slack.com",
+          "dev1323.slack.com",
+          "dev1324.slack.com",
+          "dev1325.slack.com",
+          "dev1326.slack.com",
+          "dev1327.slack.com",
+          "dev1328.slack.com",
+          "dev1329.slack.com",
+          "dev1330.slack.com",
+          "dev1331.slack.com",
+          "dev1332.slack.com",
+          "dev1333.slack.com",
+          "dev1334.slack.com",
+          "dev1335.slack.com",
+          "dev1336.slack.com",
+          "dev1337.slack.com",
+          "dev1338.slack.com",
+          "dev1339.slack.com",
+          "dev1340.slack.com",
+          "dev1341.slack.com",
+          "dev1342.slack.com",
+          "dev1343.slack.com"
+        ]
+      },
+      "findings": [
+        {
+          "source": "ct",
+          "signal": "subdomain_estate",
+          "subcategory": "subdomain_hygiene",
+          "category": "digital_footprint_assets",
+          "observed": "4326 subdomains",
+          "value": {
+            "count": 4326
+          },
+          "event_date": null,
+          "locator": "certspotter %.slack.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "ct",
+          "signal": "stale_hosts",
+          "subcategory": "abandoned_shadow_assets",
+          "category": "digital_footprint_assets",
+          "observed": "5 stale/dev/staging names",
+          "value": {
+            "count": 5
+          },
+          "event_date": null,
+          "locator": "certspotter %.slack.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "certs issued, not hosts live \u2014 possible forgotten hosts"
+        },
+        {
+          "source": "ct",
+          "signal": "weak_issuance",
+          "subcategory": "certificate_transparency_issues",
+          "category": "digital_footprint_assets",
+          "observed": "wildcard_sprawl",
+          "value": {
+            "wildcard_sprawl": true
+          },
+          "event_date": null,
+          "locator": "certspotter %.slack.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "hibp",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:22.129417Z",
+      "source_version": null,
+      "raw": {
+        "domain": "slack.com",
+        "breaches": []
+      },
+      "findings": [
+        {
+          "source": "hibp",
+          "signal": "breach_by_data_class",
+          "subcategory": "confirmed_breaches",
+          "category": "breach_compromise_history",
+          "observed": "no known public breach",
+          "value": {
+            "band": "no_known_breach"
+          },
+          "event_date": null,
+          "locator": "HIBP /breaches Domain=slack.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no PUBLICLY known breach; absence is not proof of security"
+        }
+      ],
+      "reliability": 0.55,
+      "notes": "no breach record \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "kev",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:23.404356Z",
+      "source_version": "2026.07.22",
+      "raw": {
+        "catalog_version": "2026.07.22",
+        "total_kev": 1653,
+        "matched": 0
+      },
+      "findings": [
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "no KEV product match",
+          "value": {
+            "band": "no_kev_match"
+          },
+          "event_date": null,
+          "locator": "CISA KEV 2026.07.22",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no known-exploited CVE name-matches (or vendor ships no software)"
+        }
+      ],
+      "reliability": 0.6,
+      "notes": "no KEV match \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "nvd",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:24.761145Z",
+      "source_version": "live",
+      "raw": {
+        "keyword": "Slack",
+        "returned": 50,
+        "summaries": [
+          {
+            "cve": "CVE-1999-1186",
+            "score": 7.2,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "1996-01-02T05:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-0298",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "1997-02-05T05:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-1489",
+            "score": 7.2,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "1997-03-04T05:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-0340",
+            "score": 7.2,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "1997-12-01T05:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-1445",
+            "score": 5.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "1998-02-02T05:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-1498",
+            "score": 3.6,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "1998-04-06T04:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-1434",
+            "score": 7.2,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "1998-07-13T04:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-1422",
+            "score": 7.2,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "1999-01-02T05:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-0421",
+            "score": 7.2,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "1999-03-17T05:00:00Z"
+          },
+          {
+            "cve": "CVE-1999-0856",
+            "score": 5.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "1999-12-01T05:00:00Z"
+          },
+          {
+            "cve": "CVE-2001-1036",
+            "score": 7.2,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2001-08-31T04:00:00Z"
+          },
+          {
+            "cve": "CVE-2003-0335",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2003-05-22T04:00:00Z"
+          },
+          {
+            "cve": "CVE-2004-0530",
+            "score": 7.2,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2004-08-06T04:00:00Z"
+          },
+          {
+            "cve": "CVE-2005-4151",
+            "score": 2.1,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2005-12-10T11:03:00Z"
+          },
+          {
+            "cve": "CVE-2007-0822",
+            "score": 1.9,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2007-02-07T20:28:00Z"
+          },
+          {
+            "cve": "CVE-2007-0823",
+            "score": 1.9,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2007-02-07T20:28:00Z"
+          },
+          {
+            "cve": "CVE-2007-3499",
+            "score": 6.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2007-06-29T18:30:00Z"
+          },
+          {
+            "cve": "CVE-2018-17232",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2018-09-20T06:29:00.290000Z"
+          },
+          {
+            "cve": "CVE-2019-1003043",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2019-03-28T18:29:00.390000Z"
+          },
+          {
+            "cve": "CVE-2019-1003044",
+            "score": 7.1,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2019-03-28T18:29:00.420000Z"
+          },
+          {
+            "cve": "CVE-2019-14365",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2019-11-12T21:15:11.800000Z",
+            "epss": 0.01919
+          },
+          {
+            "cve": "CVE-2019-14366",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2019-11-12T21:15:11.847000Z",
+            "epss": 0.01677
+          },
+          {
+            "cve": "CVE-2019-14367",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2019-11-12T21:15:11.910000Z",
+            "epss": 0.01203
+          },
+          {
+            "cve": "CVE-2013-7171",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2019-11-21T14:15:12.740000Z",
+            "epss": 0.06344
+          },
+          {
+            "cve": "CVE-2013-7172",
+            "score": 7.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2019-11-21T14:15:12.817000Z",
+            "epss": 0.0046
+          },
+          {
+            "cve": "CVE-2020-11498",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2020-04-02T23:15:13.033000Z",
+            "epss": 0.03395
+          },
+          {
+            "cve": "CVE-2019-20845",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2020-06-19T14:15:10.573000Z",
+            "epss": 0.01114
+          },
+          {
+            "cve": "CVE-2017-18879",
+            "score": 6.1,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2020-06-19T19:15:10.077000Z",
+            "epss": 0.00685
+          },
+          {
+            "cve": "CVE-2017-18880",
+            "score": 6.1,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2020-06-19T19:15:10.137000Z",
+            "epss": 0.00685
+          },
+          {
+            "cve": "CVE-2020-2208",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2020-07-02T15:15:17.770000Z",
+            "epss": 0.00691
+          },
+          {
+            "cve": "CVE-2020-15526",
+            "score": 5.9,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2020-07-09T17:15:12.310000Z",
+            "epss": 0.00499
+          },
+          {
+            "cve": "CVE-2021-26068",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2021-02-22T21:15:19.727000Z",
+            "epss": 0.02714
+          },
+          {
+            "cve": "CVE-2021-30126",
+            "score": 6.5,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2021-04-02T20:15:13.597000Z",
+            "epss": 0.00674
+          },
+          {
+            "cve": "CVE-2021-43838",
+            "score": 5.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2021-12-17T19:15:07.683000Z",
+            "epss": 0.01377
+          },
+          {
+            "cve": "CVE-2021-43843",
+            "score": 5.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2021-12-20T22:15:07.817000Z",
+            "epss": 0.01916
+          },
+          {
+            "cve": "CVE-2022-0124",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2022-01-18T17:15:09.713000Z"
+          },
+          {
+            "cve": "CVE-2022-2406",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2022-07-14T18:15:08.367000Z"
+          },
+          {
+            "cve": "CVE-2022-31162",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2022-07-22T04:15:14.187000Z",
+            "epss": 0.00852
+          },
+          {
+            "cve": "CVE-2022-39292",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2022-10-10T15:15:09.783000Z",
+            "epss": 0.00693
+          },
+          {
+            "cve": "CVE-2022-41906",
+            "score": 8.7,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2022-11-11T19:15:11.613000Z",
+            "epss": 0.00655
+          },
+          {
+            "cve": "CVE-2021-4302",
+            "score": 3.5,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2023-01-04T22:15:09Z"
+          },
+          {
+            "cve": "CVE-2021-4301",
+            "score": 6.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2023-01-07T22:15:08.800000Z",
+            "epss": 0.00691
+          },
+          {
+            "cve": "CVE-2018-17451",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2023-04-15T23:15:13.480000Z",
+            "epss": 0.00316
+          },
+          {
+            "cve": "CVE-2023-2183",
+            "score": 4.1,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2023-06-06T19:15:11.277000Z"
+          },
+          {
+            "cve": "CVE-2023-46723",
+            "score": 8.9,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2023-10-31T16:15:10.233000Z",
+            "epss": 0.00399
+          },
+          {
+            "cve": "CVE-2023-5356",
+            "score": 7.3,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2024-01-12T14:15:48.707000Z",
+            "epss": 0.00829
+          },
+          {
+            "cve": "CVE-2024-32881",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2024-04-26T21:15:49.450000Z",
+            "epss": 0.00799
+          },
+          {
+            "cve": "CVE-2024-35196",
+            "score": 2.0,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2024-05-31T18:15:12.993000Z"
+          },
+          {
+            "cve": "CVE-2022-30360",
+            "score": 6.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2024-10-25T17:15:03.630000Z",
+            "epss": 0.00274
+          },
+          {
+            "cve": "CVE-2024-54682",
+            "score": 6.5,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2024-12-16T08:15:05.513000Z",
+            "epss": 0.00425
+          }
+        ],
+        "scored_recent": 25,
+        "epss_enriched": 25
+      },
+      "findings": [
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2013-7171 CRITICAL (CVSS 9.8; EPSS 0.06)",
+          "value": {
+            "band": "cvss_critical",
+            "cve": "CVE-2013-7171",
+            "cvss": 9.8,
+            "severity": "CRITICAL",
+            "epss": 0.06344
+          },
+          "event_date": "2019-11-21T14:15:12.740000Z",
+          "locator": "NVD CVE-2013-7171",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2024-32881 CRITICAL (CVSS 9.8; EPSS 0.01)",
+          "value": {
+            "band": "cvss_critical",
+            "cve": "CVE-2024-32881",
+            "cvss": 9.8,
+            "severity": "CRITICAL",
+            "epss": 0.00799
+          },
+          "event_date": "2024-04-26T21:15:49.450000Z",
+          "locator": "NVD CVE-2024-32881",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-46723 HIGH (CVSS 8.9; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2023-46723",
+            "cvss": 8.9,
+            "severity": "HIGH",
+            "epss": 0.00399
+          },
+          "event_date": "2023-10-31T16:15:10.233000Z",
+          "locator": "NVD CVE-2023-46723",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2020-11498 HIGH (CVSS 8.8; EPSS 0.03)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2020-11498",
+            "cvss": 8.8,
+            "severity": "HIGH",
+            "epss": 0.03395
+          },
+          "event_date": "2020-04-02T23:15:13.033000Z",
+          "locator": "NVD CVE-2020-11498",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2021-26068 HIGH (CVSS 8.8; EPSS 0.03)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2021-26068",
+            "cvss": 8.8,
+            "severity": "HIGH",
+            "epss": 0.02714
+          },
+          "event_date": "2021-02-22T21:15:19.727000Z",
+          "locator": "NVD CVE-2021-26068",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2018-17451 HIGH (CVSS 8.8; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2018-17451",
+            "cvss": 8.8,
+            "severity": "HIGH",
+            "epss": 0.00316
+          },
+          "event_date": "2023-04-15T23:15:13.480000Z",
+          "locator": "NVD CVE-2018-17451",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2022-41906 HIGH (CVSS 8.7; EPSS 0.01)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2022-41906",
+            "cvss": 8.7,
+            "severity": "HIGH",
+            "epss": 0.00655
+          },
+          "event_date": "2022-11-11T19:15:11.613000Z",
+          "locator": "NVD CVE-2022-41906",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2013-7172 HIGH (CVSS 7.8; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2013-7172",
+            "cvss": 7.8,
+            "severity": "HIGH",
+            "epss": 0.0046
+          },
+          "event_date": "2019-11-21T14:15:12.817000Z",
+          "locator": "NVD CVE-2013-7172",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2019-14365 HIGH (CVSS 7.5; EPSS 0.02)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2019-14365",
+            "cvss": 7.5,
+            "severity": "HIGH",
+            "epss": 0.01919
+          },
+          "event_date": "2019-11-12T21:15:11.800000Z",
+          "locator": "NVD CVE-2019-14365",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2019-14366 HIGH (CVSS 7.5; EPSS 0.02)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2019-14366",
+            "cvss": 7.5,
+            "severity": "HIGH",
+            "epss": 0.01677
+          },
+          "event_date": "2019-11-12T21:15:11.847000Z",
+          "locator": "NVD CVE-2019-14366",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2019-14367 HIGH (CVSS 7.5; EPSS 0.01)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2019-14367",
+            "cvss": 7.5,
+            "severity": "HIGH",
+            "epss": 0.01203
+          },
+          "event_date": "2019-11-12T21:15:11.910000Z",
+          "locator": "NVD CVE-2019-14367",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2019-20845 HIGH (CVSS 7.5; EPSS 0.01)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2019-20845",
+            "cvss": 7.5,
+            "severity": "HIGH",
+            "epss": 0.01114
+          },
+          "event_date": "2020-06-19T14:15:10.573000Z",
+          "locator": "NVD CVE-2019-20845",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2022-31162 HIGH (CVSS 7.5; EPSS 0.01)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2022-31162",
+            "cvss": 7.5,
+            "severity": "HIGH",
+            "epss": 0.00852
+          },
+          "event_date": "2022-07-22T04:15:14.187000Z",
+          "locator": "NVD CVE-2022-31162",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2022-39292 HIGH (CVSS 7.5; EPSS 0.01)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2022-39292",
+            "cvss": 7.5,
+            "severity": "HIGH",
+            "epss": 0.00693
+          },
+          "event_date": "2022-10-10T15:15:09.783000Z",
+          "locator": "NVD CVE-2022-39292",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-5356 HIGH (CVSS 7.3; EPSS 0.01)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2023-5356",
+            "cvss": 7.3,
+            "severity": "HIGH",
+            "epss": 0.00829
+          },
+          "event_date": "2024-01-12T14:15:48.707000Z",
+          "locator": "NVD CVE-2023-5356",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2021-30126 MEDIUM (CVSS 6.5; EPSS 0.01)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2021-30126",
+            "cvss": 6.5,
+            "severity": "MEDIUM",
+            "epss": 0.00674
+          },
+          "event_date": "2021-04-02T20:15:13.597000Z",
+          "locator": "NVD CVE-2021-30126",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2024-54682 MEDIUM (CVSS 6.5; EPSS 0.00)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2024-54682",
+            "cvss": 6.5,
+            "severity": "MEDIUM",
+            "epss": 0.00425
+          },
+          "event_date": "2024-12-16T08:15:05.513000Z",
+          "locator": "NVD CVE-2024-54682",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2022-30360 MEDIUM (CVSS 6.4; EPSS 0.00)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2022-30360",
+            "cvss": 6.4,
+            "severity": "MEDIUM",
+            "epss": 0.00274
+          },
+          "event_date": "2024-10-25T17:15:03.630000Z",
+          "locator": "NVD CVE-2022-30360",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2021-4301 MEDIUM (CVSS 6.3; EPSS 0.01)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2021-4301",
+            "cvss": 6.3,
+            "severity": "MEDIUM",
+            "epss": 0.00691
+          },
+          "event_date": "2023-01-07T22:15:08.800000Z",
+          "locator": "NVD CVE-2021-4301",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2017-18879 MEDIUM (CVSS 6.1; EPSS 0.01)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2017-18879",
+            "cvss": 6.1,
+            "severity": "MEDIUM",
+            "epss": 0.00685
+          },
+          "event_date": "2020-06-19T19:15:10.077000Z",
+          "locator": "NVD CVE-2017-18879",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2017-18880 MEDIUM (CVSS 6.1; EPSS 0.01)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2017-18880",
+            "cvss": 6.1,
+            "severity": "MEDIUM",
+            "epss": 0.00685
+          },
+          "event_date": "2020-06-19T19:15:10.137000Z",
+          "locator": "NVD CVE-2017-18880",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2020-15526 MEDIUM (CVSS 5.9; EPSS 0.00)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2020-15526",
+            "cvss": 5.9,
+            "severity": "MEDIUM",
+            "epss": 0.00499
+          },
+          "event_date": "2020-07-09T17:15:12.310000Z",
+          "locator": "NVD CVE-2020-15526",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2021-43838 MEDIUM (CVSS 5.3; EPSS 0.01)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2021-43838",
+            "cvss": 5.3,
+            "severity": "MEDIUM",
+            "epss": 0.01377
+          },
+          "event_date": "2021-12-17T19:15:07.683000Z",
+          "locator": "NVD CVE-2021-43838",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2021-43843 MEDIUM (CVSS 5.3; EPSS 0.02)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2021-43843",
+            "cvss": 5.3,
+            "severity": "MEDIUM",
+            "epss": 0.01916
+          },
+          "event_date": "2021-12-20T22:15:07.817000Z",
+          "locator": "NVD CVE-2021-43843",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2020-2208 MEDIUM (CVSS 4.3; EPSS 0.01)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2020-2208",
+            "cvss": 4.3,
+            "severity": "MEDIUM",
+            "epss": 0.00691
+          },
+          "event_date": "2020-07-02T15:15:17.770000Z",
+          "locator": "NVD CVE-2020-2208",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "ita",
+      "vendor_ref": "slack",
+      "status": "empty",
+      "fetched_at": "2026-07-23T08:54:26.102813Z",
+      "source_version": "unknown",
+      "raw": {
+        "query": "slack",
+        "list_size": 25909,
+        "match_count": 0,
+        "screened": true
+      },
+      "findings": [],
+      "reliability": 0.95,
+      "notes": "clean screen vs 25909 CSL entries (retained as s16(7) defence record)"
+    },
+    {
+      "source": "gleif",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:27.350269Z",
+      "source_version": "live",
+      "raw": {
+        "query": "Slack",
+        "candidates": 15,
+        "resolved": {
+          "lei": "549300VIZRB02KN4IJ45",
+          "legalName": "SLACK TECHNOLOGIES, INC.",
+          "jurisdiction": "US-DE",
+          "entityStatus": "ACTIVE",
+          "regStatus": "LAPSED"
+        },
+        "other_candidates": [
+          {
+            "lei": "969500WUFEQ3A2IYTE25",
+            "legalName": "SLACK",
+            "jurisdiction": "FR",
+            "entityStatus": "INACTIVE",
+            "regStatus": "RETIRED"
+          },
+          {
+            "lei": "984500BEDCCA987F0170",
+            "legalName": "SLACK, SAMUEL LAWRENCE",
+            "jurisdiction": "AU",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "254900EJCKZ2K3S09I70",
+            "legalName": "SLACK CAPITAL LIMITED",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "335800XI1KG8OAODWN21",
+            "legalName": "SLACK TECHNOLOGIES INDIA LLP",
+            "jurisdiction": "IN",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "2138006LJI7T29YLIO21",
+            "legalName": "EVELYN JUNE SLACK SETTLEMENT",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "LAPSED"
+          },
+          {
+            "lei": "213800TJ8LUA7ZV96N60",
+            "legalName": "EDWIN SLACK GRANDCHILDREN'S SETTLEMENT",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "213800HUVZ5I98V41915",
+            "legalName": "SLACK VENTURE CAPITAL LIMITED",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "984500388B90C79F5050",
+            "legalName": "SLACK BUSINESS MANAGEMENT & TAXES LTD",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "2138009P2HTKGSBCWU98",
+            "legalName": "THE PAUL SLACK GRANDCHILDREN'S TRUST",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "213800AWLHRTTXEOMG16",
+            "legalName": "THE SOPHIE SLACK DISCRETIONARY SETTLEMENT",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "LAPSED"
+          }
+        ],
+        "ambiguous": true,
+        "name_match": 3,
+        "strong_matches": 15,
+        "exact_matches": 2
+      },
+      "findings": [
+        {
+          "source": "gleif",
+          "signal": "entity_status",
+          "subcategory": "legal_entity_status",
+          "category": "business_financial_stability",
+          "observed": "SLACK TECHNOLOGIES, INC. \u2014 ACTIVE/LAPSED",
+          "value": {
+            "band": "registration_lapsed",
+            "lei": "549300VIZRB02KN4IJ45",
+            "jurisdiction": "US-DE",
+            "entity_status": "ACTIVE",
+            "registration_status": "LAPSED"
+          },
+          "event_date": null,
+          "locator": "GLEIF LEI 549300VIZRB02KN4IJ45",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "ENTITY-level standing; MULTIPLE strong name matches \u2014 review attribution"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "wikidata",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:28.796639Z",
+      "source_version": "live",
+      "raw": {
+        "query": "Slack",
+        "target_domain": "slack.com",
+        "candidates_inspected": 1,
+        "qid": "Q17130715",
+        "label": "Slack",
+        "official_website": [
+          "https://slack.com",
+          "https://www.salesforce.com/slack/"
+        ],
+        "dissolved": false
+      },
+      "findings": [
+        {
+          "source": "wikidata",
+          "signal": "entity_existence",
+          "subcategory": "legal_entity_status",
+          "category": "business_financial_stability",
+          "observed": "Slack \u2014 live (domain-verified via official website)",
+          "value": {
+            "band": "entity_active_confirmed",
+            "qid": "Q17130715",
+            "official_website": [
+              "https://slack.com",
+              "https://www.salesforce.com/slack/"
+            ]
+          },
+          "event_date": null,
+          "locator": "Wikidata Q17130715",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "CORROBORATION of entity standing \u2014 domain-verified (P856 matches vendor domain); combines with GLEIF at higher confidence when they agree (\u00a75.4.3)"
+        }
+      ],
+      "reliability": 0.7,
+      "notes": null
+    },
+    {
+      "source": "rdap",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:30.016366Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "slack.com",
+        "ldhName": "SLACK.COM",
+        "status": [
+          "client delete prohibited",
+          "client transfer prohibited",
+          "client update prohibited",
+          "server delete prohibited",
+          "server transfer prohibited",
+          "server update prohibited"
+        ],
+        "created": "1992-10-21T04:00:00+00:00",
+        "expires": "2027-10-20T04:00:00+00:00"
+      },
+      "findings": [
+        {
+          "source": "rdap",
+          "signal": "domain_registration",
+          "subcategory": "domain_standing",
+          "category": "business_financial_stability",
+          "observed": "domain established ~33 year(s), active",
+          "value": {
+            "band": "domain_established",
+            "created": "1992-10-21T04:00:00+00:00",
+            "expires": "2027-10-20T04:00:00+00:00",
+            "status": [
+              "client delete prohibited",
+              "client transfer prohibited",
+              "client update prohibited",
+              "server delete prohibited",
+              "server transfer prohibited",
+              "server update prohibited"
+            ]
+          },
+          "event_date": null,
+          "locator": "RDAP slack.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "domain STANDING (entity-level) \u2014 a domain is not the company; minority weight"
+        }
+      ],
+      "reliability": 0.85,
+      "notes": null
+    },
+    {
+      "source": "regulatory",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:30.690056Z",
+      "source_version": null,
+      "raw": {
+        "tokens": [
+          "slack"
+        ],
+        "feeds_reached": [
+          "FTC",
+          "SEC",
+          "DOJ",
+          "UK-CMA",
+          "UK-ICO",
+          "CNIL"
+        ],
+        "match_count": 0,
+        "matches": []
+      },
+      "findings": [
+        {
+          "source": "regulatory",
+          "signal": "regulator_action",
+          "subcategory": "regulatory_actions",
+          "category": "adverse_media_reputation",
+          "observed": "no regulatory action found (recent window)",
+          "value": {
+            "band": "no_action_found",
+            "feeds": [
+              "FTC",
+              "SEC",
+              "DOJ",
+              "UK-CMA",
+              "UK-ICO",
+              "CNIL"
+            ]
+          },
+          "event_date": null,
+          "locator": "regulator feeds: FTC, SEC, DOJ, UK-CMA, UK-ICO, CNIL",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 recent-window, US-weighted; absence is weak (\u00a75.4.2)"
+        }
+      ],
+      "reliability": 0.4,
+      "notes": "no regulator match \u2014 clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "gdelt",
+      "vendor_ref": "slack",
+      "status": "error",
+      "fetched_at": "2026-07-23T08:54:42.510342Z",
+      "source_version": null,
+      "raw": null,
+      "findings": [],
+      "reliability": 0.6,
+      "notes": "GDELT returned 429"
+    },
+    {
+      "source": "trust",
+      "vendor_ref": "slack",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:45.427225Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "slack.com",
+        "pages_found": [
+          "security",
+          "trust"
+        ],
+        "certifications_claimed": [
+          "ISO 27001",
+          "ISO 27701",
+          "SOC 2"
+        ],
+        "role_contacts": []
+      },
+      "findings": [
+        {
+          "source": "trust",
+          "signal": "cert_posture",
+          "subcategory": "certifications_attestations",
+          "category": "compliance_regulatory",
+          "observed": "ISO 27001, ISO 27701, SOC 2",
+          "value": {
+            "band": "claimed_unverified",
+            "certs": [
+              "ISO 27001",
+              "ISO 27701",
+              "SOC 2"
+            ]
+          },
+          "event_date": null,
+          "locator": "https://slack.com/[security,trust]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "SELF-REPORTED claim \u2014 corroborate against cert registry where possible"
+        },
+        {
+          "source": "trust",
+          "signal": "program_disclosure",
+          "subcategory": "security_program_disclosure",
+          "category": "vendor_transparency_gov",
+          "observed": "detailed_policies",
+          "value": {
+            "pages": [
+              "security",
+              "trust"
+            ],
+            "chars": 354197
+          },
+          "event_date": null,
+          "locator": "https://slack.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported program disclosure"
+        },
+        {
+          "source": "trust",
+          "signal": "contactability",
+          "subcategory": "contactability_responsiveness",
+          "category": "vendor_transparency_gov",
+          "observed": "none published",
+          "value": {
+            "role_contacts": [],
+            "band": "none_published"
+          },
+          "event_date": null,
+          "locator": "https://slack.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "trust",
+          "signal": "reporting_posture",
+          "subcategory": "disclosure_reporting",
+          "category": "compliance_regulatory",
+          "observed": "substantive",
+          "value": {
+            "band": "substantive",
+            "chars": 354197
+          },
+          "event_date": null,
+          "locator": "https://slack.com/[security,trust]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported \u2014 published policies/reports inferred from trust-page substance"
+        }
+      ],
+      "reliability": 0.5,
+      "notes": null
+    }
+  ]
+}

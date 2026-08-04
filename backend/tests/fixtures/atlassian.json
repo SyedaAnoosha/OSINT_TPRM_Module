@@ -1,0 +1,1616 @@
+{
+  "vendor": {
+    "ref": "atlassian",
+    "name": "Atlassian",
+    "domain": "atlassian.com"
+  },
+  "results": [
+    {
+      "source": "dns",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:13.240515Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "atlassian.com",
+        "dmarc_txt": [
+          "v=DMARC1; p=reject; fo=1; pct=100; adkim=r; aspf=r; rua=mailto:dmarc_rua@emaildefense.proofpoint.com,mailto:dmarc-rua@abuse.atlassian.com; ruf=mailto:dmarc_ruf@emaildefense.proofpoint.com,mailto:dmarc-ruf@abuse.atlassian.com"
+        ],
+        "dmarc_policy": "p_reject",
+        "root_txt": [
+          "docusign=c709d0e7-f221-4f03-b936-704266b503a0",
+          "dropbox-domain-verification=o4rdwxnte1t0",
+          "facebook-domain-verification=s0cdi2ihgpeg7v7hl45zatfdbi5ia6",
+          "google-site-verification=4BcTn3m9wfJrq8ONDz9ltMbFhVgT51FVkfmSn-fcGZM",
+          "google-site-verification=961ryHZWzEAyKPpOY6xTPviMeUlp00RagzX7INHnRpk",
+          "google-site-verification=CRUWMjnPZaaZap-3EJktXdl_an_hWEgNqTb_j2LUTcM",
+          "google-site-verification=Ey-v6Be7J2lbOSMR7ID-gA6wGZXKxYMuTVkR4LFueow",
+          "google-site-verification=Gh3bIDlI_r-ksbSfnr8Kzvgp6Ccq3fE8dd_LXzJVIpo",
+          "google-site-verification=JG9JPuB-cRDnvpykq5rcpdNNy9ZwvkfyMVlRn2iapAw",
+          "google-site-verification=Kj7SMNgp41m5YiH7KEawowCRQFilQrRZ8D_TztiEn2g",
+          "google-site-verification=Lwmfu2vZQ0v_OCc48kYQNXCcmgP7Gj6Fg2kL08Xhfn0",
+          "google-site-verification=MSD4eeRGxm5bA9Au1cGuV8OPQOsju7epTDJ-f9C90gY",
+          "google-site-verification=O7Ybt8qvuC_Wr7eNYnJyhTxaGWpIERx_eQXhD219Mmc",
+          "google-site-verification=U5hiOly8JOwhyRXMmxgWaDHGMem7kgQud1Iis8gshyA",
+          "google-site-verification=fK0r-SyWnbxUuzdIbhScO9WjBIDBuEAh8ldTX3FDheU",
+          "google-site-verification=r1_7nBuqdcWdM0QIiDWQusHa9jelyX5hJYgX3xWSeTM",
+          "google-site-verification=va3Nya0kn20guRQIVU-LF4RRsKZ6u1Rewtqb4eYro-8",
+          "google-site-verification=x-2Aoze34nZo0Bs3hefRL6DJiMtGOyYBixByW_D0ZPU",
+          "google-site-verification=z98_8Laz1Jr_VZwpAMfx5IXbFy4PCx66ygZoqCeLyyc",
+          "hubspot-developer-verification=YzQ0ODBmZWMtMWI4YS00Zjk4LWI1ZDEtZGFkNzg3NzQ0MWY2",
+          "hubspot-developer-verification=ZjUyYzJkNDEtNTllMC00MjE4LTg0NzctNGFkNDNhMTQwMDJl",
+          "jamf-site-verification=tQF45ulu-gGP9PsBrWuMpw",
+          "knowbe4-site-verification=d26e46454d5f1bfcd1bd89f8ccf0d578",
+          "krisp-domain-verification=iaYrEjBouKqKfT09dQFvUw0qkjiB2HwO",
+          "lastpass-verification-code=6kaWM#TIy^*%CfMRVDa&&j&$JrJ4mr%!b^*HRTs1X3V4pMsGgUnD02HI*9ij&SBYbfoB9UV9xjOgWuaoAjTu4RywpdWrw7c%w5F",
+          "miro-verification=6bd145c8ff96aabe81ebbc9298522ad4c41e08f6",
+          "mongodb-site-verification=7ITIBB5r72gygRCiBxwA5UQcOyng1Vz1",
+          "notion-domain-verification=1ez7s7pQwWadv3VpVRoGN6T4wH6rz95OH5yc5aNgDV9",
+          "onetrust-domain-verification=aa11449cf62348e78d229049ddf67df2",
+          "openai-domain-verification=dv-sieehJkHarisQONQPcyKyLrq",
+          "pardot548382=251a035bf1d916039f96c33d2457506ec1936c8c8331956b270cb6f51e4a1a6a",
+          "pendo-domain-verification=08405cee-3c6b-4169-9461-fef5648efd67",
+          "postman-domain-verification=800d74a33351205a654e3108f639ed29eb015d093ef1c303ac965d3272c6f02456307508bb8236be692906720c795570c4a78814e5ad34365dd2e34731c42197",
+          "ppe-b2f6e67f740d3c6bd37c6665c6d19a140a8acd97",
+          "profound-domain-verification-kwc8pk=Nkeycc3Ki88gmNXVDIlIu2qgb",
+          "segment-site-verification=jWNfQP1TpeIY9m5hjMJ9oq7bqKE7ARtD",
+          "status-page-domain-verification=3fbwzqm8vjhr",
+          "stripe-verification=04d7fb4776f1301905fec8ab2640d90063d83433562200fe8e84a163af2ff537",
+          "stripe-verification=27a7887beca7c109d6beeb7b154db1878cdb699d0d93e48a731ec08c694a6290",
+          "stripe-verification=427826c728dfce0a7a78322acfdbce70473ec2d999a739fd15d0151a8ccb0200",
+          "stripe-verification=580cea36ec46ac0adcc200221811acaca1db456b0fb91bd7cc129d8f3459b9b8",
+          "stripe-verification=71d4571aac7216050c8bebaadf0538662d4e5a950b7c4cfd8e69b12a54835df1",
+          "stripe-verification=8C4E45BA3E22F706F5F3FB72A6F72719FE8C912462788AB8D6C1A38CC1C64A6A",
+          "stripe-verification=97aa50e11805a745fd972ed3c9cc3b4fb81d706adb8bf9693b347772e00478d5",
+          "stripe-verification=B90269683791B84C666A07BAEF5A248445E78BA55FA2E2208E3A062BFA751425",
+          "stripe-verification=a08bc6fbbb27bb9d81ddf84670414dc9aec5ed4d6740c0c1a566a71d19ea8341",
+          "stripe-verification=c3c46ec084306a30bcc1d0551fb9a508231831f38a2723e874e6446c29281d55",
+          "stripe-verification=d6a3912e7b1c6ece6fbbd3fbd94ec2809cef42dd52c146b9e97911d819705df9",
+          "stripe-verification=df30411351944f1496e1672379f26a194bc00c7fb0fcbbab989d610f090bffd8",
+          "stripe-verification=e3129af3aea23f39d9869982084895f81fcb2a931daec6fac7052df798612d6f",
+          "twilio-domain-verification=e459472c26323f835802d62f65dd9f66",
+          "v=MCPv1; k=ed25519; p=3+HwEl6PGRASMFD+ktCP5sprdenoB/YZHJAOqE2CVoo=",
+          "v=spf1 ip4:54.85.255.245 ip4:54.241.191.3 include:_spf.google.com include:cust-spf.exacttarget.com include:spf-001d9801.pphosted.com include:amazonses.com include:spf1.atlassian.com include:spf3.atlassian.com ip4:54.71.147.74 ip4:54.71.63.106 ip4:54.70.13.32 ~all",
+          "vp76ki2nsesve2u3a44pp0mahb",
+          "zoom-domain-verification=2803a8e0-7054-4e81-a7d7-fd55692d5e3b",
+          "1d0d0fe5-61e0-4edb-a509-92bc5ce59983",
+          "JkOZtIuIvTHsXraQgis9EtXUyG3SaZAj",
+          "MS=ms18133540",
+          "SFMC--FelJdVfs1qWNvc7OtWJs6MZcusOPOyWM_eCsysa",
+          "SFMC-NEVZE-pd0X15BlxXI8i2N1C977acCSS6iXsjznDF",
+          "SFMC-VGtbZqMeaLnLX_ep8blmghawDtsZvdGp8ohWo4J5",
+          "SFMC-wEuWumryKcoCTXQMJmxNyZH7NNNMnlDdhmqeETRC",
+          "SwdhbLH9TABXUXVsyv0iFHC0gtExgksKtVsvVoqGKZ4=",
+          "_tr70kb8d6vfv6evu0rderlk4g0qp5iu",
+          "a7cf340215d81686fa0541a53ec9384c",
+          "adobe-idp-site-verification=45af865bd23a9cbf05c82c7c47118beaae9fa1806a8906132943dbf19c9f470b",
+          "airtable-verification=220a9b71c22879816d9d241613827202",
+          "anodot-domain-verification=23e696e0e0d3bd0801e872b07a3ae2e96fd14cda1e6e0da7bbaf2e4e095cb21a",
+          "anthropic-domain-verification-enh4fz=TCXJHD6cAL2Z8omPsnYyIrBSZ",
+          "apperio-domain-verification=205f89afe51545a9805b40d8fca11dc3",
+          "apple-domain-verification=xJk7gq0QjgmNwKOC",
+          "atlassian-domain-verification=7xPjAxr91ksK7xsQQrqNJ8JFeaE9d8uAuzKoBhkfR7hlh7Gzy3MuwtWaHXBZfc45",
+          "atlassian-domain-verification=An/zNsIXav1loZKNgNsLVZCSVF2ZwxCmmRmHyazPNupCMhIIewVgxjLRX8vHnEH6",
+          "atlassian-domain-verification=CXg3TfK6ks2yn8qhnjbtaw8KCGz1K31j0BtdTSS5WlX6VJiPfspjjg3f26obkuA8",
+          "atlassian-domain-verification=GoNKpGQAjzgcMJeaDCpawM8OAdqJfI3Qdf9spLiWI8C0YsmbNaRV2Ynl6LCQYdYN",
+          "atlassian-domain-verification=JxhV/ZhZkrHgVYscIkTb0uMQ/pZKY49/9ooO9KLUmIFve3PmWY8TFJSMQTmgLgv/",
+          "atlassian-domain-verification=LxdUlMBGyIDZzdv5a3379ISDrFCwFudcod0VChiY9LkNp28183xDRHw8pkPq7Ypk",
+          "atlassian-domain-verification=TS3UJOnLYyKBsGxOYnvhbVxyWdzDSJkxGkxrZumZa0N105LDvHaJUaiYaVzOxcUb",
+          "atlassian-domain-verification=TX9lehYa7FjdqgpdvamdPToWtgCK34NADujThyFK7Pb36OxG/zvaJ8jrcFRa0DxC",
+          "atlassian-domain-verification=YgtkR1lUarneaVF9TSEqiX78nL3RNACOQ6IIvkJjhmZx8Db3bRgl/nIrpPNopHWj",
+          "atlassian-domain-verification=ZRphniOpyvhHV76mRmxnLkHJVrKnbeOIxmhbxb8PF6AarX0FypthxYB/r5XpVC2E",
+          "atlassian-domain-verification=ZlsTGOEPNmWFXzzhEayLG9WDmjOwsr1H36NdpelFLTF/kGCLr/a5rCCOqqGZRjWt",
+          "atlassian-domain-verification=gtWlmVkmNlzB0F0QoItHOhMGV1F//z0VsxzR6JiXQLK4LaXZ6nVZMybZEXNimQ/D",
+          "atlassian-domain-verification=mnSEydSHNWTwzBa1PLswfF7e/U/IEx9v5ppCtA60bxCvWZLntKvQHd2ddb3h3kEd",
+          "atlassian-domain-verification=qXy0sJTeEzEpIxfg30MuaX1rZvWqIE66QYh8m1SKJrAxIK59OFAawrIZjKd6kwgo",
+          "atlassian-domain-verification=riKoagHwPoh1ADNcj5c0dKK57fNjgfBsG/c7pORIY3PuL3LwseHjKJ7CklCccfp/",
+          "atlassian-sending-domain-verification=1eef8e00-d3a1-4e96-87d6-3c89eff0c1a0",
+          "atlassian-sending-domain-verification=d3a0d4ae-a1a3-46dc-897e-9b3c7a05aa12",
+          "bugcrowd-verification=e6bfef1b70648d92dfaa9c71109333e1",
+          "canva-site-verification=xQleHIYkB_3_GwMv8WMAhg",
+          "cursor-domain-verification-64a3xw=FGgvQz4cWuUQpOR9J9nyQwkR9",
+          "d25ka488dfqyj6.cloudfront.net",
+          "docusign=1d2cd2cd-53da-4c43-b487-46a5d4745f60",
+          "docusign=40001689-5955-4691-bdc0-0c95f792b589"
+        ],
+        "spf_state": "softfail_all",
+        "dkim_selector": "google",
+        "dnssec_dnskey_present": true,
+        "caa_present": true,
+        "mx": [
+          "10 mxa-001d9801.gslb.pphosted.com.",
+          "10 mxb-001d9801.gslb.pphosted.com."
+        ]
+      },
+      "findings": [
+        {
+          "source": "dns",
+          "signal": "dmarc",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "p_reject",
+          "value": {
+            "policy": "p_reject",
+            "record": "v=DMARC1; p=reject; fo=1; pct=100; adkim=r; aspf=r; rua=mailto:dmarc_rua@emaildefense.proofpoint.com,mailto:dmarc-rua@abuse.atlassian.com; ruf=mailto:dmarc_ruf@emaildefense.proofpoint.com,mailto:dmarc-ruf@abuse.atlassian.com"
+          },
+          "event_date": null,
+          "locator": "_dmarc.atlassian.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "spf",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "softfail_all",
+          "value": {
+            "state": "softfail_all",
+            "record": "v=spf1 ip4:54.85.255.245 ip4:54.241.191.3 include:_spf.google.com include:cust-spf.exacttarget.com include:spf-001d9801.pphosted.com include:amazonses.com include:spf1.atlassian.com include:spf3.atlassian.com ip4:54.71.147.74 ip4:54.71.63.106 ip4:54.70.13.32 ~all"
+          },
+          "event_date": null,
+          "locator": "atlassian.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dkim",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "selector": "google"
+          },
+          "event_date": null,
+          "locator": "google._domainkey.atlassian.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dnssec",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "valid",
+          "value": {
+            "dnskey_present": true
+          },
+          "event_date": null,
+          "locator": "atlassian.com DNSKEY",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "caa",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true
+          },
+          "event_date": null,
+          "locator": "atlassian.com CAA",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "tls",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:13.628006Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "atlassian.com",
+        "port": 443,
+        "version": "TLSv1.3",
+        "cipher": "TLS_AES_128_GCM_SHA256",
+        "not_after_raw": "Jan  1 23:59:59 2027 GMT",
+        "not_after_iso": "2027-01-01T23:59:59+00:00",
+        "days_to_expiry": 162,
+        "legacy_offered": []
+      },
+      "findings": [
+        {
+          "source": "tls",
+          "signal": "tls_version",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "TLSv1.3",
+          "value": {
+            "band": "tls_13",
+            "negotiated": "TLSv1.3",
+            "legacy_offered": []
+          },
+          "event_date": null,
+          "locator": "atlassian.com:443",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "tls",
+          "signal": "cert_validity",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "valid (162d)",
+          "value": {
+            "band": "valid",
+            "days_to_expiry": 162
+          },
+          "event_date": "2027-01-01T23:59:59Z",
+          "locator": "atlassian.com:443 leaf cert",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "headers",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:15.156915Z",
+      "source_version": "live",
+      "raw": {
+        "url": "https://www.atlassian.com/",
+        "status_code": 200,
+        "headers": {
+          "content-type": "text/html",
+          "transfer-encoding": "chunked",
+          "connection": "keep-alive",
+          "date": "Thu, 23 Jul 2026 08:52:12 GMT",
+          "set-cookie": "atlCohort={\"bucketAll\":{\"bucketId\":0,\"bucketedAtUTC\":\"2026-07-23T08:52:12.041Z\",\"version\":\"2\",\"index\":11}}; Max-Age=31536000; Domain=.atlassian.com; Path=/; Secure;, ajs_anonymous_id=%2204cd1381-21e8-4128-9fbb-5b281a048ae5%22; Max-Age=31536000; Domain=.atlassian.com; Path=/; Secure;, bxp_gateway_anchor=%7B%22anchor%22%3A%22Brand%22%2C%22type%22%3A%22SEO%22%7D; Max-Age=604800; Path=/; Domain=.atlassian.com; Secure;, X-Experiments-Key=path=/~GQdwhgxg+gdg9gFwJYDMkTMuMoCMCmANoVPgB4AO+ATkgLb4wIC8ARBNgtXIa8AOYgKAWgCcAZgBMk4eAjCAFnAYUw/fMOr4UWgM4Lh5KrQZM2HJt14ACMLuvtOV1tYA+DhPl0I+c4WCRhXXwwaggDXQBXOjpQgE9hADdJZhQwQmDgBBAIfmEAdlEABmELTzIESPThXEgAa35uSJgAE11ZSCCkfhhhJBhzJx4XOwcy5zcPLx9gMhRCOBAoLQ4YxhbMJGwoSVhcCigW2kTGVPTMwREARiLigDYO+SUVNQ0FGjhhACskajBhCiESLtbiJT7hMAwdS6M4ZfCgSDLbR6BRQACOABYUHFJHcoGAwFBPN5mFxIvC5FBdOkvFBCCE2lAIAhCfwFrUSDAwIlSdRycBqfTdFAQEgWuoEHhKCL8LgoIDMCg4NQ6LDMoLaaLxfhJbhpSBZfLCIrlXRDvgeWk4Vk4HVGEEEHF6bI/hRjI9ZLLhPxMPg1fDmqhTfKaLpsOkkAAvTbbVYUbCMSWMMC4ektXn8vwG3DCLhgFBoeQE72+/0I+TZ/H+KA+zxQJXUOlwfjqFr9KDA0MZ+GXYQAViufYAHMIlRBgQDuC1Isz/C102Se0JhBjRBj8rmQnRhJI+4oPoplPhVOpc2A7XATtQy34KFOZwh2gtlMJItRCN3gPhtcJjXRcBspSQO8k5wNOs5troHBXnEn5Zl6naGLodBgZEQpBBAtAUI+n69n2fYYiOnhgNuu7CNOtBQoYJxMDUkIwDQZZ4RikhXKUPD0syWwwO07zcGWYKEFw2DepEFDtBsLJ9L0kLpHEyAQO0ICusYuHLvk4gbsmqYaP0nhhC+EIIIeDA3p0hCoJ4LR0TADHUA66B1LBVoXMudxDmR2b9KENl2Uxy5DhiRQYpuJE7nu+CRL5NAAgodgaH2/kiB54gjrUtkxfRcDNBA+CmCwLlLiI7macIXKJGe9K0T6ZnyE0yBUSyOklp4akiPkA4juVfQWK+FCSV4bUFPkVxscRpF7uldmxfFwjiElBR9ncIV6fgjS+t8/XCHMCwgL+cBoF0PRiZ+oJwOaiR4DqhK6N0MBiXg9QnYVAjqXcRTiK+MBBiqAKvORBrELm9B+i9lLBKE4RQP0LTkFAiSfSki6vSIw43P4wINd6fytJOSBkAtojSA8407g8U2MS9vZE1cIXPMe/1QVojD6IgMLI9pzqKduYBfPt/BwHBnToPz/RDRIdx7qTIkINl9m6HELQMQk9MnhoFP2WAUUwJGhNXKIY1bmT+7cCZDOniyF5XgtNxFHcMhgCAKBsar/0azbRS0xufiu6eZ1JGK+CfCh07OrWoPnEVwg3BiVwPJBKbOvAvRwMYMZcoQ/gZ/J6DtJESAUEL0DGlCVTqFSRD4Myyp0pC/D4ggXBILgkStS9dCECsyimJJ3FBHa9Ky704f+kAA=; Max-Age=600; Path=/; Secure; Domain=.atlassian.com;, X-Experiments-Trace-Id=2de0799e-268a-4f5b-b75e-74661aa286db; Max-Age=600; Path=/; Secure; Domain=.atlassian.com;",
+          "content-security-policy": "base-uri 'self'; default-src 'self' *.atlassian.com *.intercomcdn.com *.orangelogic.com *.6sc.co *.6sense.com sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org; script-src 'self' *.gstatic.com *.cookielaw.org *.public.atl-paas.net *.prod.atl-paas.net *.googletagmanager.com *.marketo.net *.marketo.com *.atlassian.com utt.impactcdn.com *.google.com *.doubleclick.com *.googleadservices.com *.livechatinc.com *.bing.com *.quora.com *.yimg.jp *.clicktale.net *.linkedin.com *.twitter.com *.licdn.com *.demandbase.com *.doubleclick.net *.facebook.net *.redditstatic.com *.clearbitscripts.com *.clarity.ms *.vimeo.com *.google-analytics.com facebook.com *.facebook.com impactcdn.com *.impactcdn.com clearbitjs.com *.clearbitjs.com yahoo.co.jp *.yahoo.co.jp *.recaptcha.net *.ads-twitter.com *.intercom.io *.intercomcdn.com *.jsdelivr.net *.6sc.co *.6sense.com *.techtarget.com *.capterra.com sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org roundprincethere.com *.roundprincethere.com bzrcdn.openai.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' *.public.atl-paas.net *.prod.atl-paas.net fonts.googleapis.com *.googletagmanager.com sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org 'unsafe-inline'; img-src 'self' blob: data: atlassian.com *.atlassian.com *.cookielaw.org *.gravatar.com *.wp.com fd-assets.prod.atl-paas.net pixel.pointmediatracker.com *.prod.public.atl-paas.net cnv.event.prod.bidr.io *.doubleclick.net *.clicktale.net *.bing.com rlcdn.com reddit.com quora.com *.rlcdn.com *.reddit.com *.quora.com *.ctfassets.net  *.linkedin.com *.google.com *.google.com.au *.company-target.com *.facebook.com *.google-analytics.com *.twitter.com t.co *.intercomcdn.com *.intercomassets.com *.frontend.public.atl-paas.net *.orangelogic.com *.googletagmanager.com img.logo.dev *.atlassian.net sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org bytebucket.org *.bytebucket.org bitbucket-assetroot.s3.amazonaws.com b.6sc.co obs.roundprincethere.com; font-src 'self' *.ctfassets.net *.intercomcdn.com *.gstatic.com *.frontend.public.atl-paas.net *.atl.orangelogic.com; frame-ancestors 'none'; form-action 'self' pages.eml.atlassian.com app-ab35.marketo.com *.marketo.com *.mktoresp.com *.facebook.com; report-uri https://web-security-reports.services.atlassian.com/csp-report/wac-web; report-to csp-default-endpoint; connect-src 'self' ws: atlassian.com *.atlassian.com *.cookielaw.org *.onetrust.com *.public.atl-paas.net *.prod.atl-paas.net *.mktoresp.com *.marketo.com *.ingest.sentry.io *.workato.com atlassian.sjv.io statsigapi.net *.statsigapi.net *.contentful.com atlassian.net *.clicktale.net *.contentsquare.net *.bing.com google-analytics.com company-target.com linkedin.com *.google-analytics.com *.company-target.com *.linkedin.com *.doubleclick.net *.reddit.com *.redditstatic.com *.google.com *.demandbase.com *.clarity.ms *.clearbit.com *.intercom.io *.algolianet.com *.algolia.net *.algolia.io *.recaptcha.net https://unpkg.com/@rive-app/ *.facebook.com *.orangelogic.com *.adnxs.com *.6sc.co *.6sense.com m.castle.io apis.auxia.io *.atlassian.net https://participant.connect.us-east-1.amazonaws.com wss://participant.connect.us-east-1.amazonaws.com *.connect.us-east-1.amazonaws.com sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org obs.roundprincethere.com ibc-flow.techtarget.com; worker-src 'self' blob:; frame-src 'self' *.youtube.com *.google.com *.doubleclick.net *.recaptcha.net *.atl-paas.net pages.eml.atlassian.com app-ab35.marketo.com *.marketo.com *.mktoresp.com *.company-target.com *.googletagmanager.com *.atlassian.net *.facebook.com; media-src 'self' *.ctfassets.net *.atlassian.com *.orangelogic.com",
+          "content-security-policy-report-only": "",
+          "reporting-endpoints": "csp-default-endpoint=\"https://web-security-reports.services.atlassian.com/csp-report/wac-web\"",
+          "content-encoding": "gzip",
+          "x-node-architecture": "arm64",
+          "x-instance-type": "r8g.12xlarge",
+          "cache-control": "max-age=0, stale-if-error=0, no-cache=\"Set-Cookie\"",
+          "server": "AtlassianEdge",
+          "x-content-type-options": "nosniff",
+          "x-xss-protection": "1; mode=block",
+          "atl-traceid": "00e1014d37b244a8b7f4d6379eb11cd8",
+          "atl-request-id": "00e1014d-37b2-44a8-b7f4-d6379eb11cd8",
+          "strict-transport-security": "max-age=63072000; preload",
+          "report-to": "{\"endpoints\": [{\"url\": \"https://dz8aopenkvv6s.cloudfront.net\"}], \"group\": \"endpoint-1\", \"include_subdomains\": true, \"max_age\": 600}",
+          "nel": "{\"failure_fraction\": 0.01, \"include_subdomains\": true, \"max_age\": 600, \"report_to\": \"endpoint-1\"}",
+          "vary": "Accept-Encoding",
+          "via": "1.1 cb9c45f867b33e46c79b6fe15aee84f6.cloudfront.net (CloudFront)",
+          "alt-svc": "h3=\":443\"; ma=86400",
+          "x-frame-options": "DENY",
+          "server-timing": "cdn-upstream-layer;desc=\"EDGE\",cdn-upstream-dns;dur=0,cdn-upstream-connect;dur=0,cdn-upstream-fbl;dur=729,atl-edge;dur=704,atl-edge-internal;dur=2,atl-edge-upstream;dur=703,atl-edge-pop;desc=\"aws-ap-south-1\",bifrost;dur=22.56058399938047,tesseract;dur=22,cdn-cache-miss,cdn-pop;desc=\"DXB53-P3\",cdn-rid;desc=\"95c0P0FIoaph0qGa252Q2N8ksYDh9IYXBeOK8VLqCIdW6tGz5_wWdQ==\",cdn-downstream-fbl;dur=796",
+          "x-cache": "Miss from cloudfront",
+          "x-amz-cf-pop": "DXB53-P3",
+          "x-amz-cf-id": "95c0P0FIoaph0qGa252Q2N8ksYDh9IYXBeOK8VLqCIdW6tGz5_wWdQ=="
+        },
+        "security_txt_present": true
+      },
+      "findings": [
+        {
+          "source": "headers",
+          "signal": "hsts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "max-age=63072000; preload"
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/ [strict-transport-security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "csp",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "base-uri 'self'; default-src 'self' *.atlassian.com *.intercomcdn.com *.orangelogic.com *.6sc.co *.6sense.com sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org; script-src 'self' *.gstatic.com *.cookielaw.org *.public.atl-paas.net *.prod.atl-paas.net *.googletagmanager.com *.marketo.net *.marketo.com *.atlassian.com utt.impactcdn.com *.google.com *.doubleclick.com *.googleadservices.com *.livechatinc.com *.bing.com *.quora.com *.yimg.jp *.clicktale.net *.linkedin.com *.twitter.com *.licdn.com *.demandbase.com *.doubleclick.net *.facebook.net *.redditstatic.com *.clearbitscripts.com *.clarity.ms *.vimeo.com *.google-analytics.com facebook.com *.facebook.com impactcdn.com *.impactcdn.com clearbitjs.com *.clearbitjs.com yahoo.co.jp *.yahoo.co.jp *.recaptcha.net *.ads-twitter.com *.intercom.io *.intercomcdn.com *.jsdelivr.net *.6sc.co *.6sense.com *.techtarget.com *.capterra.com sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org roundprincethere.com *.roundprincethere.com bzrcdn.openai.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' *.public.atl-paas.net *.prod.atl-paas.net fonts.googleapis.com *.googletagmanager.com sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org 'unsafe-inline'; img-src 'self' blob: data: atlassian.com *.atlassian.com *.cookielaw.org *.gravatar.com *.wp.com fd-assets.prod.atl-paas.net pixel.pointmediatracker.com *.prod.public.atl-paas.net cnv.event.prod.bidr.io *.doubleclick.net *.clicktale.net *.bing.com rlcdn.com reddit.com quora.com *.rlcdn.com *.reddit.com *.quora.com *.ctfassets.net  *.linkedin.com *.google.com *.google.com.au *.company-target.com *.facebook.com *.google-analytics.com *.twitter.com t.co *.intercomcdn.com *.intercomassets.com *.frontend.public.atl-paas.net *.orangelogic.com *.googletagmanager.com img.logo.dev *.atlassian.net sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org bytebucket.org *.bytebucket.org bitbucket-assetroot.s3.amazonaws.com b.6sc.co obs.roundprincethere.com; font-src 'self' *.ctfassets.net *.intercomcdn.com *.gstatic.com *.frontend.public.atl-paas.net *.atl.orangelogic.com; frame-ancestors 'none'; form-action 'self' pages.eml.atlassian.com app-ab35.marketo.com *.marketo.com *.mktoresp.com *.facebook.com; report-uri https://web-security-reports.services.atlassian.com/csp-report/wac-web; report-to csp-default-endpoint; connect-src 'self' ws: atlassian.com *.atlassian.com *.cookielaw.org *.onetrust.com *.public.atl-paas.net *.prod.atl-paas.net *.mktoresp.com *.marketo.com *.ingest.sentry.io *.workato.com atlassian.sjv.io statsigapi.net *.statsigapi.net *.contentful.com atlassian.net *.clicktale.net *.contentsquare.net *.bing.com google-analytics.com company-target.com linkedin.com *.google-analytics.com *.company-target.com *.linkedin.com *.doubleclick.net *.reddit.com *.redditstatic.com *.google.com *.demandbase.com *.clarity.ms *.clearbit.com *.intercom.io *.algolianet.com *.algolia.net *.algolia.io *.recaptcha.net https://unpkg.com/@rive-app/ *.facebook.com *.orangelogic.com *.adnxs.com *.6sc.co *.6sense.com m.castle.io apis.auxia.io *.atlassian.net https://participant.connect.us-east-1.amazonaws.com wss://participant.connect.us-east-1.amazonaws.com *.connect.us-east-1.amazonaws.com sourcetreeapp.com *.sourcetreeapp.com bitbucket.org *.bitbucket.org obs.roundprincethere.com ibc-flow.techtarget.com; worker-src 'self' blob:; frame-src 'self' *.youtube.com *.google.com *.doubleclick.net *.recaptcha.net *.atl-paas.net pages.eml.atlassian.com app-ab35.marketo.com *.marketo.com *.mktoresp.com *.company-target.com *.googletagmanager.com *.atlassian.net *.facebook.com; media-src 'self' *.ctfassets.net *.atlassian.com *.orangelogic.com"
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/ [content-security-policy]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "x_frame_opts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "DENY"
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/ [x-frame-options]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "security_txt",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "vd_program",
+          "subcategory": "vuln_disclosure_program",
+          "category": "vendor_transparency_gov",
+          "observed": "security_txt_only",
+          "value": {
+            "band": "security_txt_only",
+            "security_txt": true
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "published vulnerability-disclosure path inferred from security.txt (RFC 9116)"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "ct",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:20.374908Z",
+      "source_version": "certspotter",
+      "raw": {
+        "domain": "atlassian.com",
+        "ct_source": "certspotter",
+        "raw_names": 2566,
+        "unique_subdomains": 41,
+        "stale_candidates": [
+          "community-dev1.dev.atlassian.com",
+          "community-dev2.dev.atlassian.com",
+          "community-dev4.dev.atlassian.com",
+          "community-dev6.dev.atlassian.com",
+          "dev.atlassian.com",
+          "dev.dea.atlassian.com",
+          "dev.internal.atlassian.com",
+          "dev.sec.internal.atlassian.com",
+          "dev.services.atlassian.com",
+          "octopus.dev.internal.atlassian.com",
+          "plato-airlock-dev.atlassian.com",
+          "staging.dea.atlassian.com",
+          "status.staging.atlassian.com"
+        ],
+        "wildcard_seen": true,
+        "subdomains_sample": [
+          "atlassian.com",
+          "blogs.atlassian.com",
+          "bserv.internal.atlassian.com",
+          "community-dev1.dev.atlassian.com",
+          "community-dev2.dev.atlassian.com",
+          "community-dev4.dev.atlassian.com",
+          "community-dev6.dev.atlassian.com",
+          "cw-proxy-442042188799.instenv-ui.internal.atlassian.com",
+          "dev.atlassian.com",
+          "dev.dea.atlassian.com",
+          "dev.internal.atlassian.com",
+          "dev.sec.internal.atlassian.com",
+          "dev.services.atlassian.com",
+          "devsphere.tools.atlassian.com",
+          "devsphere.tools.stg.atlassian.com",
+          "docker-blobs.artifacts.atlassian.com",
+          "docker-blobs.artifacts.stg.atlassian.com",
+          "go2.atlassian.com",
+          "idnow-iqservice.office.atlassian.com",
+          "image.mailer.atlassian.com",
+          "instenv.internal.atlassian.com",
+          "internal.atlassian.com",
+          "maven.artifacts.atlassian.com",
+          "maven.artifacts.stg.atlassian.com",
+          "misc.artifacts.atlassian.com",
+          "misc.artifacts.stg.atlassian.com",
+          "mobile-tools.internal.atlassian.com",
+          "octopus.dev.internal.atlassian.com",
+          "packages.atlassian.com",
+          "packages.stg.atlassian.com",
+          "pke-stg.atlassian.com",
+          "pke.atlassian.com",
+          "plato-airlock-dev.atlassian.com",
+          "services.atlassian.com",
+          "staging.dea.atlassian.com",
+          "status.atlassian.com",
+          "status.staging.atlassian.com",
+          "stg.atlassian.com",
+          "stg.internal.atlassian.com",
+          "stg.services.atlassian.com",
+          "www.idnow-iqservice.office.atlassian.com"
+        ]
+      },
+      "findings": [
+        {
+          "source": "ct",
+          "signal": "subdomain_estate",
+          "subcategory": "subdomain_hygiene",
+          "category": "digital_footprint_assets",
+          "observed": "41 subdomains",
+          "value": {
+            "count": 41
+          },
+          "event_date": null,
+          "locator": "certspotter %.atlassian.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "ct",
+          "signal": "stale_hosts",
+          "subcategory": "abandoned_shadow_assets",
+          "category": "digital_footprint_assets",
+          "observed": "13 stale/dev/staging names",
+          "value": {
+            "count": 13
+          },
+          "event_date": null,
+          "locator": "certspotter %.atlassian.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "certs issued, not hosts live \u2014 possible forgotten hosts"
+        },
+        {
+          "source": "ct",
+          "signal": "weak_issuance",
+          "subcategory": "certificate_transparency_issues",
+          "category": "digital_footprint_assets",
+          "observed": "wildcard_sprawl",
+          "value": {
+            "wildcard_sprawl": true
+          },
+          "event_date": null,
+          "locator": "certspotter %.atlassian.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "hibp",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:20.540292Z",
+      "source_version": null,
+      "raw": {
+        "domain": "atlassian.com",
+        "breaches": []
+      },
+      "findings": [
+        {
+          "source": "hibp",
+          "signal": "breach_by_data_class",
+          "subcategory": "confirmed_breaches",
+          "category": "breach_compromise_history",
+          "observed": "no known public breach",
+          "value": {
+            "band": "no_known_breach"
+          },
+          "event_date": null,
+          "locator": "HIBP /breaches Domain=atlassian.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no PUBLICLY known breach; absence is not proof of security"
+        }
+      ],
+      "reliability": 0.55,
+      "notes": "no breach record \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "kev",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:22.787776Z",
+      "source_version": "2026.07.22",
+      "raw": {
+        "catalog_version": "2026.07.22",
+        "matched": 13,
+        "matches": [
+          {
+            "cve": "CVE-2021-26086",
+            "product": "Jira Server and Data Center",
+            "name": "Atlassian Jira Server and Data Center Path Traversal Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2024-12-03",
+            "ransomware": "Unknown"
+          },
+          {
+            "cve": "CVE-2023-22527",
+            "product": "Confluence Data Center and Server",
+            "name": "Atlassian Confluence Data Center and Server Template Injection Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2024-02-14",
+            "ransomware": "Known"
+          },
+          {
+            "cve": "CVE-2023-22518",
+            "product": "Confluence Data Center and Server",
+            "name": "Atlassian Confluence Data Center and Server Improper Authorization Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2023-11-28",
+            "ransomware": "Known"
+          },
+          {
+            "cve": "CVE-2023-22515",
+            "product": "Confluence Data Center and Server",
+            "name": "Atlassian Confluence Data Center and Server Broken Access Control Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2023-10-13",
+            "ransomware": "Known"
+          },
+          {
+            "cve": "CVE-2022-36804",
+            "product": "Bitbucket Server and Data Center",
+            "name": "Atlassian Bitbucket Server and Data Center Command Injection Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2022-10-21",
+            "ransomware": "Unknown"
+          },
+          {
+            "cve": "CVE-2022-26138",
+            "product": "Confluence",
+            "name": "Atlassian Questions For Confluence App Hard-coded Credentials Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2022-08-19",
+            "ransomware": "Unknown"
+          },
+          {
+            "cve": "CVE-2022-26134",
+            "product": "Confluence Server/Data Center",
+            "name": "Atlassian Confluence Server and Data Center Remote Code Execution Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2022-06-06",
+            "ransomware": "Known"
+          },
+          {
+            "cve": "CVE-2021-26085",
+            "product": "Confluence Server",
+            "name": "Atlassian Confluence Server Pre-Authorization Arbitrary File Read Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2022-04-18",
+            "ransomware": "Known"
+          },
+          {
+            "cve": "CVE-2019-11581",
+            "product": "Jira Server and Data Center",
+            "name": "Atlassian Jira Server and Data Center Server-Side Template Injection Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2022-09-07",
+            "ransomware": "Unknown"
+          },
+          {
+            "cve": "CVE-2019-3398",
+            "product": "Confluence Server and Data Center",
+            "name": "Atlassian Confluence Server and Data Center Path Traversal Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2022-05-03",
+            "ransomware": "Unknown"
+          },
+          {
+            "cve": "CVE-2021-26084",
+            "product": "Confluence Server and Data Center",
+            "name": "Atlassian Confluence Server and Data Center Object-Graph Navigation Language (OGNL) Injection Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2021-11-17",
+            "ransomware": "Known"
+          },
+          {
+            "cve": "CVE-2019-11580",
+            "product": "Crowd and Crowd Data Center",
+            "name": "Atlassian Crowd and Crowd Data Center Remote Code Execution Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2022-05-03",
+            "ransomware": "Known"
+          },
+          {
+            "cve": "CVE-2019-3396",
+            "product": "Confluence Server and Data Server",
+            "name": "Atlassian Confluence Server and Data Center Server-Side Template Injection Vulnerability",
+            "vendor": "Atlassian",
+            "due": "2022-05-03",
+            "ransomware": "Known"
+          }
+        ]
+      },
+      "findings": [
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2021-26086 in Jira Server and Data Center (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2021-26086",
+            "product": "Jira Server and Data Center",
+            "vendor_project": "Atlassian",
+            "ransomware": "Unknown"
+          },
+          "event_date": "2024-11-12T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2021-26086",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-22527 in Confluence Data Center and Server (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2023-22527",
+            "product": "Confluence Data Center and Server",
+            "vendor_project": "Atlassian",
+            "ransomware": "Known"
+          },
+          "event_date": "2024-01-24T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2023-22527",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-22518 in Confluence Data Center and Server (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2023-22518",
+            "product": "Confluence Data Center and Server",
+            "vendor_project": "Atlassian",
+            "ransomware": "Known"
+          },
+          "event_date": "2023-11-07T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2023-22518",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-22515 in Confluence Data Center and Server (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2023-22515",
+            "product": "Confluence Data Center and Server",
+            "vendor_project": "Atlassian",
+            "ransomware": "Known"
+          },
+          "event_date": "2023-10-05T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2023-22515",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2022-36804 in Bitbucket Server and Data Center (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2022-36804",
+            "product": "Bitbucket Server and Data Center",
+            "vendor_project": "Atlassian",
+            "ransomware": "Unknown"
+          },
+          "event_date": "2022-09-30T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2022-36804",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2022-26138 in Confluence (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2022-26138",
+            "product": "Confluence",
+            "vendor_project": "Atlassian",
+            "ransomware": "Unknown"
+          },
+          "event_date": "2022-07-29T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2022-26138",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2022-26134 in Confluence Server/Data Center (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2022-26134",
+            "product": "Confluence Server/Data Center",
+            "vendor_project": "Atlassian",
+            "ransomware": "Known"
+          },
+          "event_date": "2022-06-02T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2022-26134",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2021-26085 in Confluence Server (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2021-26085",
+            "product": "Confluence Server",
+            "vendor_project": "Atlassian",
+            "ransomware": "Known"
+          },
+          "event_date": "2022-03-28T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2021-26085",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2019-11581 in Jira Server and Data Center (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2019-11581",
+            "product": "Jira Server and Data Center",
+            "vendor_project": "Atlassian",
+            "ransomware": "Unknown"
+          },
+          "event_date": "2022-03-07T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2019-11581",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2019-3398 in Confluence Server and Data Center (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2019-3398",
+            "product": "Confluence Server and Data Center",
+            "vendor_project": "Atlassian",
+            "ransomware": "Unknown"
+          },
+          "event_date": "2021-11-03T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2019-3398",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2021-26084 in Confluence Server and Data Center (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2021-26084",
+            "product": "Confluence Server and Data Center",
+            "vendor_project": "Atlassian",
+            "ransomware": "Known"
+          },
+          "event_date": "2021-11-03T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2021-26084",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2019-11580 in Crowd and Crowd Data Center (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2019-11580",
+            "product": "Crowd and Crowd Data Center",
+            "vendor_project": "Atlassian",
+            "ransomware": "Known"
+          },
+          "event_date": "2021-11-03T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2019-11580",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        },
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2019-3396 in Confluence Server and Data Server (KEV)",
+          "value": {
+            "band": "listed",
+            "cve": "CVE-2019-3396",
+            "product": "Confluence Server and Data Server",
+            "vendor_project": "Atlassian",
+            "ransomware": "Known"
+          },
+          "event_date": "2021-11-03T00:00:00Z",
+          "locator": "CISA KEV 2026.07.22 :: CVE-2019-3396",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "name-matched to vendorProject \u2014 review before treating as attributed"
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "nvd",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:24.708254Z",
+      "source_version": null,
+      "raw": {
+        "keyword": "Atlassian",
+        "returned": 50,
+        "summaries": [
+          {
+            "cve": "CVE-2005-3967",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2005-12-03T19:03:00Z"
+          },
+          {
+            "cve": "CVE-2006-3338",
+            "score": 2.6,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2006-07-03T18:05:00Z"
+          },
+          {
+            "cve": "CVE-2006-3339",
+            "score": 5.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2006-07-03T18:05:00Z"
+          },
+          {
+            "cve": "CVE-2007-6619",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2008-01-03T23:46:00Z"
+          },
+          {
+            "cve": "CVE-2008-6531",
+            "score": 6.8,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2009-03-26T21:00:00.327000Z"
+          },
+          {
+            "cve": "CVE-2008-6831",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2009-06-08T19:30:00.297000Z"
+          },
+          {
+            "cve": "CVE-2008-6832",
+            "score": 6.8,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2009-06-08T19:30:00.313000Z"
+          },
+          {
+            "cve": "CVE-2010-1164",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2010-04-20T15:30:00.507000Z"
+          },
+          {
+            "cve": "CVE-2010-1165",
+            "score": 9.0,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2010-04-20T15:30:00.553000Z"
+          },
+          {
+            "cve": "CVE-2010-1870",
+            "score": 5.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2010-08-17T20:00:03.407000Z"
+          },
+          {
+            "cve": "CVE-2011-4822",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2011-12-15T03:57:34.433000Z"
+          },
+          {
+            "cve": "CVE-2012-2926",
+            "score": 9.1,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2012-05-22T15:55:02.853000Z"
+          },
+          {
+            "cve": "CVE-2012-2927",
+            "score": 4.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2012-05-22T15:55:02.900000Z"
+          },
+          {
+            "cve": "CVE-2012-2928",
+            "score": 6.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2012-05-22T15:55:02.947000Z"
+          },
+          {
+            "cve": "CVE-2013-3925",
+            "score": 5.8,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2013-07-01T21:55:02.170000Z"
+          },
+          {
+            "cve": "CVE-2013-3926",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2013-07-01T21:55:03.090000Z"
+          },
+          {
+            "cve": "CVE-2013-5319",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2013-08-20T14:55:47.040000Z"
+          },
+          {
+            "cve": "CVE-2014-2313",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2014-03-09T13:16:57.117000Z"
+          },
+          {
+            "cve": "CVE-2014-2314",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2014-03-09T13:16:57.130000Z"
+          },
+          {
+            "cve": "CVE-2012-6342",
+            "score": 6.8,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2014-05-13T14:55:08.563000Z"
+          },
+          {
+            "cve": "CVE-2015-5603",
+            "score": 6.5,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2015-09-21T19:59:00.137000Z"
+          },
+          {
+            "cve": "CVE-2015-8481",
+            "score": 3.1,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2016-01-08T19:59:13.287000Z"
+          },
+          {
+            "cve": "CVE-2014-9757",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2016-02-08T19:59:00.127000Z"
+          },
+          {
+            "cve": "CVE-2015-8360",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2016-02-08T19:59:03.563000Z"
+          },
+          {
+            "cve": "CVE-2015-8361",
+            "score": 9.1,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2016-02-08T19:59:04.563000Z"
+          },
+          {
+            "cve": "CVE-2015-8398",
+            "score": 6.1,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2016-04-11T21:59:10.367000Z"
+          },
+          {
+            "cve": "CVE-2015-8399",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2016-04-11T21:59:11.320000Z"
+          },
+          {
+            "cve": "CVE-2016-5229",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2016-08-02T16:59:02.260000Z"
+          },
+          {
+            "cve": "CVE-2016-6496",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2016-12-09T22:59:02.233000Z"
+          },
+          {
+            "cve": "CVE-2016-6283",
+            "score": 6.1,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-01-18T22:59:00.813000Z"
+          },
+          {
+            "cve": "CVE-2016-6668",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2017-01-23T21:59:02.360000Z"
+          },
+          {
+            "cve": "CVE-2016-6285",
+            "score": 6.1,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-01-31T22:59:00.330000Z"
+          },
+          {
+            "cve": "CVE-2016-4317",
+            "score": 5.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-04-10T03:59:01.153000Z"
+          },
+          {
+            "cve": "CVE-2016-4318",
+            "score": 4.8,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-04-10T03:59:01.187000Z"
+          },
+          {
+            "cve": "CVE-2016-4319",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2017-04-10T03:59:01.217000Z"
+          },
+          {
+            "cve": "CVE-2016-4320",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-04-10T03:59:01.247000Z"
+          },
+          {
+            "cve": "CVE-2017-5983",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2017-04-10T15:59:00.457000Z"
+          },
+          {
+            "cve": "CVE-2017-7415",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2017-04-27T10:59:00.143000Z"
+          },
+          {
+            "cve": "CVE-2017-8768",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2017-05-04T22:29:00.197000Z"
+          },
+          {
+            "cve": "CVE-2017-8058",
+            "score": 5.9,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-05-05T07:29:01.167000Z"
+          },
+          {
+            "cve": "CVE-2017-8080",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2017-05-05T14:29:00.160000Z"
+          },
+          {
+            "cve": "CVE-2017-7999",
+            "score": 6.5,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-06-01T16:29:00.417000Z"
+          },
+          {
+            "cve": "CVE-2017-8907",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2017-06-14T20:29:00.140000Z"
+          },
+          {
+            "cve": "CVE-2017-9505",
+            "score": 4.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-06-15T16:29:00.233000Z"
+          },
+          {
+            "cve": "CVE-2017-9506",
+            "score": 6.1,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-08-23T19:29:00.197000Z"
+          },
+          {
+            "cve": "CVE-2017-9507",
+            "score": 5.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-08-24T17:29:00.240000Z"
+          },
+          {
+            "cve": "CVE-2017-9508",
+            "score": 5.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-08-24T17:29:00.273000Z"
+          },
+          {
+            "cve": "CVE-2017-9509",
+            "score": 5.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-08-24T17:29:00.320000Z"
+          },
+          {
+            "cve": "CVE-2017-9510",
+            "score": 5.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2017-08-24T17:29:00.350000Z"
+          },
+          {
+            "cve": "CVE-2017-9512",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2017-08-24T17:29:00.383000Z"
+          }
+        ],
+        "scored_recent": 0
+      },
+      "findings": [
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "no recent critical/high CVE keyword-match",
+          "value": {
+            "band": "no_critical_cve"
+          },
+          "event_date": null,
+          "locator": "NVD keywordSearch=Atlassian",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no recent CVE keyword-matches this vendor (coarse match, \u00a75.4.2)"
+        }
+      ],
+      "reliability": 0.55,
+      "notes": "no scorable CVE \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "ita",
+      "vendor_ref": "atlassian",
+      "status": "empty",
+      "fetched_at": "2026-07-23T08:52:25.717937Z",
+      "source_version": "unknown",
+      "raw": {
+        "query": "atlassian",
+        "list_size": 25909,
+        "match_count": 0,
+        "screened": true
+      },
+      "findings": [],
+      "reliability": 0.95,
+      "notes": "clean screen vs 25909 CSL entries (retained as s16(7) defence record)"
+    },
+    {
+      "source": "gleif",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:26.642213Z",
+      "source_version": "live",
+      "raw": {
+        "query": "Atlassian",
+        "candidates": 5,
+        "resolved": {
+          "lei": "549300V7ZY5P02D2MY38",
+          "legalName": "ATLASSIAN CORPORATION",
+          "jurisdiction": "US-DE",
+          "entityStatus": "ACTIVE",
+          "regStatus": "ISSUED"
+        },
+        "other_candidates": [
+          {
+            "lei": "549300R62HBFDVTIDN55",
+            "legalName": "ATLASSIAN INDIA LLP",
+            "jurisdiction": "IN",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "549300IXZ6QFOQGTMA56",
+            "legalName": "ATLASSIAN US, INC.",
+            "jurisdiction": "US-DE",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "5493005ANNO41NYIM267",
+            "legalName": "ATLASSIAN PTY LTD",
+            "jurisdiction": "AU",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "549300AGBII4MWBVJY22",
+            "legalName": "ATLASSIAN CORPORATION PLC",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "LAPSED"
+          }
+        ],
+        "ambiguous": true,
+        "name_match": 3,
+        "strong_matches": 5,
+        "exact_matches": 3
+      },
+      "findings": [
+        {
+          "source": "gleif",
+          "signal": "entity_status",
+          "subcategory": "legal_entity_status",
+          "category": "business_financial_stability",
+          "observed": "ATLASSIAN CORPORATION \u2014 ACTIVE/ISSUED",
+          "value": {
+            "band": "active_good_standing",
+            "lei": "549300V7ZY5P02D2MY38",
+            "jurisdiction": "US-DE",
+            "entity_status": "ACTIVE",
+            "registration_status": "ISSUED"
+          },
+          "event_date": null,
+          "locator": "GLEIF LEI 549300V7ZY5P02D2MY38",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "ENTITY-level standing; MULTIPLE strong name matches \u2014 review attribution"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "wikidata",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:27.782313Z",
+      "source_version": "live",
+      "raw": {
+        "query": "Atlassian",
+        "target_domain": "atlassian.com",
+        "candidates_inspected": 1,
+        "qid": "Q757307",
+        "label": "Atlassian",
+        "official_website": [
+          "https://www.atlassian.com/"
+        ],
+        "dissolved": false
+      },
+      "findings": [
+        {
+          "source": "wikidata",
+          "signal": "entity_existence",
+          "subcategory": "legal_entity_status",
+          "category": "business_financial_stability",
+          "observed": "Atlassian \u2014 live (domain-verified via official website)",
+          "value": {
+            "band": "entity_active_confirmed",
+            "qid": "Q757307",
+            "official_website": [
+              "https://www.atlassian.com/"
+            ]
+          },
+          "event_date": null,
+          "locator": "Wikidata Q757307",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "CORROBORATION of entity standing \u2014 domain-verified (P856 matches vendor domain); combines with GLEIF at higher confidence when they agree (\u00a75.4.3)"
+        }
+      ],
+      "reliability": 0.7,
+      "notes": null
+    },
+    {
+      "source": "rdap",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:28.959008Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "atlassian.com",
+        "ldhName": "ATLASSIAN.COM",
+        "status": [
+          "client delete prohibited",
+          "client transfer prohibited",
+          "client update prohibited"
+        ],
+        "created": "2001-03-19T12:38:02+00:00",
+        "expires": "2027-03-19T11:38:02+00:00"
+      },
+      "findings": [
+        {
+          "source": "rdap",
+          "signal": "domain_registration",
+          "subcategory": "domain_standing",
+          "category": "business_financial_stability",
+          "observed": "domain established ~25 year(s), active",
+          "value": {
+            "band": "domain_established",
+            "created": "2001-03-19T12:38:02+00:00",
+            "expires": "2027-03-19T11:38:02+00:00",
+            "status": [
+              "client delete prohibited",
+              "client transfer prohibited",
+              "client update prohibited"
+            ]
+          },
+          "event_date": null,
+          "locator": "RDAP atlassian.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "domain STANDING (entity-level) \u2014 a domain is not the company; minority weight"
+        }
+      ],
+      "reliability": 0.85,
+      "notes": null
+    },
+    {
+      "source": "regulatory",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:30.211843Z",
+      "source_version": null,
+      "raw": {
+        "tokens": [
+          "atlassian"
+        ],
+        "feeds_reached": [
+          "SEC",
+          "DOJ",
+          "UK-CMA",
+          "UK-ICO",
+          "CNIL"
+        ],
+        "match_count": 0,
+        "matches": []
+      },
+      "findings": [
+        {
+          "source": "regulatory",
+          "signal": "regulator_action",
+          "subcategory": "regulatory_actions",
+          "category": "adverse_media_reputation",
+          "observed": "no regulatory action found (recent window)",
+          "value": {
+            "band": "no_action_found",
+            "feeds": [
+              "SEC",
+              "DOJ",
+              "UK-CMA",
+              "UK-ICO",
+              "CNIL"
+            ]
+          },
+          "event_date": null,
+          "locator": "regulator feeds: SEC, DOJ, UK-CMA, UK-ICO, CNIL",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 recent-window, US-weighted; absence is weak (\u00a75.4.2)"
+        }
+      ],
+      "reliability": 0.4,
+      "notes": "no regulator match \u2014 clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "gdelt",
+      "vendor_ref": "atlassian",
+      "status": "error",
+      "fetched_at": "2026-07-23T08:52:41.980016Z",
+      "source_version": null,
+      "raw": null,
+      "findings": [],
+      "reliability": 0.6,
+      "notes": "GDELT returned 429"
+    },
+    {
+      "source": "trust",
+      "vendor_ref": "atlassian",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:52:44.240527Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "atlassian.com",
+        "pages_found": [
+          "security",
+          "trust"
+        ],
+        "certifications_claimed": [
+          "ISO 27001",
+          "PCI DSS"
+        ],
+        "role_contacts": []
+      },
+      "findings": [
+        {
+          "source": "trust",
+          "signal": "cert_posture",
+          "subcategory": "certifications_attestations",
+          "category": "compliance_regulatory",
+          "observed": "ISO 27001, PCI DSS",
+          "value": {
+            "band": "claimed_unverified",
+            "certs": [
+              "ISO 27001",
+              "PCI DSS"
+            ]
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/[security,trust]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "SELF-REPORTED claim \u2014 corroborate against cert registry where possible"
+        },
+        {
+          "source": "trust",
+          "signal": "program_disclosure",
+          "subcategory": "security_program_disclosure",
+          "category": "vendor_transparency_gov",
+          "observed": "detailed_policies",
+          "value": {
+            "pages": [
+              "security",
+              "trust"
+            ],
+            "chars": 395827
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported program disclosure"
+        },
+        {
+          "source": "trust",
+          "signal": "contactability",
+          "subcategory": "contactability_responsiveness",
+          "category": "vendor_transparency_gov",
+          "observed": "none published",
+          "value": {
+            "role_contacts": [],
+            "band": "none_published"
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "trust",
+          "signal": "reporting_posture",
+          "subcategory": "disclosure_reporting",
+          "category": "compliance_regulatory",
+          "observed": "substantive",
+          "value": {
+            "band": "substantive",
+            "chars": 395827
+          },
+          "event_date": null,
+          "locator": "https://atlassian.com/[security,trust]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported \u2014 published policies/reports inferred from trust-page substance"
+        }
+      ],
+      "reliability": 0.5,
+      "notes": null
+    }
+  ]
+}

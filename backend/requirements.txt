@@ -1,0 +1,20 @@
+# Runtime dependencies — pinned loosely for the PoC.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7
+pydantic-settings>=2.3
+httpx>=0.27
+dnspython>=2.6
+PyYAML>=6.0
+python-dotenv>=1.0
+# Postgres backend (Neon). Used whenever DATABASE_URL is set; the app is Postgres-first.
+# The [binary] extra ships the libpq build so no system Postgres client is required.
+psycopg[binary]>=3.2
+# Connection pooling. Optional at runtime (storage.py falls back to connect-per-store without
+# it) but strongly wanted: a Neon TLS handshake is ~0.7s and the API opens a store per request.
+psycopg_pool>=3.2
+
+# dev / test
+pytest>=8.2
+pytest-asyncio>=0.23
+anyio>=4.4

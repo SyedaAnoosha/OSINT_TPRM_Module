@@ -1,0 +1,288 @@
+{
+  "results": [
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "identity_email",
+          "event_date": null,
+          "locator": "synthetic://ghost-archetype.example/dmarc",
+          "notes": null,
+          "observed": "p_reject",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "dmarc",
+          "source": "dns",
+          "subcategory": "dmarc",
+          "value": {
+            "band": "p_reject"
+          }
+        },
+        {
+          "category": "identity_email",
+          "event_date": null,
+          "locator": "synthetic://ghost-archetype.example/spf",
+          "notes": null,
+          "observed": "hardfail_all",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "spf",
+          "source": "dns",
+          "subcategory": "spf",
+          "value": {
+            "band": "hardfail_all"
+          }
+        },
+        {
+          "category": "identity_email",
+          "event_date": null,
+          "locator": "synthetic://ghost-archetype.example/dkim",
+          "notes": null,
+          "observed": "present",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "dkim",
+          "source": "dns",
+          "subcategory": "dkim",
+          "value": {
+            "band": "present"
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://ghost-archetype.example/dnssec",
+          "notes": null,
+          "observed": "valid",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "dnssec",
+          "source": "dns",
+          "subcategory": "dnssec",
+          "value": {
+            "band": "valid"
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://ghost-archetype.example/caa",
+          "notes": null,
+          "observed": "present",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "caa",
+          "source": "dns",
+          "subcategory": "caa",
+          "value": {
+            "band": "present"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.95,
+      "source": "dns",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.95,
+      "source": "tls",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.9,
+      "source": "headers",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.9,
+      "source": "ct",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.55,
+      "source": "hibp",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.95,
+      "source": "kev",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.55,
+      "source": "nvd",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.95,
+      "source": "ita",
+      "source_version": "synthetic-1",
+      "status": "empty",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.9,
+      "source": "gleif",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.7,
+      "source": "wikidata",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.85,
+      "source": "rdap",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.4,
+      "source": "regulatory",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.6,
+      "source": "gdelt",
+      "source_version": "synthetic-1",
+      "status": "empty",
+      "vendor_ref": "synthetic_ghost"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_ghost",
+        "synthetic": true
+      },
+      "reliability": 0.5,
+      "source": "trust",
+      "source_version": "synthetic-1",
+      "status": "error",
+      "vendor_ref": "synthetic_ghost"
+    }
+  ],
+  "synthetic": {
+    "builder": "tests/build_archetypes.py",
+    "constructed": true,
+    "not_a_real_company": "No real entity is named, described or implied. The domain is under .example, reserved by RFC 2606 and unregistrable. This fixture must never enter a peer cohort, a benchmark population or a published report.",
+    "purpose": "E0.2 \u2014 engine archetypes the real five-vendor corpus cannot contain",
+    "why_this_one": "A vendor about whom almost nothing is publicly visible. DNS answers; every other collector fails or returns nothing. Everything observed is CLEAN, so a model that reported coverage as quality would publish this as a perfect score \u2014 the single worst call the system could make. Expected: refused, ghost, posture None."
+  },
+  "vendor": {
+    "domain": "ghost-archetype.example",
+    "name": "Ghost Archetype Pty Ltd (synthetic)",
+    "ref": "synthetic_ghost"
+  }
+}

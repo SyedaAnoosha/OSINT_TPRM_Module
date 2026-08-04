@@ -1,0 +1,36 @@
+# Root ignore. `backend/.gitignore` and `frontend/.gitignore` already cover their own
+# trees (git applies nested ignore files); this catches the rest and the OS noise.
+
+# --- secrets: never commit. `.env.example` IS committed, deliberately. ---
+.env
+*.env
+!.env.example
+!**/.env.example
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# --- node ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# --- the evidence store: regenerable, and may hold collected vendor data ---
+backend/data/
+
+# --- editors / OS ---
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*~

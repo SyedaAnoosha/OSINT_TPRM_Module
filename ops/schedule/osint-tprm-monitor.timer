@@ -1,0 +1,17 @@
+[Unit]
+Description=Daily OSINT TPRM monitoring sweep
+Documentation=file:///opt/osint-tprm/ops/schedule/README.md
+
+[Timer]
+# 03:17, not 03:00. Every timer on every host fires on the hour, and this sweep queries free public
+# services that are busiest at exactly that minute.
+OnCalendar=*-*-* 03:17:00
+# Spread further, because a fleet running the same unit would otherwise all land on 03:17.
+RandomizedDelaySec=900
+# Run on boot if the host was down at the scheduled time. A missed day is a gap in the ledger, and
+# the health check will report it — better to catch up than to explain the hole.
+Persistent=true
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

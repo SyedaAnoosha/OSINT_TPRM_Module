@@ -1,0 +1,205 @@
+# scoring.v1-core.yaml — a LEANER cut of scoring.yaml, for comparison (not yet wired in).
+# =============================================================================
+# Same thesis, less machinery. This keeps every DEFENSIBLE differentiator and drops the
+# sophistication that is calibrated to data we don't have on n=5 vendors. Diff this against
+# scoring.yaml and decide per section. Nothing here changes behaviour until the engine points
+# at it.
+#
+# KEPT (the reasons this isn't just a worse UpGuard):
+#   * Two axes never collapsed — risk (0-100) AND confidence (0-1).
+#   * Sanctions is a GATE, never a weight (Autonomous Sanctions Act s16(7)).
+#   * No natural persons (§4.2 bright line).
+#   * NIST SP 1326 decay in risk, per finding.
+#   * gate -> mean -> floor, with a non-compensatory knockout.
+#   * Clean-receipt CONCEPT ("checked-clean" != "never checked").
+#
+# CUT or SIMPLIFIED vs scoring.yaml (see NOTE lines) — precision the evidence can't support:
+#   * size-normalization log-damp + reference population   -> 3 coarse bands.
+#   * corroboration noisy-OR (1 - Π(1-r), cap 0.98)        -> flat agreement bonus.
+#   * per-source clean_reliability decimals (0.55/0.60...) -> one constant.
+#   * HELD categories w/ target_weight + full sub-structure -> a names-only roadmap list.
+# =============================================================================
+
+version: v1-core-draft
+direction: "0 = lowest risk, 100 = highest risk"
+
+# -----------------------------------------------------------------------------
+# CATEGORIES — the seven that a live free collector actually feeds. Sum = 100.
+# Sanctions is the gate. Held categories are a roadmap note (bottom), not runtime structure.
+# -----------------------------------------------------------------------------
+categories:
+  cyber_hygiene_technical:      { weight: 31 }
+  breach_compromise_history:    { weight: 25 }
+  vendor_transparency_gov:      { weight: 14 }
+  digital_footprint_assets:     { weight: 10 }
+  business_financial_stability: { weight: 7  }
+  compliance_regulatory:        { weight: 7  }
+  adverse_media_reputation:     { weight: 6  }
+  # sum = 100
+  regulatory_legal_sanctions:   { gate: true }   # emits nothing — see gates
+
+# -----------------------------------------------------------------------------
+# SUBCATEGORIES + SIGNAL BANDS — this IS the model. A band maps an observation to a
+# 0-100 severity, ordered by directness of evidence. Scored subs sum to 100 per category.
+# A returning-nothing sub is excluded and the rest renormalise.
+# -----------------------------------------------------------------------------
+subcategories:
+
+  cyber_hygiene_technical:
+    transport_security:   { weight: 40,
+        signals: { tls_version: { tls_10_or_11: 80, only_tls_12: 20, tls_13: 0, weak_ciphers: 50 },
+                   cert_validity: { expired_serving_prod: CRITICAL, expiring_lt_14d: 70, expiring_lt_30d: 40, valid: 0 } } }
+    email_authentication: { weight: 30,
+        signals: { dmarc: { absent: 100, p_none: 70, p_quarantine: 35, p_reject: 0 },
+                   spf: { absent: 60, softfail_all: 30, hardfail_all: 0 },
+                   dkim: { absent: 40, present: 0 } } }
+    web_hardening:        { weight: 15,
+        signals: { hsts: { absent: 40, present: 0 }, csp: { absent: 25, present: 0 },
+                   x_frame_opts: { absent: 15, present: 0 }, security_txt: { absent: 15, present: 0 } } }
+    dns_infrastructure:   { weight: 15,
+        signals: { dnssec: { absent: 40, misconfigured: 60, valid: 0 }, caa: { absent: 25, present: 0 } } }
+
+  breach_compromise_history:
+    confirmed_breaches:        { weight: 45, aggregation: pattern,
+        signals: { breach_by_data_class: { passwords_or_cards: 90, personal_info: 65, email_only: 40, no_known_breach: 5 } } }
+    exploited_vulnerabilities: { weight: 30, aggregation: worst_of,
+        signals: { kev_listed_cve: { unpatched: 95, patch_evidenced: 30, no_kev_match: 5 } } }
+    known_vulnerabilities:     { weight: 25, aggregation: worst_of,
+        signals: { nvd_cve: { probable_exploit: 85, critical_unpatched: 70, high_unpatched: 45, remediated: 15, no_critical_cve: 5 } } }
+
+  vendor_transparency_gov:
+    security_program_disclosure:   { weight: 40,
+        signals: { program_disclosure: { none: 60, marketing_only: 40, detailed_policies: 15 } } }
+    contactability_responsiveness: { weight: 30,
+        signals: { contactability: { none_published: 40, partial: 20, dpo_and_security_contact: 5 } } }
+    vuln_disclosure_program:       { weight: 30,
+        signals: { vd_program: { none: 50, security_txt_only: 25, bug_bounty: 10 } } }
+
+  digital_footprint_assets:
+    # NOTE: size-normalization simplified. scoring.yaml log-damps a COUNT against a reference
+    # population of 1000 (we have 5 vendors). Here: three coarse buckets the collector assigns.
+    subdomain_hygiene:               { weight: 40,
+        signals: { subdomain_estate: { small: 0, medium: 15, large: 30 } } }   # <=10 / 11-100 / >100
+    abandoned_shadow_assets:         { weight: 35,
+        signals: { stale_hosts: { none: 0, some: 30, many: 60 } } }            # 0 / 1-5 / >5 dev-staging names
+    certificate_transparency_issues: { weight: 25,
+        signals: { weak_issuance: { deprecated_ca_or_key: 60, wildcard_sprawl: 30, none: 0 } } }
+
+  business_financial_stability:
+    legal_entity_status: { weight: 70,
+        signals: { entity_status:    { entity_inactive: 85, registration_retired: 75, registration_lapsed: 35, active_good_standing: 5 },
+                   entity_existence: { entity_dissolved: 85, entity_active_confirmed: 5 } } }
+    domain_standing:     { weight: 30,
+        signals: { domain_registration: { domain_suspended: 75, domain_expiring: 45, domain_new: 30, domain_recent: 15, domain_established: 5 } } }
+
+  compliance_regulatory:
+    certifications_attestations: { weight: 55,
+        signals: { cert_posture: { none_claimed: 60, claimed_expired: 50, claimed_unverified: 30, registry_corroborated: 10 } } }
+    disclosure_reporting:        { weight: 45,
+        signals: { reporting_posture: { none: 55, partial: 30, substantive: 10 } } }
+    # sanctions_watchlists -> gate, never here (Autonomous Sanctions Act s16(7))
+
+  adverse_media_reputation:
+    regulatory_actions: { weight: 100,
+        signals: { regulator_action: { enforcement_action: 80, formal_investigation: 50, no_action_found: 5 } } }
+
+# -----------------------------------------------------------------------------
+# EXCLUDED — refused on principle, not silently dropped (§4.2).
+# -----------------------------------------------------------------------------
+excluded_signals:
+  executive_brand_risk:        "natural persons — §4.2"
+  pep_links:                   "natural persons — screening individuals; gate-territory, not a weight"
+  beneficial_ownership_person: "natural persons — entity-level ownership only"
+  diversity_inclusion_signals: "natural persons — inferring demographics is profiling"
+  shadow_ai_usage:             "not lawfully observable externally"
+
+# -----------------------------------------------------------------------------
+# FINDING MODIFIERS — NIST SP 1326. Decay lives here, in risk, per finding. KEPT verbatim:
+# cheap to compute, cheap to defend, and genuinely differentiating.
+# -----------------------------------------------------------------------------
+modifiers:
+  age:        { half_life_months: 36, floor: 0.15 }   # 0.5^(months/36), never 0
+  frequency:  { increment: 0.25, cap: 2.0 }           # 1 + 0.25×(n-1); pattern signals only
+  mitigation: { evidenced_factor: 0.6 }               # ×0.6 only where remediation is EVIDENCED
+
+# -----------------------------------------------------------------------------
+# GATES — emit nothing, before the mean.
+# -----------------------------------------------------------------------------
+gates:
+  sanctions:        { behaviour: block, tuning: recall, sources: ["ITA CSL (active)"] }
+  entity_ambiguous: { behaviour: block, below_confidence: 0.5 }
+
+# -----------------------------------------------------------------------------
+# BANDS — five-band presentation scale (tunable default the client owns).
+# -----------------------------------------------------------------------------
+bands:
+  very_low: { min: 0,  max: 20 }
+  low:      { min: 21, max: 40 }
+  moderate: { min: 41, max: 60 }
+  high:     { min: 61, max: 80 }
+  critical: { min: 81, max: 100 }
+
+# -----------------------------------------------------------------------------
+# KNOCKOUT FLOOR — non-compensatory, after the mean. Only DIRECTLY-OBSERVED-CURRENT
+# criticals auto-fire; name-matches score high + flag but need confirmation.
+# -----------------------------------------------------------------------------
+knockout:
+  floor_band: moderate
+  behaviour: "overall_risk = max(overall_risk, bands.moderate.min)"
+  requires_attribution: 0.7
+  auto_floor: [certificate_expired]
+  requires_confirmation: [kev_cve_unpatched, breach_unremediated]
+
+# -----------------------------------------------------------------------------
+# CONFIDENCE — the second axis. Emitted with every score or not at all.
+# -----------------------------------------------------------------------------
+confidence:
+  formula: "coverage × source_reliability × freshness"   # per subcategory, rolled up by weight
+  refuse_below: 0.4             # -> "Insufficient evidence" + gaps, no score
+  quadrant_boundary: 0.7
+  # NOTE: clean-receipt simplified. scoring.yaml tunes a per-source decimal (HIBP 0.55, KEV 0.60,
+  # NVD 0.55) with no ground truth to fit. Here: ONE constant for any checked-clean observation.
+  # Authoritative registers (GLEIF) are the exception — their clean state is full-reliability.
+  clean_receipt_reliability: 0.55
+  authoritative_sources: [gleif]
+  # NOTE: corroboration simplified. scoring.yaml combines reliabilities as noisy-OR
+  # (1 - Π(1-r)), capped 0.98, gated on agree_within 40. That machinery fires in ONE place
+  # (GLEIF + Wikidata). Here: a flat bonus when >=2 independent sources agree on the same
+  # subcategory fact, capped so it never reads as certainty.
+  corroboration_bonus: 0.15
+  corroboration_cap: 0.95
+
+quadrants:
+  evidenced_clean:       { risk_lte: 40, conf_gte: 0.7 }
+  the_ghost:             { risk_lte: 40, conf_lt: 0.7  }   # found nothing — UNASSESSED, not safe
+  verified_exposure:     { risk_gt: 40,  conf_gte: 0.7 }
+  uncorroborated_signal: { risk_gt: 40,  conf_lt: 0.7  }   # review, never report
+
+# -----------------------------------------------------------------------------
+# AGGREGATION — many assets per vendor. Weighted mean, but ANY critical on ANY asset
+# floors the whole vendor (weakest-link, expressed to fit gate->mean->floor).
+# -----------------------------------------------------------------------------
+aggregation:
+  method: weighted_mean_with_critical_weakest_link
+  non_critical: "weighted mean across all discovered in-scope assets"
+  critical_override: "any critical finding on any asset floors the whole vendor"
+
+# -----------------------------------------------------------------------------
+# HELD CATEGORIES — designed, not yet fed. Moved OUT of the runtime model into a
+# names-only roadmap note (scoring.yaml carried full subcategory structure + target_weight
+# for sources that don't exist — that's documentation living in the scoring config).
+# Full taxonomy + target weights live in methodology.md §5.9.
+# -----------------------------------------------------------------------------
+held_roadmap:
+  supply_chain_dependency: "target 13% — needs subprocessor/DPA source; 4th-party enum buildable from dns/ct/trust"
+  data_privacy_leakage:    "target 6% — no lawful free collector (HIBP domain paid; policy-page parse roadmap)"
+  geopolitical_foci:       "target 4% — registry terms (open item 7) + DFAT licence; SOCI 2028"
+  esg_ethical:             "target 3% — Modern Slavery licence (open item 2)"
+  emerging_tech_ai:        "target 2% — no lawfully observable source"
+
+# -----------------------------------------------------------------------------
+# PIPELINE ORDER — unchanged, not negotiable.
+#   entity-resolution -> collect -> EVIDENCE STORE (first) -> normalize -> modifiers
+#   -> signal -> subcategory mean -> category mean -> GATE -> overall mean
+#   -> KNOCKOUT FLOOR -> confidence + quadrant
+# -----------------------------------------------------------------------------

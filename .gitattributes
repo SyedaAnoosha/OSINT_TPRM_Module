@@ -1,0 +1,11 @@
+# Normalise line endings in the repo so a `regolden` diff shows a MODEL change and never a
+# CRLF/LF change. The corpus diff is the evidence for every migration phase — it has to be
+# readable, and it has to mean the same thing on every machine.
+* text=auto eol=lf
+
+# Binary reference material — never diff or normalise.
+*.pdf   binary
+*.docx  binary
+*.webp  binary
+*.png   binary
+*.jpg   binary

@@ -1,0 +1,1616 @@
+# scoring.yaml — the model, in a file a non-engineer can read and defend
+# =============================================================================
+# v4.2.0 — PENALTY-BASED POSTURE MODEL. Inspired by UpGuard's subtractive method, but our
+# own: our scale, our categories, our differentiators. NOT a copy.
+#
+# THE MODEL IN ONE LINE. Every vendor starts at 100 (a clean posture). For each issue found
+# in public data we subtract a penalty sized by SEVERITY. The posture score is 100 minus the
+# penalties; a letter grade is the headline; and — kept separate, never mixed in — a
+# CONFIDENCE score says how much of the planned evidence we actually got.
+#
+# WHY penalty-based (defensible on its face):
+#   * ONE lever, not fifty. Four severity penalties (below) drive everything. No per-signal
+#     point-tuning, no category-weight derivation to defend (open item 13 disappears — a
+#     category's influence emerges from how many issues it has and how bad they are).
+#   * Every number maps to a plain sentence: "a missing DMARC record is a Medium issue, -8".
+#
+# WHAT WE KEEP (the differentiators that make this more than a technical rating):
+#   1. TWO AXES, NEVER COLLAPSED — a posture 0-100 AND a separate confidence (coverage).
+#   2. SANCTIONS IS A GATE — a hit BLOCKS and emits nothing (human adjudication), it does not
+#      quietly grade the vendor. Autonomous Sanctions Act s16(7). (We do NOT force Grade F.)
+#   3. NO NATURAL PERSONS — executives, PEP screening, person-level ownership, demographic
+#      profiling are excluded at the bright line (§4.2). See excluded_signals.
+#   4. DECAY LIVES IN THE PENALTY — NIST SP 1326: an old finding is penalised less than a fresh
+#      one (age/frequency/mitigation modifiers).
+#   5. A DIRECTLY-OBSERVED CURRENT CRITICAL applies a non-compensatory CEILING (an expired
+#      production cert caps the grade), so one severe live issue can't be diluted away.
+#   6. WEAKEST-LINK across a vendor's assets — the vendor's posture is its worst asset's.
+#   7. EVERY DEDUCTION HAS A SENTENCE — see `reasons` below. A penalising band without one
+#      fails the loader: a score a client cannot have explained to them is the thing this
+#      model exists not to produce.
+#
+# Full defence: methodology.md §5. Grades/penalties are a transparent, tunable default.
+# =============================================================================
+
+# MAJOR bump, deliberately. E1-E5 changed what Posture MEANS, not just what it weighs: sector
+# severity promotion is gone (E1), the norm no longer penalises (E2), contactability is charged
+# once (E3), going-concern facts left Posture for Continuity (E4), and the seven categories became
+# five scoring plus two context, with the divisor recalibrated from 4.0 to 2.86 (E5).
+#
+# Every vendor's published posture moved. A consumer comparing a 4.x score with a 5.0 score is
+# comparing two different measurements — which is precisely what a major version is for.
+# Change notice, with the per-vendor movement: docs/change-notice-v5.md
+#
+# 5.1.0 (E6) is a MINOR bump, not another major one. The axes, the categories, the divisor and the
+# severity ladder are all unchanged; what changed is the INPUT to one signal — `stale_hosts` bands
+# on a failure rate instead of a raw count. A 5.0 and a 5.1 posture are the same measurement, and
+# a vendor whose score moved between them moved because the model stopped charging for the size of
+# their estate. That is comparable in a way a 4.x → 5.x movement is not.
+version: 5.2.0
+supersedes: 5.1.0
+model: penalty_subtractive
+direction: "100 = strongest posture, 0 = weakest — a penalty is SUBTRACTED per issue found"
+max_score: 100
+
+# -----------------------------------------------------------------------------
+# SEVERITY PENALTIES — the only points table. Every signal is a PASS (no penalty) or a fail at
+# one severity. These four numbers are the main lever; tune here, not per-signal.
+# -----------------------------------------------------------------------------
+# E7b WIDENED THIS LADDER. Critical:Low was 13.3:1 and is now 33.3:1.
+#
+# The defect it fixes, computed rather than asserted: four Medium findings plus eight Low ones
+# came to 56 points against a Critical's 40, so a dozen missing HTTP headers outranked one
+# actively-exploited vulnerability — 0.71:1, trivia winning. Widening ALONE only reaches 1.39:1;
+# it ships with `aggregation.decay` (E7a) because neither half is sufficient. Together: 3.06:1.
+#
+# THESE ARE EXPERT JUDGEMENT, NOT CALIBRATED VALUES, and must be labelled as such wherever they
+# are published. Calibrating them needs outcome labels — see docs/e0.4-outcome-labels-deferral.md.
+# `low: 1.5` is a FLOAT: anything asserting integer penalties will fail, which is intended.
+severity_penalties:
+  critical:      50    # actively dangerous & confirmable — expired prod cert, unpatched KEV, CVSS 9-10
+  high:          20    # serious weakness — no DMARC, TLS 1.0/1.1, confirmed breach of personal data
+  medium:        6     # meaningful gap — weak TLS, p=none, missing SPF, CVSS 4-6.9
+  low:           1.5   # minor hygiene — a missing security header, no DNSSEC, CVSS 0.1-3.9
+  informational: 0     # recorded, NOT scored — unverifiable (unproven open port, unconfirmed media)
+
+# -----------------------------------------------------------------------------
+# OVERALL POSTURE — how the seven category penalties become one number.
+#
+#   overall_posture = 100 - (sum of category penalties, each capped at 100) / penalty_divisor
+#
+# THE DIVISOR IS FIXED BY THE MODEL, never by how many categories happened to return data. That
+# is the whole point: a source that comes back clean adds no penalty and cannot move the
+# denominator, so evidence coverage CANNOT leak into posture. (Averaging only the categories that
+# answered made a clean trust page worth +23 posture — silence changed the score, which is exactly
+# what "missing data reduces confidence, never posture" forbids.)
+#
+# A divisor of 7 is algebraically the plain mean of the seven category postures, but it is very
+# forgiving of CONCENTRATED failure: every benchmark vendor scored A (86-92) including one with 13
+# KEV product matches. 4 is calibrated against the frozen corpus (backend/tests/fixtures) to
+# separate the evidenced-clean vendors from the ones with real findings. Lower = harsher.
+# -----------------------------------------------------------------------------
+overall:
+  # E5: 4 -> 2.86, and this MUST move whenever the number of scoring categories does.
+  #
+  # THE TRAP. Only SCORING categories can contribute penalty, so the model's maximum damage is
+  # (scoring_categories x 100) / divisor. At seven categories and a divisor of 4 that was 175
+  # posture points. E5 leaves five scoring categories (the other two are context and can never
+  # penalise) — so leaving the divisor at 4 would have cut maximum damage to 125 and made the model
+  # QUIETLY MORE FORGIVING: a larger FRACTION of the model would have to fail before a vendor
+  # bottomed out. Nothing would have failed; every score would just have drifted up.
+  #
+  #   divisor(n) = n x (4 / 7)      holds maximum damage at 175 whatever n is
+  #        7 -> 4.00     6 -> 3.43     5 -> 2.86     4 -> 2.29     3 -> 1.71
+  #
+  # Asserted by test_divisor_preserves_maximum_damage, which counts SCORING categories only.
+  penalty_divisor: 2.86
+
+# -----------------------------------------------------------------------------
+# GRADES — the headline letter, from the overall posture (0-100). A tunable default.
+# -----------------------------------------------------------------------------
+grades:
+  A: { min: 85 }   # robust posture, few/no external issues
+  B: { min: 70 }   # reasonable controls, some gaps
+  C: { min: 50 }   # poor controls, serious issues
+  D: { min: 30 }   # severe issues; should not handle sensitive data
+  F: { min: 0 }    # little to no basic security investment
+
+# -----------------------------------------------------------------------------
+# CONFIDENCE — the SECOND axis, reported separately, never mixed into the score. It is pure
+# evidence COVERAGE: of the signals we planned to collect, how many returned data.
+# -----------------------------------------------------------------------------
+confidence:
+  refuse_below: 0.4          # below this -> "Insufficient evidence" (a Ghost): the posture is not published
+  bands: { high: 0.90, medium: 0.70 }   # >=0.90 High, >=0.70 Medium, else Low
+
+  # --- E7d: THE CEILING RAMP. Thin evidence caps how good a vendor may LOOK. ---
+  #
+  # `refuse_below` used to be the whole story: a cliff at 40%, and above it nothing. A vendor seen
+  # through four collectors could publish 100 and read identically to one seen through fourteen,
+  # which made being hard to observe the cheapest route to a high score — the precise incentive
+  # this product exists to remove.
+  #
+  # A CAP, NEVER A DEDUCTION. It does not touch any category penalty, so the honesty rule holds
+  # exactly as before: missing data still costs no posture. It limits the CLAIM we are prepared to
+  # publish on the evidence we hold. Findings are the vendor's; the ceiling above them is ours.
+  #
+  # Read `>=` on the lower bound. Below `refuse_below` nothing publishes at all, and that refusal
+  # is ADVERSE, not neutral — see `insufficient_evidence_is_adverse`.
+  ceiling_ramp:
+    - { coverage_at_least: 0.90, ceiling: 100 }   # full collection — no cap
+    - { coverage_at_least: 0.75, ceiling: 97 }    # can still reach A, cannot be flawless
+    - { coverage_at_least: 0.60, ceiling: 90 }    # top of A is not available on this evidence
+    - { coverage_at_least: 0.40, ceiling: 80 }    # B at best
+    #  < 0.40 -> not published (refuse_below)
+
+  # Wording the UI is REQUIRED to honour. A grey "insufficient evidence" chip reads as neutral,
+  # and neutral is wrong: a supplier nobody can see is a supplier nobody has checked, and that is
+  # a finding. Recorded in config so the frontend and the report cannot quietly diverge from it.
+  insufficient_evidence_is_adverse: true
+  insufficient_evidence_caveat: >-
+    Insufficient public evidence to publish a posture. This is an ADVERSE result, not a neutral
+    one: it means this supplier could not be assessed from public sources, and it must not be read
+    as a clean bill of health. Obtain the evidence directly before proceeding.
+  # Confidence remains coverage-first, then a bounded assurance multiplier can adjust it using
+  # corroborated entity maturity (operational track record), never technical posture findings.
+  #
+  # CONTINUOUS, NOT STEPPED. The `by_band` table below is the fallback for a finding whose source
+  # gave us no usable year count. When years ARE known the multiplier is interpolated across the
+  # saturating curve in `maturity.py`, because the five bands could not tell an 11-year-old vendor
+  # from a 40-year-old one — everything past ten years was one bucket, and a 2-year-old and a
+  # 40-year-old differed by less than a grade band's worth of noise.
+  #
+  # `floor` and `ceiling` ARE THE LEVER. They are the whole of age's influence on the published
+  # numbers, deliberately: widen them and operating history matters more, narrow them to equal
+  # values and it stops mattering at all. Age never reaches posture at any setting — see
+  # context-aware-vendor-risk-scoring-study.md §1.6, which finds no published evidence that
+  # founding date predicts security posture and puts maturity in Confidence and Benchmarking only.
+  assurance_multiplier:
+    signal: entity_maturity
+    curve:
+      floor:   0.96      # no operating history at all
+      ceiling: 1.04      # saturated (>=25 years, well-evidenced)
+    # Fallback for a maturity finding that carries a band but no year count.
+    by_band:
+      mature_gt_10: 1.02
+      established_5_10: 1.01
+      young_2_5: 0.99
+      startup_lt_2: 0.98
+      new_lt_1: 0.96
+
+# -----------------------------------------------------------------------------
+# CATEGORIES + SIGNALS — this IS the model. Each signal maps an OBSERVATION to a severity
+# (or 'pass'). Grouped into the categories we collect for; a category's score is 100 minus the
+# penalties found in it (for the breakdown display). No category percentages — influence
+# emerges from the issues found, exactly the point of a penalty model.
+# -----------------------------------------------------------------------------
+categories:
+
+  # =============================================================================================
+  # E5 — FIVE SCORING CATEGORIES, TWO CONTEXT CATEGORIES.
+  #
+  # WHY THE OLD SET HAD TO GO. Seven categories had grown to mean seven different things. Two of
+  # them (business_financial_stability, most of compliance_regulatory) held facts that are not
+  # security observations at all, and E2-E4 emptied them of penalties without renaming them — so
+  # the file still read as though a company's founding date were a security category.
+  #
+  # THE LINE THIS SET DRAWS. A SCORING category answers one question: *how exposed is this vendor
+  # to compromise?* A CONTEXT category holds signals we still collect and still count toward
+  # coverage, but which answer a different question — will this vendor still be trading (Continuity,
+  # E4), and how much independent assurance do they have (Assurity, E9). Context categories carry
+  # no penalising band and contribute exactly zero to posture, by construction.
+  #
+  # WHY CONTEXT CATEGORIES EXIST RATHER THAN DELETING THE SIGNALS. `planned_signal_count` is the
+  # confidence denominator. Delete nine signals and every vendor's confidence rises for no
+  # evidential reason — the check still ran, we simply stopped charging for it. Keeping them here
+  # holds the denominator at 27 and keeps the receipt showing the check happened.
+  #
+  # SIGNALS ARE UNIQUE ACROSS CATEGORIES. The engine keys penalties on (category, signal), so a
+  # signal appearing twice is charged twice. Asserted by test_no_signal_appears_in_two_categories.
+  #
+  # THE DIVISOR MOVES WITH THIS. See `overall.penalty_divisor` — five scoring categories at the
+  # old divisor of 4 would have made the model quietly MORE forgiving, because a larger fraction
+  # of the model would have to fail before the score bottomed out.
+  # =============================================================================================
+
+  # --- SCORING 1. Breach & compromise history — realized > exploited > theoretical -------------
+  breach_compromise_history:
+    breach_by_data_class: { no_known_breach: pass, email_only: medium, personal_info: high, passwords_or_cards: critical }
+    # Bands state WHAT WAS OBSERVED only. Remediation is NOT encoded here — it is a separate,
+    # corroborated fact carried on the finding and applied once via modifiers.mitigation, so a
+    # fix is never discounted twice (v4.1.0; see the note on that block).
+    kev_listed_cve: { no_kev_match: pass, listed: critical }
+    nvd_cve: { no_critical_cve: pass, cvss_medium_or_low: low, cvss_high: high, cvss_critical: critical, probable_exploit: critical }
+
+  # --- SCORING 2. Attack surface & hygiene — the estate and how well it is kept ----------------
+  # Merges the old cyber_hygiene_technical (minus email auth) with digital_footprint_assets. They
+  # were split because of how they are COLLECTED, not because they answer different questions:
+  # an expired certificate and an abandoned subdomain are both "this estate is not being kept".
+  # E6: `subdomain_estate` is now the DENOMINATOR for stale_hosts and is no longer scored itself.
+  # Every band is informational. It stays in the signal list because it is still COLLECTED and
+  # still counts toward coverage — deleting it would drop planned_signal_count to 26 and lift
+  # every vendor's confidence for no evidential reason. Charging a vendor for the SIZE of their
+  # public estate was measuring how big they are and calling the answer risk.
+  #
+  # `stale_hosts` is banded on the exposure index g (see `exposure:` below), not on a raw count.
+  # `negligible` is new at E6: it is where a large, well-kept estate lands, and without it a
+  # vendor with 5 abandoned hosts out of 4,326 paid the same 8 points as one with 5 out of 20.
+  attack_surface_hygiene:
+    tls_version:   { tls_13: pass, only_tls_12: low, weak_ciphers: medium, tls_10_or_11: high }
+    cert_validity: { valid: pass, expiring_lt_30d: medium, expiring_lt_14d: high, expired_serving_prod: critical }
+    hsts:   { present: pass, absent: low }
+    csp:    { present: pass, absent: low }
+    x_frame_opts: { present: pass, absent: low }
+    dnssec: { valid: pass, absent: informational, misconfigured: medium }
+    caa:    { present: pass, absent: informational }
+    subdomain_estate: { small: pass, medium: informational, large: informational }
+    stale_hosts:      { none: pass, negligible: low, some: medium, many: high }
+    weak_issuance:    { none: pass, wildcard_sprawl: low, deprecated_ca_or_key: medium }
+    # E12 — ESTATE RATES. The fan-out's output, and the whole reason for the phase: "TLS 1.0 on
+    # the homepage" becomes "TLS 1.0 on 8 of 340 checked hosts". Both band on the RATE via E6's
+    # exposure branch, not on a raw count, because 8 of 340 and 8 of 20 are not the same estate.
+    #
+    # THEY DO NOT ARM THE CRITICAL CEILING and they never will: findings carry
+    # `host_role: estate`, and `critical_ceiling.auto_signal_scope` restricts the knockout to the
+    # apex. An expired certificate on one abandoned staging box must not cap a whole vendor at the
+    # top of Grade D — that is the any-host failure E12's design record rejects.
+    #
+    # Both are silent at `estate.probe_cap: 1` (the shipped default): no second wave runs, no
+    # finding is emitted, and the signal contributes nothing to coverage because it was never
+    # planned for. Raising the cap is what brings them to life.
+    estate_tls_legacy:   { none: pass, negligible: low, some: medium, many: high }
+    estate_cert_expired: { none: pass, negligible: low, some: medium, many: high }
+
+  # --- SCORING 3. Identity & email — can this vendor be impersonated? --------------------------
+  # Separated from general hygiene because it is one decision at the apex, answered by three DNS
+  # records that stand or fall together. It is also Class-B: a rate has no meaning here (E12), so
+  # keeping it apart stops exposure normalisation being applied where it does not belong.
+  identity_email:
+    dmarc:  { p_reject: pass, p_quarantine: low, p_none: medium, absent: high }
+    spf:    { hardfail_all: pass, softfail_all: low, absent: medium }
+    dkim:   { present: pass, absent: low }
+
+  # --- SCORING 4. Transparency — can this vendor be TOLD about a vulnerability? ----------------
+  #
+  # ONE FACT, CHARGED ONCE (E3). RFC 9116's `Contact:` field, a published security address and a
+  # vulnerability-disclosure path are usually the SAME observation seen three ways — headers_collector
+  # emits `security_txt` and `vd_program` from a single fetch of /.well-known/security.txt, and
+  # trust_collector reads the same contact off the trust page. Charging all three made governance
+  # heavier than any deliberate weighting decision would have made it.
+  #
+  # `vd_program` is the one that keeps the penalty: the report calls it the only governance signal
+  # with a causal mechanism — a vendor with no disclosure path cannot be TOLD about a vulnerability,
+  # which is a real and direct exposure rather than a paperwork gap. `security_txt` (E2) and
+  # `contactability` (E3) are now `informational`: still collected, still counted toward coverage,
+  # no longer separately charged. Removing them entirely would shrink the confidence denominator
+  # and lift every vendor's confidence for no evidential reason.
+  #
+  # OPEN ITEM CARRIED TO E12: `vd_program` penalises 100% of the corpus, which makes it a flat tax
+  # rather than a discriminator — it shifts every vendor's intercept and separates nobody. Its
+  # penalty is meant to scale with host count (a disclosure path matters more across 400 hosts than
+  # across four), which is exposure normalisation and belongs with the other Class-P work.
+  transparency:
+    vd_program:   { bug_bounty: pass, security_txt_only: low, none: medium }
+    security_txt: { present: pass, absent: informational }
+
+  # --- SCORING 5. Compliance & regulatory — claim reliability, not audit budget ----------------
+  # What survives here is deliberately narrow. `cert_posture.none_claimed` is FREE (E2) — having no
+  # certification is a budget fact, not a risk fact. What still charges is asserting one that does
+  # not check out (`claimed_unverified`, `claimed_expired`): a statement about the reliability of
+  # the vendor's own claims.
+  #
+  # `regulator_action` — DECISION RECORDED, NOT DEFAULTED (E5 forced this choice):
+  #   It stays in Posture for now, moved out of "adverse media" into compliance where it belongs.
+  #   The known defect: the collector cannot distinguish CYBER enforcement from any other kind, so
+  #   a DOJ antitrust settlement would score identically to an ICO data-protection fine at 20
+  #   points. That is wrong and a vendor would rightly dispute it.
+  #   It is not fixed here because (a) it fires on 0 of 5 corpus vendors — every one reads
+  #   `no_action_found` — so there is no live miscategorisation to correct today, and (b) the fix
+  #   is a COLLECTOR change, and folding it into the largest re-score in the plan would make the
+  #   diff unreadable.
+  #   BLOCKING PREREQUISITE FOR E9c: tag cyber-relevance in regulatory_collector. The cheap,
+  #   principled route is the regulator's own remit rather than keyword guessing — ICO and CNIL are
+  #   data-protection regulators, so their enforcement is cyber-relevant by definition, while
+  #   FTC/SEC/DOJ/CMA enforce many things. Pinned by test so it cannot be forgotten.
+  compliance_regulatory:
+    cert_posture:      { registry_corroborated: pass, claimed_unverified: low, claimed_expired: medium, none_claimed: informational }
+    regulator_action:  { no_action_found: pass, formal_investigation: medium, enforcement_action: high }
+
+  # =============================================================================================
+  # CONTEXT CATEGORIES — collected, counted toward coverage, NEVER penalising.
+  #
+  # These carry no penalising band by construction. They exist so the confidence denominator does
+  # not move when a signal stops charging: the check still ran, and the receipt should still say so.
+  # A context category that ever gains a penalising band has become a scoring category, and the
+  # divisor must be re-derived — asserted by test_context_categories_never_penalise.
+  # =============================================================================================
+
+  # --- CONTEXT A. Going-concern — feeds the Continuity axis (E4), never Posture ----------------
+  # Companies House maps liquidation, receivership, administration and insolvency-proceedings onto
+  # `entity_inactive`, which used to cost 20 points of TECHNICAL SECURITY posture. A vendor
+  # entering administration does not thereby have worse TLS. Published as registry-cited flags with
+  # a retrieval date — see app/continuity.py.
+  continuity_context:
+    entity_status:       { active_good_standing: pass, registration_lapsed: informational, registration_retired: informational, entity_inactive: informational }
+    entity_existence:    { entity_active_confirmed: pass, entity_dissolved: informational }
+    entity_maturity:     { mature_gt_10: pass, established_5_10: pass, young_2_5: informational, startup_lt_2: informational, new_lt_1: informational }
+    domain_registration: { domain_established: pass, domain_recent: informational, domain_new: informational, domain_expiring: informational, domain_suspended: informational }
+
+  # --- CONTEXT B. Assurance — feeds Assurity (E9), never Posture -------------------------------
+  # Penalising the absence of an audit or a public security page is a tax on audit budget, which
+  # falls hardest on small suppliers and measures spend rather than risk. These become POSITIVE
+  # credit in Assurity at E9b — absence never subtracts, presence adds.
+  assurance_context:
+    program_disclosure: { detailed_policies: pass, marketing_only: informational, none: informational }
+    contactability:     { dpo_and_security_contact: pass, partial: informational, none_published: informational }
+    reporting_posture:  { substantive: pass, partial: informational, none: informational }
+
+# -----------------------------------------------------------------------------
+# REASONS — the sentence a client actually reads, one per FAILING band.
+#
+# Written CONSEQUENCE FIRST, in plain English: "Anyone can send email pretending to be this
+# company" is what a procurement lead understands; "no DMARC record" is the supporting fact and
+# belongs underneath, not in front. A reader must never need an engineer to translate a deduction.
+#
+# These live here, beside the band they explain, for two reasons: a reason cannot drift from the
+# band it describes, and a non-engineer can rewrite the wording without a deploy. Every band that
+# carries a penalty must have one — the loader refuses to start otherwise, so the explanation can
+# never silently fall behind the model. Passing bands need none: nothing is deducted, nothing to
+# explain.
+# -----------------------------------------------------------------------------
+reasons:
+
+  # --- 1. Cyber hygiene & technical -------------------------------------------------------
+  tls_version:
+    only_tls_12:    "Traffic is encrypted with an older standard. It is still safe today, but it is one version behind current best practice."
+    weak_ciphers:   "Some of the encryption options this server accepts are outdated and no longer considered strong."
+    tls_10_or_11:   "Traffic can be pushed onto obsolete encryption that is known to be breakable, so data in transit may be readable by an attacker positioned between the user and this company."
+  cert_validity:
+    expiring_lt_30d:      "The security certificate expires within a month. If it lapses, visitors will be shown security warnings and connections may fail."
+    expiring_lt_14d:      "The security certificate expires within two weeks and there is no sign of a replacement yet."
+    expired_serving_prod: "The security certificate has already expired and is still being served to the public. Visitors cannot verify they are talking to the real company, and encrypted connections may fail outright."
+  dmarc:
+    p_quarantine: "Faked email sent in this company's name is sent to spam rather than blocked outright."
+    p_none:       "Protection against faked email is set to watch only, so email pretending to come from this company is noticed but still delivered."
+    absent:       "Anyone can send email pretending to be this company. There is no published rule telling mail servers to stop it, which is the standard opening move in invoice fraud and staff impersonation."
+  spf:
+    softfail_all: "The rule listing who may send email for this company is advisory only, so unauthorised senders are not firmly rejected."
+    absent:       "This company does not publish a list of who is allowed to send email on its behalf, so receiving mail servers cannot tell a genuine sender from a forger."
+  dkim:
+    absent: "Outgoing email is not signed, so a recipient cannot confirm a message really came from this company and was not altered on the way."
+  hsts:
+    absent: "Browsers are not told to always use a secure connection to this site, leaving a short window where a visitor can be pushed onto an insecure one."
+  csp:
+    absent: "The site does not restrict where its page content may be loaded from, which makes it easier for injected or third-party code to run on the page."
+  x_frame_opts:
+    absent: "Other websites can embed this company's pages inside their own, which is how users are tricked into clicking something they cannot see."
+  dnssec:
+    misconfigured: "The signing on the company's domain records is set up incorrectly, which can make the domain unreachable for some users and provides none of the protection intended."
+
+  # --- 2. Breach & compromise history -----------------------------------------------------
+  breach_by_data_class:
+    email_only:         "Customer email addresses were exposed in a confirmed public breach."
+    personal_info:      "Personal customer information was exposed in a confirmed public breach."
+    passwords_or_cards: "Customer passwords or payment card details were exposed in a confirmed public breach — the most directly exploitable class of data there is."
+  kev_listed_cve:
+    listed: "A product this company is associated with appears on the register of vulnerabilities that are being actively exploited in the wild. This is a name match against the product line, not proof this company's own systems are unpatched."
+  nvd_cve:
+    cvss_medium_or_low: "a publicly recorded vulnerability of moderate or low severity is associated with this company's products."
+    cvss_high:          "a publicly recorded vulnerability rated high severity is associated with this company's products."
+    cvss_critical:      "a publicly recorded vulnerability rated critical is associated with this company's products."
+    probable_exploit:   "a publicly recorded vulnerability associated with this company's products is assessed as likely to be exploited in the near term."
+
+  # --- 3. Digital footprint & assets ------------------------------------------------------
+  # `subdomain_estate` reasons removed at E6 — it no longer penalises, and an orphaned reason
+  # fails the loader. The estate size is still reported as context, and is now published as the
+  # DENOMINATOR under every stale_hosts finding, which is where a reader can actually use it.
+  stale_hosts:
+    negligible: "A small number of this company's public addresses look abandoned, but they are a tiny fraction of an estate this size — the proportion is low enough to read as normal churn rather than neglect."
+    some: "A noticeable share of the company's public addresses look abandoned — still reachable, but showing no sign of upkeep."
+    many: "A large share of the company's public addresses look abandoned. Forgotten systems stop receiving security updates and are a common way in."
+  # E12 — the estate rates. Every sentence names the DENOMINATOR, because a proportion whose
+  # population is hidden is not a finding a vendor can argue with, and attribution disagreements
+  # ("you counted 340, we operate 40") are already a top-two dispute category.
+  estate_tls_legacy:
+    negligible: "A small number of this company's other public servers still accept an obsolete, insecure version of encryption — a tiny fraction of the addresses we checked, which reads as ordinary lag rather than neglect."
+    some: "A noticeable share of this company's public servers still accept an obsolete, insecure version of encryption. Anyone able to sit between a user and those servers can read the traffic."
+    many: "A large share of this company's public servers still accept an obsolete, insecure version of encryption. That is an estate-wide pattern rather than one overlooked machine."
+  estate_cert_expired:
+    negligible: "A small number of this company's other public servers are presenting an expired security certificate — a tiny fraction of those we checked."
+    some: "A noticeable share of this company's public servers present an expired security certificate. Visitors get a browser warning, and staff learn to click through it."
+    many: "A large share of this company's public servers present an expired security certificate. Certificate renewal is failing across the estate, not on one forgotten machine."
+  weak_issuance:
+    wildcard_sprawl:      "The company relies heavily on catch-all certificates. If one is stolen it can be used against every address it covers."
+    deprecated_ca_or_key: "Some certificates use an authority or key strength that is no longer considered current practice."
+
+  # --- 4. Vendor transparency & governance ------------------------------------------------
+  vd_program:
+    security_txt_only: "The company accepts vulnerability reports but runs no formal programme to encourage or reward them."
+    none:              "The company offers no route for outsiders to report a security flaw, so problems found by researchers may never reach it."
+
+  # --- 5. Business & financial stability --------------------------------------------------
+
+  # --- 6. Compliance & regulatory ---------------------------------------------------------
+  cert_posture:
+    claimed_unverified: "The company states it holds security certifications, but they could not be confirmed against an independent register."
+    claimed_expired:    "The security certifications the company advertises appear to have expired."
+
+  # --- 7. Adverse media & reputation ------------------------------------------------------
+  regulator_action:
+    formal_investigation: "A regulator has formally opened an investigation naming this company. An investigation is not a finding of wrongdoing."
+    enforcement_action:   "A regulator has taken formal enforcement action against this company — a concluded decision, not an allegation."
+
+# -----------------------------------------------------------------------------
+# ACTIONS — what to DO about each deduction, and when to look again.
+#
+# `reasons` answers "so what?". This block answers "now what?" — the half a reader otherwise has
+# to supply themselves, which is exactly the work the product exists to remove. A procurement lead
+# who reads "the certificate has expired" still has to work out whether to sign, what to ask the
+# vendor, and when to re-check. That translation is where an unactioned amber score becomes a
+# signed contract.
+#
+# FOUR KEYS PER PENALISING BAND, each written for a different reader:
+#   action            — the remediation, in the client's own words. An instruction, not homework.
+#   ask_of_vendor     — the exact question, copy-pasteable into an email. Placeholders in <angle
+#                       brackets> are filled from the finding at serve time.
+#   recheck_after     — 7d for a live critical · 30d for hygiene · 90d for historic. It is also
+#                       what a scheduler will read to decide when to re-run (roadmap §4).
+#   accepts_as_refute — what evidence would CLOSE this finding. This is the dispute path's input:
+#                       a vendor cannot contest a score fairly without knowing what would satisfy
+#                       it, and "prove me wrong" is not a specification.
+#
+# ENFORCED LIKE `reasons`: every penalising band must have an entry, and an entry for a band that
+# no longer penalises is a startup failure. Advice that has drifted from the finding it describes
+# is worse than no advice — it is confidently wrong.
+# -----------------------------------------------------------------------------
+actions:
+
+  # --- 1. Cyber hygiene & technical -------------------------------------------------------
+  tls_version:
+    only_tls_12:
+      action: "Enable TLS 1.3 alongside TLS 1.2 at the next maintenance window. No urgency — TLS 1.2 remains safe."
+      ask_of_vendor: "Do you have a timeline for enabling TLS 1.3 on your public endpoints?"
+      recheck_after: 90d
+      accepts_as_refute: "TLS 1.3 observed on the endpoint, or a dated roadmap commitment"
+    weak_ciphers:
+      action: "Ask the vendor to disable the outdated cipher suites their server still accepts."
+      ask_of_vendor: "Your server accepts cipher suites no longer considered strong. Can these be disabled?"
+      recheck_after: 30d
+      accepts_as_refute: "A handshake showing only current cipher suites offered"
+    tls_10_or_11:
+      action: "Ask the vendor to disable TLS 1.0 and 1.1 entirely. Both are obsolete and breakable."
+      ask_of_vendor: "Your endpoint still negotiates TLS 1.0/1.1. When will these be disabled?"
+      recheck_after: 30d
+      accepts_as_refute: "A handshake refusing TLS 1.0 and 1.1"
+  cert_validity:
+    expiring_lt_30d:
+      action: "Confirm the renewal is scheduled. No action needed if automated renewal is in place."
+      ask_of_vendor: "The certificate on <host> expires on <date>. Is renewal automated?"
+      recheck_after: 30d
+      accepts_as_refute: "A renewed certificate observed, or evidence of automated renewal"
+    expiring_lt_14d:
+      action: "Chase the replacement certificate now. Two weeks is inside the window where a missed renewal becomes an outage."
+      ask_of_vendor: "The certificate on <host> expires on <date> and we see no replacement. Is renewal in hand?"
+      recheck_after: 7d
+      accepts_as_refute: "A renewed certificate observed on the host"
+    expired_serving_prod:
+      action: "Do not proceed until resolved. Request the replacement certificate, or written confirmation the host is decommissioned."
+      ask_of_vendor: "The certificate on <host> expired on <date> and is still being served. Is this host still in production?"
+      recheck_after: 7d
+      accepts_as_refute: "A valid certificate observed on the host, or written confirmation of decommissioning"
+  dmarc:
+    p_quarantine:
+      action: "Ask the vendor to move DMARC from p=quarantine to p=reject once they are confident in their sender inventory."
+      ask_of_vendor: "Your DMARC policy is p=quarantine. Do you plan to move to p=reject?"
+      recheck_after: 90d
+      accepts_as_refute: "A DMARC record at p=reject"
+    p_none:
+      action: "Ask the vendor to progress DMARC from monitoring (p=none) to enforcement (p=quarantine, then p=reject)."
+      ask_of_vendor: "Your DMARC policy is p=none, which observes but does not block spoofed mail. What is the timeline to enforcement?"
+      recheck_after: 30d
+      accepts_as_refute: "A DMARC record at p=quarantine or p=reject"
+    absent:
+      action: "Ask the vendor to publish a DMARC record, starting at p=none and progressing to p=reject. This is the standard control against invoice fraud and staff impersonation in their name."
+      ask_of_vendor: "We could not find a DMARC record for your sending domains. Do you publish one? If not, what is the timeline?"
+      recheck_after: 30d
+      accepts_as_refute: "A published DMARC record at p=quarantine or p=reject"
+  spf:
+    softfail_all:
+      action: "Ask the vendor to change the SPF record from ~all (advisory) to -all (reject) once their sender list is confirmed complete."
+      ask_of_vendor: "Your SPF record ends in ~all rather than -all. Is a hard fail planned?"
+      recheck_after: 90d
+      accepts_as_refute: "An SPF record ending in -all"
+    absent:
+      action: "Ask the vendor to publish an SPF record listing their authorised senders."
+      ask_of_vendor: "We could not find an SPF record for your domain. Do you publish one?"
+      recheck_after: 30d
+      accepts_as_refute: "A published SPF record"
+  dkim:
+    absent:
+      action: "Ask the vendor whether outgoing mail is DKIM-signed. Absence here is inconclusive — the selector is not publicly discoverable — so treat this as a question, not a finding."
+      ask_of_vendor: "Is your outbound mail DKIM-signed? If so, which selector should we check?"
+      recheck_after: 90d
+      accepts_as_refute: "A named DKIM selector that resolves, or a signed message header"
+  hsts:
+    absent:
+      action: "Ask the vendor to add a Strict-Transport-Security header. A one-line change at the web server or CDN."
+      ask_of_vendor: "Your site does not send an HSTS header. Is this planned?"
+      recheck_after: 90d
+      accepts_as_refute: "An HSTS header observed on the endpoint"
+  csp:
+    absent:
+      action: "Ask the vendor about their Content-Security-Policy roadmap. Low priority unless the site handles sensitive input."
+      ask_of_vendor: "Your site does not send a Content-Security-Policy header. Is one planned?"
+      recheck_after: 90d
+      accepts_as_refute: "A Content-Security-Policy header observed"
+  x_frame_opts:
+    absent:
+      action: "Ask the vendor to send X-Frame-Options or a CSP frame-ancestors directive to prevent clickjacking."
+      ask_of_vendor: "Your site can be embedded in a frame by any origin. Is framing protection planned?"
+      recheck_after: 90d
+      accepts_as_refute: "X-Frame-Options or CSP frame-ancestors observed"
+  dnssec:
+    misconfigured:
+      action: "Flag to the vendor as a live availability risk: broken DNSSEC can make the domain unreachable for validating resolvers while providing none of the protection."
+      ask_of_vendor: "Your DNSSEC configuration appears broken, which can make your domain unresolvable for some users. Are you aware?"
+      recheck_after: 30d
+      accepts_as_refute: "A validly signed and resolving DNSSEC chain"
+
+  # --- 2. Breach & compromise history -----------------------------------------------------
+  breach_by_data_class:
+    email_only:
+      action: "Ask what changed after the incident. A breach with a documented remediation is a different risk from one without."
+      ask_of_vendor: "Regarding the <date> incident: what controls changed as a result, and were customers notified?"
+      recheck_after: 90d
+      accepts_as_refute: "A post-incident report or evidenced remediation"
+    personal_info:
+      action: "Request the post-incident review and the remediation evidence before signing. Ask specifically what prevents a recurrence."
+      ask_of_vendor: "Regarding the <date> breach of personal information: please share your post-incident review and the controls introduced since."
+      recheck_after: 90d
+      accepts_as_refute: "A post-incident review with evidenced, corroborated remediation"
+    passwords_or_cards:
+      action: "Do not proceed without the post-incident review, evidence of credential rotation, and the controls now in place. This is the most directly exploitable class of exposure there is."
+      ask_of_vendor: "Regarding the <date> breach exposing credentials or payment data: please provide your post-incident review, confirmation of forced credential rotation, and current controls."
+      recheck_after: 90d
+      accepts_as_refute: "A post-incident review plus evidenced credential rotation and control changes"
+  kev_listed_cve:
+    listed:
+      action: "Ask the vendor to confirm the running version and patch status for <cve>. This is a match against the product line, NOT proof this vendor is unpatched — treat it as a question."
+      ask_of_vendor: "<cve> affects <product> and appears on CISA's known-exploited catalogue. Which version are you running, and is it patched?"
+      recheck_after: 7d
+      accepts_as_refute: "Confirmation of a patched version, or evidence the affected component is not deployed"
+  nvd_cve:
+    cvss_medium_or_low:
+      action: "Note only. Confirm the vendor has a patching cadence rather than chasing this specific CVE."
+      ask_of_vendor: "What is your standard remediation SLA for vulnerabilities of moderate severity?"
+      recheck_after: 90d
+      accepts_as_refute: "A documented patching policy, or confirmation the version is not affected"
+    cvss_high:
+      action: "Ask for the patch status of <cve> and the vendor's remediation SLA for high-severity issues."
+      ask_of_vendor: "<cve> is rated high severity against <product>. What is your patch status and SLA?"
+      recheck_after: 30d
+      accepts_as_refute: "Confirmation of a patched version, or evidence the component is not deployed"
+    cvss_critical:
+      action: "Request patch status for <cve> before signing."
+      ask_of_vendor: "<cve> is rated critical against <product>. Please confirm your patch status."
+      recheck_after: 7d
+      accepts_as_refute: "Confirmation of a patched version, or evidence the component is not deployed"
+    probable_exploit:
+      action: "Prioritise <cve>: it is assessed as likely to be exploited in the near term. Request patch status before signing."
+      ask_of_vendor: "<cve> against <product> is assessed as likely to be exploited soon. Please confirm patch status."
+      recheck_after: 7d
+      accepts_as_refute: "Confirmation of a patched version, or evidence the component is not deployed"
+
+  # --- 3. Digital footprint & assets ------------------------------------------------------
+  # `subdomain_estate` actions removed at E6 with its penalties — see the reasons block above.
+  # Every stale_hosts refute now names the DENOMINATOR as well as the count, because the dispute
+  # this phase invites is "you counted 340 hosts, we operate 40" and there was previously no way
+  # for a vendor to file it. Correcting the denominator changes the band, not just the wording.
+  stale_hosts:
+    negligible:
+      action: "Note only. The proportion is low for an estate this size — record it and re-check on the normal cycle rather than raising it with the vendor."
+      ask_of_vendor: "A small number of your public hosts appear unmaintained. Are they still in service?"
+      recheck_after: 90d
+      accepts_as_refute: "Confirmation the hosts are maintained or decommissioned, or a corrected count of your public estate"
+    some:
+      action: "Share the host list and ask whether these are still in use. Forgotten systems stop receiving updates."
+      ask_of_vendor: "These hosts appear unmaintained: <hosts>. Are they still in service, and how many public hosts do you operate in total?"
+      recheck_after: 30d
+      accepts_as_refute: "Confirmation the hosts are maintained or decommissioned, or a corrected count of your public estate"
+    many:
+      action: "Raise as a systemic asset-management concern, not a list of individual hosts. A large share of abandoned addresses points at a process gap."
+      ask_of_vendor: "A large share of your public hosts appear unmaintained. What is your decommissioning process, and how many public hosts do you operate in total?"
+      recheck_after: 30d
+      accepts_as_refute: "A documented decommissioning process plus evidence of cleanup, or a corrected count of your public estate"
+  # E12 — the estate rates. Every refute names the SAMPLING RULE as well as the count, because the
+  # dispute this phase invites is "you probed the wrong hosts" and a vendor must be able to file
+  # it. Correcting the denominator or the sample changes the band, not just the wording.
+  estate_tls_legacy:
+    negligible:
+      action: "Note only. A small proportion of an estate this size reads as ordinary lag — record it and re-check on the normal cycle."
+      ask_of_vendor: "A small number of your public hosts still accept TLS 1.0/1.1. Are these in service, and is legacy TLS deliberate for them?"
+      recheck_after: 90d
+      accepts_as_refute: "Confirmation the hosts are decommissioned or that legacy TLS is required for a named legacy integration, or a corrected list of your public hosts"
+    some:
+      action: "Share the host list and ask for a disablement date. Legacy TLS on a public host is readable by anyone positioned between it and its users."
+      ask_of_vendor: "These hosts accept TLS 1.0/1.1: <hosts>. When will legacy TLS be disabled, and how many public hosts do you operate?"
+      recheck_after: 30d
+      accepts_as_refute: "Evidence legacy TLS is disabled, a dated remediation plan, or a corrected list of your public hosts"
+    many:
+      action: "Raise as an estate-wide configuration gap rather than a list of hosts. This proportion points at a standard build that still permits legacy TLS."
+      ask_of_vendor: "A large share of your public hosts accept TLS 1.0/1.1. What is your TLS baseline, and how is it enforced on new hosts?"
+      recheck_after: 7d
+      accepts_as_refute: "A documented TLS baseline with evidence of enforcement, or a corrected list of your public hosts"
+  estate_cert_expired:
+    negligible:
+      action: "Note only. Record it and re-check on the normal cycle."
+      ask_of_vendor: "A small number of your public hosts present an expired certificate. Are they still in service?"
+      recheck_after: 90d
+      accepts_as_refute: "Confirmation the hosts are decommissioned or renewed, or a corrected list of your public hosts"
+    some:
+      action: "Ask for the renewal process. Users who are trained to click through certificate warnings will click through a real one."
+      ask_of_vendor: "These hosts serve expired certificates: <hosts>. How is certificate renewal monitored across your estate?"
+      recheck_after: 30d
+      accepts_as_refute: "Evidence of renewal plus a monitoring/alerting process, or a corrected list of your public hosts"
+    many:
+      action: "Raise as a failed renewal process, not a list of certificates. At this proportion the automation is either absent or not alerting."
+      ask_of_vendor: "A large share of your public hosts serve expired certificates. What monitors certificate expiry, and who is alerted?"
+      recheck_after: 7d
+      accepts_as_refute: "A documented renewal and alerting process with evidence it fired, or a corrected list of your public hosts"
+  weak_issuance:
+    wildcard_sprawl:
+      action: "Ask whether wildcard certificate use is deliberate and how the private keys are protected."
+      ask_of_vendor: "You rely heavily on wildcard certificates. How are those private keys stored and rotated?"
+      recheck_after: 90d
+      accepts_as_refute: "Evidence of key protection (HSM/managed store) or a move to per-host certificates"
+    deprecated_ca_or_key:
+      action: "Ask the vendor to reissue certificates using current key strengths and a current authority."
+      ask_of_vendor: "Some of your certificates use deprecated key strength or authority. Is reissuance planned?"
+      recheck_after: 30d
+      accepts_as_refute: "Certificates observed with current key strength and authority"
+
+  # --- 4. Vendor transparency & governance ------------------------------------------------
+  vd_program:
+    security_txt_only:
+      action: "Note only. Ask whether a formal vulnerability disclosure programme is planned."
+      ask_of_vendor: "Do you operate a formal vulnerability disclosure or bug bounty programme?"
+      recheck_after: 90d
+      accepts_as_refute: "A published disclosure policy or bounty programme"
+    none:
+      action: "Ask how outside researchers report vulnerabilities. Without a route, problems found externally may never reach them."
+      ask_of_vendor: "How should an external researcher report a vulnerability in your products?"
+      recheck_after: 90d
+      accepts_as_refute: "A published disclosure route"
+
+  # --- 5. Business & financial stability --------------------------------------------------
+
+  # --- 6. Compliance & regulatory ---------------------------------------------------------
+  cert_posture:
+    claimed_unverified:
+      action: "Request the certificate itself, or the auditor and registry entry, so the claim can be checked independently."
+      ask_of_vendor: "Please provide your ISO 27001 certificate or SOC 2 report, including the certification body and scope."
+      recheck_after: 90d
+      accepts_as_refute: "A certificate or audit report verifiable against an independent register"
+    claimed_expired:
+      action: "Request the current certificate — the one advertised appears to have expired."
+      ask_of_vendor: "The certification shown on your site appears expired. Please provide the current certificate and its expiry."
+      recheck_after: 30d
+      accepts_as_refute: "A current, in-date certificate"
+
+  # --- 7. Adverse media & reputation ------------------------------------------------------
+  regulator_action:
+    formal_investigation:
+      action: "Ask the vendor for their account and current status. An investigation is not a finding of wrongdoing, and should not be treated as one."
+      ask_of_vendor: "We noted a regulatory investigation naming your company. Could you share the current status and your position?"
+      recheck_after: 90d
+      accepts_as_refute: "Evidence the investigation closed without adverse finding"
+    enforcement_action:
+      action: "Request the outcome, the remediation undertaken, and current compliance status. This is a concluded decision, not an allegation."
+      ask_of_vendor: "Regarding the regulatory enforcement action of <date>: what remediation was undertaken, and what is your current compliance status?"
+      recheck_after: 90d
+      accepts_as_refute: "Evidence of completed remediation and current compliance"
+# -----------------------------------------------------------------------------
+# INDUSTRY PROFILES — REMOVED at E1.
+#
+# This block promoted a severity by one step where a sector profile cited a named instrument.
+# The discipline around it was careful (promotion-only, one step, capped, anchored) but the
+# mechanism is the one the research rejects: dynamic severity adjustment. The same evidence
+# scored differently depending on a label we assigned, which destroys cross-vendor
+# comparability — and it put this file in direct contradiction with benchmarks.yaml, which
+# states that interpretation lives in benchmarking and never in the arithmetic.
+#
+# THE SECTOR OBLIGATION IS REAL AND SURVIVES. It becomes a Compliance Gap FINDING (E9c):
+# where a vendor is BOUND BY a framework and observed failing a control in it, emit a cited
+# finding about the reliability of their compliance position — not a heavier penalty on the
+# observation. Both `basis:` strings are preserved verbatim in
+# docs/compliance-gap-frameworks.md.
+#
+# Sector still reaches two places, legitimately: cohort assignment, and the Compliance Gap.
+# Neither changes what an observation is worth.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# COUNT BANDS — footprint counts bucketed into plain bands (NOT a log curve).
+# -----------------------------------------------------------------------------
+count_bands:
+  subdomain_estate: { small: 10, medium: 100 }   # <=10 small, <=100 medium, else large
+  # `stale_hosts` left this block at E6. Banding it on a raw count is the defect E6 exists to fix:
+  # 9 abandoned hosts read as `many` whether the vendor operates 20 hosts or 900. It is banded on
+  # the exposure index now — see `exposure:` below.
+  #
+  # subdomain_estate KEEPS its count bands even though none of them penalise any more. The band is
+  # still published as context ("a large estate, well kept" is a different sentence from "a small
+  # estate, well kept"), and the raw count behind it is the denominator.
+
+# -----------------------------------------------------------------------------
+# CRITICAL CEILING — non-compensatory. A directly-observed CURRENT critical caps the posture
+# so one severe live issue cannot be averaged away (our knockout, re-expressed for a posture
+# scale). Only signals we observe as CURRENT auto-apply; a coarse CVE name-match penalises but
+# does not ceiling (it proves "product line had a KEV CVE", not "unpatched here").
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# EXPOSURE (E6) — a failure RATE, not a failure COUNT.
+#
+# Before this block, `stale_hosts` banded on the raw number of abandoned hosts. A vendor with 4
+# public hosts and 2 abandoned ones paid 8; a vendor with 900 hosts and 9 abandoned ones paid 20.
+# The second runs a fifty-times tidier estate and paid two and a half times more, because the
+# model was measuring SIZE and calling it risk. docs/discrimination-analysis.md shows the
+# consequence: `stale_hosts` and `subdomain_estate` penalise 100% of real corpus vendors, and a
+# penalty nobody escapes ranks nobody.
+#
+#     r̂ = (f + alpha) / (D + alpha + beta)          prior-corrected share of the estate
+#     g  = lambda * r̂ + (1 - lambda) * min(1, f/kappa)
+#
+# The arithmetic and the reasoning behind each parameter: app/scoring/exposure.py.
+#
+# ENABLED IS A REAL SWITCH. Set `enabled: false` and every exposure signal falls back to its
+# `count_bands` entry, which is why stale_hosts' old count bands are preserved in `fallback_count_
+# bands` rather than deleted. A revert is one line, as E6's exit criteria require.
+# -----------------------------------------------------------------------------
+exposure:
+  enabled: true
+  signals:
+    stale_hosts:
+      # Where the denominator comes from. Resolved from the SIBLING finding's raw count, not from
+      # a field on the stale_hosts finding itself — the five frozen fixtures were captured before
+      # E6 and carry no `denominator` key, and re-capturing evidence to satisfy a config change is
+      # exactly what a frozen corpus exists to prevent. A `denominator` in the finding's own value
+      # wins when a collector supplies one.
+      denominator_signal: subdomain_estate
+
+      # alpha + beta = 10: believe a vendor's own rate after about ten observed hosts. Prior mean
+      # alpha/(alpha+beta) = 5%. This is what stops 1-of-1 reading as a 100% failure rate — it
+      # lands at 10%, which is "one observation", not "everything is broken".
+      alpha: 0.5
+      beta: 9.5
+
+      # 70% proportional, 30% absolute. Rate alone would let a large vendor dilute 60 abandoned
+      # hosts down to 6.6% and read as fine; 60 abandoned hosts is 60 ways in whatever the total.
+      lambda: 0.7
+      kappa: 50          # the count at which the absolute term saturates
+
+      # f = 0 short-circuits to `zero_band` before any of this runs. With a prior, zero failures
+      # still yields a small positive rate, and charging a vendor for a finding of ZERO is the
+      # fastest way to lose their trust in every other number on the page.
+      zero_band: none
+      bands:
+        negligible: 0.0     # any failures at all, but a low share of a large estate
+        some:       0.05
+        many:       0.12
+
+      # Used only when `enabled: false`. Kept so the switch is genuinely reversible.
+      fallback_count_bands: { none: 0, some: 5 }
+
+    # E12 — THE FAN-OUT'S OUTPUT, and the reason E6 was built before E12 rather than after.
+    #
+    # The mechanism is unchanged: a count over a denominator, banded on the RATE. What changes is
+    # where the denominator comes from — the collector supplies it directly (`reached`, the hosts
+    # it actually connected to), so there is no `denominator_signal` and no sibling lookup. That
+    # is the case `_denominator_for` already handles first.
+    #
+    # `reached`, NOT `sampled`. A host we could not connect to is not a host that passed and not a
+    # host that failed; it leaves the denominator entirely, exactly as an unchecked signal leaves
+    # coverage. Publishing "8 of 340" when 290 of those never answered would claim 290
+    # observations we never made.
+    estate_tls_legacy:
+      alpha: 0.5
+      beta: 9.5
+      lambda: 0.7
+      # Lower than stale_hosts' 50: an abandoned DNS name is untidy, a live host speaking TLS 1.0
+      # is a readable channel. Twenty of them is already an estate-wide answer, so the absolute
+      # term saturates sooner.
+      kappa: 20
+      zero_band: none
+      bands:
+        negligible: 0.0
+        some:       0.05
+        many:       0.12
+      fallback_count_bands: { none: 0, some: 3 }
+
+    estate_cert_expired:
+      alpha: 0.5
+      beta: 9.5
+      lambda: 0.7
+      kappa: 20
+      zero_band: none
+      bands:
+        negligible: 0.0
+        some:       0.05
+        many:       0.12
+      fallback_count_bands: { none: 0, some: 3 }
+
+critical_ceiling:
+  ceiling_score: 49                     # cannot be published above the top of Grade D
+  auto_signals: [cert_validity]         # expired production cert, seen live
+  requires_confirmation: [kev_listed_cve, breach_by_data_class]
+
+  # ---------------------------------------------------------------------------
+  # E12 INTERACTION, DECIDED IN ADVANCE BECAUSE IT IS EASY TO BREAK SILENTLY.
+  #
+  # `cert_validity` is simultaneously the only `auto_signals` entry and the only `never_decays`
+  # signal. Today it is one handshake against the apex, so "expired" is unambiguous: THE site is
+  # serving an expired certificate. The moment E12 fans out to N hosts it becomes a RATE, and the
+  # ceiling has to arm off something — at which point there are two wrong answers available and
+  # both look reasonable in a diff:
+  #
+  #   ANY host expired  -> a 400-host estate almost certainly has one abandoned staging box with a
+  #                        dead cert. Every large vendor is instantly capped at 49, the ceiling
+  #                        fires constantly, and a non-compensatory knockout that fires constantly
+  #                        stops being read at all. That is worse than not having it.
+  #   A RATE threshold  -> makes the most severe response in the model a tunable percentage, and
+  #                        invites the argument "3% of hosts is acceptable". It is not an argument
+  #                        anyone should be having about a knockout.
+  #
+  # DECISION: THE APEX, SPECIFICALLY. The ceiling arms only when the certificate on the apex host
+  # is expired — which preserves today's semantics EXACTLY through the fan-out, keeps the knockout
+  # rare and legible, and leaves the abandoned-staging-box problem to `stale_hosts`, which is a
+  # rate signal and is where a rate belongs.
+  #
+  # Enforced now rather than at E12 so the fan-out cannot quietly widen it: the field is read by
+  # the engine today (it is trivially true at N=1) and a collector that starts emitting per-host
+  # findings must set `host_role: apex` for the ceiling to arm at all.
+  # ---------------------------------------------------------------------------
+  auto_signal_scope:
+    cert_validity:
+      host_role: apex
+      basis: >-
+        A knockout must stay rare and legible. Arming on ANY host in a fanned-out estate would cap
+        every large vendor at 49 on one abandoned staging certificate, and a non-compensatory
+        response that fires constantly is one nobody reads. Estate-wide certificate decay is
+        already measured as a RATE by stale_hosts.
+
+# -----------------------------------------------------------------------------
+# GATES — emit NOTHING (BLOCK), before scoring. Sanctions is never a grade (s16(7)).
+# -----------------------------------------------------------------------------
+# A GATE IS NOT A LOW SCORE. It emits NO posture and NO grade and routes the record to a human.
+# The distinction is the whole point: a vendor with an actively-exploited internet-facing
+# vulnerability publishing 60 clears a ">= 50" procurement threshold and gets onboarded by a rule
+# nobody re-read. A blocked record cannot be cleared by arithmetic.
+#
+# E8 generalised these from two inline branches in the engine into a config-driven pass. EVERY
+# gate must carry a `basis` — a named legal, registry or standards ground — enforced at load. That
+# is the validation discipline `industry_profiles` had, which was right even though its mechanism
+# was wrong: a rule that stops a company being onboarded needs a reason someone can be shown.
+#
+# `enabled: false` gates are DECLARED, NOT LIVE. They are here rather than in a backlog because
+# the honest reason they are off is about our EVIDENCE, not about whether the rule is right, and
+# that reason belongs next to the rule.
+# -----------------------------------------------------------------------------
+# ASSURITY (E9a) — the THIRD axis: how much independent assurance does this vendor have?
+#
+# WHY IT IS NOT PART OF POSTURE. A vendor with no certifications does not have bad security; they
+# have unevidenced security. Those are different statements and the model has been conflating them
+# by charging for absence. E2 stopped the charging; E9a is where the positive half lands.
+#
+#     Assurity = 100 * sigmoid( A0 + SUM_j credit_j - SUM_k gamma_k * ComplianceGap_k )
+#
+# ABSENCE NEVER SUBTRACTS. There is no negative `credit` and the loader rejects one. A vendor with
+# nothing observable sits at the intercept, which is deliberately LOW rather than zero: unevidenced
+# is not disproved. Only a COMPLIANCE GAP subtracts, and a gap is not an absence — it is a vendor
+# asserting a framework and being observed failing one of its controls, which is a statement about
+# the reliability of their own claims (E9c).
+#
+# THE SIGMOID IS THE POINT. It bounds the axis without a floor or a ceiling cliff, so the
+# twentieth certification cannot buy what the second did, and no vendor is ever pinned at 0 or 100.
+# -----------------------------------------------------------------------------
+assurity:
+  enabled: true
+  intercept: -1.2            # ~23/100 with no observable assurance. Unevidenced, not disproved.
+  scale: 1.0                 # sigmoid steepness
+  min_observed_signals: 3    # below this, publish NOTHING — same discipline as targets.min_controls
+
+  # E9b: POSITIVE CREDIT for the signals E2 and E3 parked at `informational`.
+  #
+  # This is the other half of E2's argument, and it was always the honest half. E2 said "not doing
+  # what almost nobody does is not a failing" and set those bands to zero. It could not say "and
+  # doing it IS a distinction", because the engine had no bonus path — `penalty_for` returns 0 or
+  # positive, never negative. Assurity is that path, and it lives on its own axis so that credit
+  # for a trust page can never buy back points lost to an expired certificate.
+  credit:
+    cert_posture:
+      registry_corroborated: 1.4   # an independently VERIFIABLE certification: the strongest signal here
+      claimed_unverified:    0.2   # a claim we could not corroborate is worth something, not much
+    reporting_posture:
+      substantive:           0.9   # a real security report, not a landing page
+      partial:               0.3
+    program_disclosure:
+      detailed_policies:     0.6
+      marketing_only:        0.1
+    vd_program:
+      bug_bounty:            0.8   # a funded programme is evidence of an operating security function
+      security_txt_only:     0.3
+    contactability:
+      dpo_and_security_contact: 0.4
+      partial:               0.1
+    security_txt:
+      present:               0.2
+    dnssec:
+      valid:                 0.3   # E2 stopped charging for its absence; this credits its presence
+    caa:
+      present:               0.2
+
+  # gamma — what a Compliance Gap costs on this axis. A vendor who ASSERTS ISO 27001 and fails a
+  # control within its scope has a claim-reliability problem, and that is the one thing on this
+  # axis that may subtract.
+  gamma: 0.8
+
+# -----------------------------------------------------------------------------
+# COMPLIANCE FRAMEWORKS (E9c) — where E1's deleted sector expectation lands.
+#
+# E1 removed `industry_profiles`, which promoted a severity by one step when a sector cited a named
+# instrument. The mechanism was wrong: it made the same evidence score differently because of a
+# label we assigned, destroying comparability. THE OBLIGATION WAS NEVER WRONG.
+#
+# The difference, stated once:
+#     "This DMARC finding is worth more points."         <- an opinion wearing a number
+#     "Vendor is APRA-regulated and publishes no DMARC   <- disputable, citable, actionable
+#      record; CPS 234 requires controls commensurate
+#      with the threat."
+#
+# A Compliance Gap NEVER touches Posture. It is a finding about the reliability of a vendor's own
+# compliance position, and it is high-signal precisely because the way to game it is to drop the
+# claim — which is itself informative.
+#
+# BOUND-BY vs ASSERTED. A framework applies either because the client told us the vendor is subject
+# to it (`sector`, client-supplied, never inferred) or because the vendor CLAIMS it (an observed
+# certification). Both are recorded on the finding, because they carry different weight in a
+# conversation: one is a legal obligation, the other is the vendor's own marketing.
+#
+# Verbatim `basis:` strings preserved from the deleted industry_profiles block —
+# docs/compliance-gap-frameworks.md.
+#
+# WHICH CERTIFICATION, NOT MERELY THAT THERE IS ONE. `cert_posture` bands say `claimed_unverified`
+# — they do not say WHICH standard was claimed. So every `asserted_by` block must also name
+# `claim_contains`, matched against what the trust-page collector actually read. Without it a
+# vendor claiming only SOC 2 was published as asserting ISO 27001, which is us putting a claim in
+# their mouth and then finding them short against it. The loader refuses an `asserted_by` without
+# it.
+#
+# APPLIES_TO_SECTORS USES THE CONTROLLED VOCABULARY (app/sectors.py), which is benchmarking's
+# `sector_groups` partition and not a second list. `banking` and `superannuation` used to appear
+# here and are not sectors this system knows: a client typing "banking" got the APRA framework and
+# no peer cohort, one typing `financial_services` got both. Client spellings are handled by the
+# alias table, not by widening this list.
+#
+# ⚠️ COVERAGE IS PARTIAL AND THE ABSENCE OF A GAP IS WEAK EVIDENCE. Nine frameworks are declared,
+# eight assessed. Four are sector-bound — financial services and insurance (CPS 234, CPS 230),
+# healthcare (APP 11), and the SOCI Act's utilities and telecommunications. A vendor in retail,
+# education, professional services, manufacturing, logistics, agriculture, construction, mining,
+# hospitality, media or technology is bound by nothing modelled here and will show no gaps
+# whatever their compliance position. That caveat is emitted on EVERY report, not left to this
+# comment.
+#
+# MATURITY-MODEL FRAMEWORKS DO NOT FIT THIS SCHEMA. `failing_bands` expresses pass/fail and nothing
+# else, so a levelled standard (Essential Eight ML0-ML3, AESCSF SP-1 to SP-3) cannot be modelled
+# here without publishing a more confident claim than the instrument makes. Essential Eight is
+# therefore DECLARED AND OFF with its reason recorded below; AESCSF is not modelled at all because
+# SOCI's CIRMP obligation already covers the same entities.
+#
+# Expansion is a RESEARCH task with legal review, not a config edit, because every `basis` must
+# name a real dated instrument and the loader enforces it — a plausible expectation with an
+# official-looking citation is exactly what industry_profiles was.
+#
+# Roadmap and remaining candidates: docs/e9c-framework-roadmap.md
+# -----------------------------------------------------------------------------
+compliance_frameworks:
+  # CPS 234 and CPS 230 SHIP SEPARATELY, and the split is not cosmetic. They are two prudential
+  # standards with different subject matter (information security vs operational risk and service
+  # provider management), different commencement dates, and — the operative point for a TPRM
+  # product — CPS 230 is the one that speaks directly about MATERIAL SERVICE PROVIDERS, which is
+  # what a vendor being assessed here actually is. Reporting "APRA CPS 234 / CPS 230" as one row
+  # made it impossible for a reader to tell which obligation a gap sat under, and impossible for
+  # the vendor to dispute one without arguing about the other.
+  apra_cps_234:
+    name: "APRA CPS 234 Information Security"
+    applies_to_sectors: [financial_services, insurance]
+    basis: >-
+      APRA Prudential Standard CPS 234 Information Security, effective 1 July 2019 — paragraphs
+      15 (information security capability commensurate with vulnerabilities and threats), 21
+      (implementation of controls) and 27 (testing of control effectiveness). Mandatory for all
+      APRA-regulated entities.
+    controls:
+      dmarc:
+        failing_bands: [absent, p_none]
+        expectation: >-
+          CPS 234 ¶15 requires information security capability commensurate with the threat.
+          Business email compromise is the dominant fraud loss in this sector and spoofable email
+          is its opening move.
+      spf:
+        failing_bands: [absent]
+        expectation: "CPS 234 ¶21 — same mechanism as DMARC: the domain can be impersonated."
+      cert_posture:
+        failing_bands: [none_claimed]
+        expectation: >-
+          CPS 234 ¶27 requires systematic testing of control effectiveness. No independent audit at
+          all is a materially different position for a regulated entity than an untested one.
+      tls_version:
+        failing_bands: [tls_10_or_11, weak_ciphers]
+        expectation: >-
+          CPS 234 ¶21 requires controls commensurate with the threat to information assets.
+          Protocol versions withdrawn from every major browser are below that line.
+
+  apra_cps_230:
+    name: "APRA CPS 230 Operational Risk Management"
+    applies_to_sectors: [financial_services, insurance]
+    basis: >-
+      APRA Prudential Standard CPS 230 Operational Risk Management, in force 1 July 2026 —
+      paragraphs 34-35 (critical operations and tolerance levels), 48 (service provider risk,
+      including identification of material service providers) and 50 (ongoing monitoring of
+      material service providers). This is the standard under which a regulated buyer is required
+      to assess the vendor being scored here.
+    controls:
+      contactability:
+        failing_bands: [none_published]
+        expectation: >-
+          CPS 230 ¶50 requires ongoing monitoring of material service providers and the ability to
+          manage a disruption with them. An unreachable operator is a continuity problem, not a
+          courtesy gap.
+      reporting_posture:
+        failing_bands: [none]
+        expectation: >-
+          CPS 230 ¶48 requires the regulated entity to assess a material service provider's risk
+          management. A provider publishing nothing at all leaves that assessment with no
+          externally available input.
+      entity_status:
+        failing_bands: [entity_inactive, registration_lapsed]
+        expectation: >-
+          CPS 230 ¶34-35 requires critical operations to be maintained within tolerance. A
+          material service provider whose corporate registration has lapsed is a going-concern
+          question the standard requires the buyer to have an answer to.
+
+  privacy_act_health:
+    name: "Privacy Act APP 11 / My Health Records Act"
+    applies_to_sectors: [healthcare]
+    basis: >-
+      Privacy Act 1988 APP 11 (security of personal information) · My Health Records Act 2012 ·
+      OAIC Notifiable Data Breaches CY2025 — health providers were 19% of all notifications, the
+      largest single sector
+    controls:
+      breach_by_data_class:
+        failing_bands: [personal_info, passwords_or_cards]
+        expectation: >-
+          APP 11 requires reasonable steps to protect personal information. Health data is the most
+          sensitive class most vendors hold and the OAIC's own figures put this sector first for
+          notified breaches.
+      dmarc:
+        failing_bands: [absent, p_none]
+        expectation: "APP 11 — a spoofable domain is a route to the personal information it holds."
+      reporting_posture:
+        failing_bands: [none]
+        expectation: "APP 11 / My Health Records Act reporting expectations."
+
+  # ---------------------------------------------------------------------------
+  # SOCI Act — SHIPPED FOR TWO SECTORS ONLY, AND THE LIMIT IS THE POINT.
+  #
+  # The Act binds RESPONSIBLE ENTITIES FOR DECLARED CRITICAL INFRASTRUCTURE ASSETS, which is an
+  # entity-level fact, not an industry. Eleven asset classes are covered, and for most of them the
+  # sector is a poor proxy: "data storage or processing" is a narrow subset of `technology`, "food
+  # and grocery" a narrow subset of `retail`, "transport" a subset of `logistics`. Applying CIRMP
+  # to every technology vendor because SOME technology vendors are critical infrastructure is
+  # precisely the industry_profiles error — our label, published as their legal obligation.
+  #
+  # For electricity, gas, water and telecommunications the mapping is close to total: essentially
+  # every entity operating in those sectors operates a covered asset. Those two canonical sectors
+  # ship. The rest wait for a client-supplied `critical_infrastructure_asset` flag, which is a new
+  # intake field and therefore a scoped change, not a config edit. Recorded in the roadmap.
+  # ---------------------------------------------------------------------------
+  soci_critical_infrastructure:
+    name: "SOCI Act 2018 — Critical Infrastructure Risk Management Program"
+    applies_to_sectors: [utilities, telecommunications]
+    basis: >-
+      Security of Critical Infrastructure Act 2018 (Cth) Part 2A · Security of Critical
+      Infrastructure (Critical infrastructure risk management program) Rules 2023 s8 — a
+      responsible entity must adopt and maintain a written CIRMP addressing the cyber and
+      information security hazard, and must comply with one of the frameworks listed in the Rules
+      (Essential Eight ML1, ISO/IEC 27001, NIST CSF, AESCSF or an equivalent).
+    controls:
+      cert_posture:
+        failing_bands: [none_claimed]
+        expectation: >-
+          The CIRMP Rules require the responsible entity to comply with one of a NAMED LIST of
+          cyber security frameworks. No externally evidenced framework adoption at all is a
+          question to put to the entity — the Rules name the standards, so this is not our opinion
+          about what good looks like.
+      reporting_posture:
+        failing_bands: [none]
+        expectation: >-
+          Part 2A carries annual reporting obligations to the Cyber and Infrastructure Security
+          Centre, approved by the board. An entity publishing nothing about its security programme
+          is not evidence of non-compliance, but it is the first thing to ask for.
+
+  iso_27001_asserted:
+    name: "ISO/IEC 27001:2022"
+    # No sector: this framework applies because the VENDOR CLAIMS IT, not because a regulator
+    # imposes it. That is the claim-reliability case, and it is the strongest form of this finding
+    # — the vendor chose the standard they are being measured against.
+    applies_to_sectors: []
+    asserted_by:
+      signal: cert_posture
+      bands: [registry_corroborated, claimed_unverified, claimed_expired]
+      # WHICH standard, read off the trust page. Without this the band alone matches, and every
+      # asserted framework fires for every vendor claiming any certification at all.
+      claim_contains: ["ISO 27001", "ISO/IEC 27001"]
+    basis: >-
+      ISO/IEC 27001:2022 Annex A — A.8.23 (web filtering), A.8.24 (cryptography), A.5.14
+      (information transfer). A vendor asserting certification is asserting these controls.
+    controls:
+      tls_version:
+        failing_bands: [tls_10_or_11, weak_ciphers]
+        expectation: >-
+          A.8.24 requires rules for the effective use of cryptography. Negotiating TLS 1.0/1.1 in
+          2026 is not consistent with a current certification against this standard.
+      cert_validity:
+        failing_bands: [expired_serving_prod]
+        expectation: >-
+          A.5.14 / A.8.24 — an expired production certificate on a certified estate evidences the
+          absence of the lifecycle management the certification asserts.
+      dmarc:
+        failing_bands: [absent]
+        expectation: "A.5.14 information transfer — anti-spoofing controls on the sending domain."
+
+  # ---------------------------------------------------------------------------
+  # PCI DSS — the roadmap's recommended next framework, and the reason is observability.
+  #
+  # Requirement 4.2.1 names the control in terms an outside observer can actually check: strong
+  # cryptography on public networks, with TLS 1.0 sunset on 30 June 2018 by v3.2.1 and the position
+  # carried into v4.0. Every other framework here is inferential at the edges; this one is not, so
+  # its gap findings are concrete and a vendor can be shown exactly which requirement and which
+  # handshake.
+  #
+  # DELIBERATELY NARROW. Requirements 6.3.3 (patch known vulnerabilities), 11.3 (scanning) and
+  # 12.10 (incident response) are all in scope for a real assessment and NONE is externally
+  # observable by this system. `kev_listed_cve` looks like a match for 6.3.3 and is not: it is a
+  # keyword match against a product line, and E8 refused to gate on it for that reason. A published
+  # compliance finding built on a product-name match is very nearly as damaging as a gate, so it is
+  # excluded here on the same evidence, not on a different policy.
+  # ---------------------------------------------------------------------------
+  pci_dss_asserted:
+    name: "PCI DSS v4.0"
+    applies_to_sectors: []
+    asserted_by:
+      signal: cert_posture
+      bands: [registry_corroborated, claimed_unverified, claimed_expired]
+      claim_contains: ["PCI DSS", "PCI-DSS"]
+    basis: >-
+      PCI DSS v4.0 Requirement 4.2.1 — strong cryptography and security protocols for cardholder
+      data transmitted over open, public networks. TLS 1.0 was sunset for compliance purposes on
+      30 June 2018 (PCI DSS v3.2.1 Appendix A2) and v4.0 carries the position forward.
+    controls:
+      tls_version:
+        failing_bands: [tls_10_or_11, weak_ciphers]
+        expectation: >-
+          Requirement 4.2.1 requires strong cryptography on public networks. TLS 1.0/1.1 has been
+          outside the standard since 30 June 2018, so negotiating it is inconsistent with a current
+          attestation of compliance covering this host.
+      cert_validity:
+        failing_bands: [expired_serving_prod]
+        expectation: >-
+          Requirement 4.2.1.1 requires an inventory of trusted keys and certificates and confirms
+          that certificates used for public transmission are valid. An expired certificate serving
+          production contradicts the attestation directly.
+
+  # ---------------------------------------------------------------------------
+  # SOC 2 — the most-claimed assurance artefact in SaaS procurement, and the most over-claimed.
+  #
+  # It is a REPORT ON CONTROLS THE VENDOR SELECTED, not a certification against a fixed list, so
+  # the expectations below are tied to Common Criteria that every SOC 2 report must cover, never to
+  # the vendor's own control descriptions — which we cannot see and must not guess at.
+  # ---------------------------------------------------------------------------
+  soc2_asserted:
+    name: "SOC 2 (AICPA Trust Services Criteria)"
+    applies_to_sectors: []
+    asserted_by:
+      signal: cert_posture
+      bands: [registry_corroborated, claimed_unverified, claimed_expired]
+      claim_contains: ["SOC 2", "SOC2", "SOC II"]
+    basis: >-
+      AICPA Trust Services Criteria (2017, revised 2022) — CC6.7 (transmission and disposal of
+      information is protected), CC6.1 (logical access security over protected information assets)
+      and CC2.3 (communication with external parties about matters affecting internal control).
+    controls:
+      tls_version:
+        failing_bands: [tls_10_or_11, weak_ciphers]
+        expectation: >-
+          CC6.7 requires that information in transit is protected. A SOC 2 report covering this
+          period asserts that control was operating; a TLS 1.0/1.1 handshake on a public endpoint
+          is a question about the report's scope or its testing.
+      cert_validity:
+        failing_bands: [expired_serving_prod]
+        expectation: >-
+          CC6.1 / CC6.7 — an expired certificate serving production evidences an absent key and
+          certificate lifecycle control, which a Type II report asserts operated over the period.
+      contactability:
+        failing_bands: [none_published]
+        expectation: >-
+          CC2.3 requires communication with external parties on matters affecting internal control.
+          No published security or privacy contact leaves a customer no route to raise one.
+
+  # ---------------------------------------------------------------------------
+  # ISO/IEC 27017 + 27018 — the cloud and PII extensions, read TOGETHER on purpose.
+  #
+  # They are separate standards but they are claimed as a pair, apply to the same control surface,
+  # and share every externally observable control. Two config entries would emit two gaps for one
+  # observation and one conversation, which is the duplicate-gap problem the roadmap flagged —
+  # avoided here by not creating it.
+  # ---------------------------------------------------------------------------
+  iso_27017_27018_asserted:
+    name: "ISO/IEC 27017 / 27018 (cloud services and cloud PII)"
+    applies_to_sectors: []
+    asserted_by:
+      signal: cert_posture
+      bands: [registry_corroborated, claimed_unverified, claimed_expired]
+      claim_contains: ["ISO 27017", "ISO 27018", "ISO/IEC 27017", "ISO/IEC 27018"]
+    basis: >-
+      ISO/IEC 27017:2015 (code of practice for information security controls for cloud services)
+      CLD.13.1.4 and 10.1.1 · ISO/IEC 27018:2019 (protection of PII in public clouds acting as PII
+      processors) A.10.1 — cryptographic controls for PII transmitted over public networks.
+    controls:
+      tls_version:
+        failing_bands: [tls_10_or_11, weak_ciphers]
+        expectation: >-
+          27017 CLD.10.1.1 and 27018 A.10.1 both require cryptographic controls appropriate to
+          cloud-hosted customer data and PII in transit. A vendor claiming the cloud extensions is
+          claiming exactly this control on exactly this surface.
+      cert_validity:
+        failing_bands: [expired_serving_prod]
+        expectation: >-
+          27017 CLD.13.1.4 — the cloud service provider's responsibility for the security of the
+          service it operates includes the certificate lifecycle on the endpoints it publishes.
+      dnssec:
+        failing_bands: [misconfigured]
+        expectation: >-
+          A misconfigured DNSSEC chain on a cloud service's own domain is a live availability and
+          integrity defect on the service boundary 27017 makes the provider responsible for.
+
+  # ---------------------------------------------------------------------------
+  # ESSENTIAL EIGHT — DECLARED AND OFF. The reason is evidence, not policy, and it is recorded
+  # here rather than left as an omission so the research is not repeated and switching it on is a
+  # one-line change once the input exists.
+  #
+  # TWO INDEPENDENT BLOCKERS, either of which alone would be enough:
+  #
+  #   1. IT IS A MATURITY MODEL. The Eight are levelled ML0-ML3; `failing_bands` can express
+  #      pass/fail and nothing else. Publishing "fails Essential Eight" against a standard that
+  #      has no pass/fail is a more confident claim than the instrument itself makes.
+  #   2. ALMOST NOTHING IN IT IS EXTERNALLY OBSERVABLE. Application control, macro settings,
+  #      admin privilege restriction, MFA and backups are all INTERNAL controls. The one strategy
+  #      that touches internet-facing services is "patch applications", and our evidence for it is
+  #      `kev_listed_cve` / `nvd_cve` — a keyword match against a PRODUCT LINE, which E8 already
+  #      refused to gate on for exactly this reason and which no framework in this file uses as a
+  #      control. Applying a different evidence standard here because we wanted the coverage would
+  #      make the rule about the outcome rather than the evidence.
+  #
+  # Shipping it enabled would produce a framework that applies to every government vendor and
+  # emits nothing — "considered, no gaps found", which reads as a clean bill and is not one. That
+  # is strictly worse than this entry.
+  #
+  # UNBLOCKED BY: P3's Evidence Request Pack, which is the inside-out input this needs. When a
+  # vendor answers on MFA, patching cadence and backups, the maturity levels become assessable and
+  # this framework switches on against ANSWERS rather than against inference.
+  #
+  # AESCSF / TISN are NOT modelled and will not be: they are also maturity models (SP-1 to SP-3),
+  # they cover the same entities as SOCI above, and SOCI's CIRMP obligation subsumes the part of
+  # them that is actually enforceable. A second framework saying the same thing about the same
+  # vendor is the duplicate-gap problem by another name.
+  # ---------------------------------------------------------------------------
+  acsc_essential_eight:
+    name: "ACSC Essential Eight (Maturity Model)"
+    enabled: false
+    disabled_because: >-
+      Levelled ML0-ML3, which `failing_bands` cannot express, and seven of the eight mitigation
+      strategies are internal controls no external observer can see. The eighth — patching
+      internet-facing services — would rest on a product-line keyword match that E8 already
+      refused to gate on. Blocked on P3's Evidence Request Pack, which supplies the inside-out
+      answers this model actually needs.
+    applies_to_sectors: [government]
+    basis: >-
+      ACSC Essential Eight Maturity Model (November 2023 release), Maturity Level One — the
+      baseline the Australian Government's Protective Security Policy Framework Policy 10 requires
+      non-corporate Commonwealth entities to achieve, and which is commonly flowed down to
+      suppliers by contract.
+    controls:
+      cert_posture:
+        failing_bands: [none_claimed]
+        expectation: >-
+          PSPF Policy 10 flows Essential Eight ML1 down to suppliers by contract. No externally
+          evidenced assurance of any kind leaves that flow-down unverifiable.
+
+# -----------------------------------------------------------------------------
+# ESTATE (E12) — how many hosts get probed, and the rule that decides which.
+#
+# THE SAMPLING RULE IS THE DENOMINATOR. "TLS 1.0 on 8 of 340 hosts" means nothing unless a reader
+# knows how the 340 were chosen, and a vendor disputing the figure is disputing THIS BLOCK rather
+# than the count. Attribution disagreements ("you counted 340, we operate 40") are already a
+# top-two dispute category at one host per vendor; fan-out multiplies their frequency.
+#
+# `probe_cap: 1` IS APEX-ONLY, WHICH IS EXACTLY TODAY'S BEHAVIOUR. The machinery is built, tested
+# and wired; raising this number is what switches the fan-out on. It is a config value rather than
+# a code change precisely so the RUNTIME AND POLITENESS BUDGET is visible to whoever raises it:
+# every collector queries someone else's free service, the suite already takes ~299s at cap 1, and
+# fan-out multiplies that by the cap. Raising it is a resourcing decision, not a tuning one.
+#
+# Order of operations is fixed and enforced in code: classify tenants -> drop -> resolve liveness
+# -> drop the dead -> THEN sample. Each step is in that position because getting it wrong produces
+# a denominator that is wrong in a direction nobody notices. See app/collectors/estate.py.
+# -----------------------------------------------------------------------------
+estate:
+  # STILL 1, AND NOW FOR A MEASURED REASON RATHER THAN AN UNMADE DECISION.
+  #
+  # E12's fan-out was described as "a capacity and resourcing decision rather than a technical
+  # design problem". Half right. `python -m app.estate_readiness` measured the book on 2026-08-01:
+  #
+  #     book-wide estate availability      26%   (38 of 146 vendors)
+  #     relationships with an estate       48%   (11 of 23)
+  #     readiness threshold                50%
+  #     CT sources answering               certspotter 35, crt.sh 3
+  #
+  # The blocker is not probe budget — 25 probes per vendor is 1,644 handshakes across the whole
+  # book, which is a polite afternoon. The blocker is that CERTIFICATE TRANSPARENCY IS NOT
+  # ANSWERING: crt.sh returns 404 under load and Certspotter rate-limits keyless clients at 429,
+  # so three quarters of the book has no estate to sample at any cap.
+  #
+  # Raising the cap makes both `estate_*` signals REACHABLE, which puts them back in every vendor's
+  # coverage denominator (see `scoring_config.unreachable_signals`). The 108 vendors that cannot
+  # produce them would lose ~7 points of confidence each — correctly, because once the feature is
+  # on they genuinely have an estate nobody looked at. Rebasing the denominator per vendor to hide
+  # that is the move `assessment_depth.py` refuses for P5's depths, and for the same reason.
+  #
+  # WHAT FLIPS THIS: a Certspotter API key. That is the resourcing item — a credential, not
+  # capacity. `estate_readiness` reports READY when availability crosses 50% with no publishing
+  # vendor falling below the ghost floor, and `SUGGESTED_CAP_WHEN_READY` is 25.
+  probe_cap: 1
+  rule_version: "1.0.0"
+
+  # Twenty-five names sharing one parent is a namespace; four is an engineering team. Deliberately
+  # HIGH, because a false positive here DROPS A HOST from the estate, and dropping real hosts
+  # flatters the vendor — the failure in the comfortable direction, which nobody reviewing a
+  # clean-looking report will catch.
+  tenant_sibling_threshold: 25
+
+  # Whether to resolve names before probing. CT shows certificates ISSUED, never hosts LIVE, and a
+  # name certified in 2019 that has not resolved since is not an attack surface. Including dead
+  # names inflates the denominator and therefore flatters the vendor: "8 of 340" reads better than
+  # "8 of 60", and the 280 difference is names nobody can reach.
+  #
+  # An UNCHECKED name is not a DEAD name. With this off nothing is excluded for liveness, which is
+  # the same rule the engine applies to an unchecked signal.
+  resolve_liveness: true
+
+  basis: >-
+    The denominator a rate is published against must be reconstructible by the vendor disputing it.
+    Deterministic hash sampling seeded on the vendor reference means the same estate yields the
+    same sample on every run, so a change in a rate is a change in the estate rather than a change
+    in the dice — which is what makes a trend mean anything.
+
+gates:
+  sanctions:
+    behaviour: block
+    enabled: true
+    tuning: recall
+    sources: ["ITA CSL (active)", "DFAT (held)"]
+    basis: >-
+      Autonomous Sanctions Act 2011 (Cth) s16(7) and the Charter of the United Nations Act 1945
+      (Cth). Dealing with a designated person or entity is a criminal offence; the decision is a
+      legal adjudication with a permit pathway, and it is not ours to make with a number.
+    adjudication: >-
+      Confirm the match against the primary register, record the adjudicator and the reasoning,
+      and obtain a DFAT permit where a dealing is intended.
+
+  entity_ambiguous:
+    behaviour: block
+    enabled: true
+    below_confidence: 0.5
+    basis: >-
+      Scoring the wrong company is the one error this system cannot recover from: the report is
+      internally consistent, fully evidenced, and about somebody else. Below this confidence the
+      registry match is not strong enough to carry a published assessment.
+    adjudication: >-
+      Confirm the legal entity against a company register and re-run with the confirmed identifier.
+
+  # --- E8: finding-driven gates -------------------------------------------------------------
+  entity_dissolved:
+    behaviour: block
+    enabled: true
+    when: { signal: entity_existence, bands: [entity_dissolved] }
+    basis: >-
+      A dissolved or struck-off company has no legal personality: it cannot hold a contract, carry
+      insurance, or be sued. This is a registry FACT with a retrieval date, not an inference — the
+      only one of E8's proposed gates whose evidence is strong enough to block on today.
+      Companies House / ASIC / GLEIF registration status.
+    adjudication: >-
+      Confirm against the primary register. A dissolution can be a group restructure with a
+      surviving successor entity — identify it and assess that entity instead.
+
+  # E4 SPLIT, HONOURED. `registration_lapsed`, administration, liquidation and receivership do NOT
+  # gate: they are going-concern facts that a buyer may legitimately proceed on with conditions,
+  # and they surface as cited Continuity flags. Only DISSOLVED — the entity no longer exists — is
+  # non-negotiable. Gating on administration would block companies that trade through it daily.
+
+  kev_overdue:
+    behaviour: block
+    enabled: false          # <-- DECLARED, NOT LIVE. See below.
+    when: { signal: kev_listed_cve, bands: [listed], value_date_before_now: due }
+    basis: >-
+      CISA BOD 22-01 sets a remediation due date for every KEV entry; past it, a federal agency is
+      non-compliant. An actively-exploited vulnerability on an internet-facing data-bearing asset
+      past its due date is the clearest "stop" signal in public security data.
+    disabled_because: >-
+      OUR EVIDENCE CANNOT CARRY A BLOCK. `kev_listed_cve` is a keyword match against a PRODUCT
+      LINE, not an observation of this vendor's unpatched systems — the band's own published
+      reason says so. Blocking a company from being onboarded on a name match would be the most
+      damaging false positive this system could produce. Enable when E12 confirms the affected
+      component at the asset level; the due date is already collected (`value.due`), so the trigger
+      is ready and only the evidence is missing.
+    adjudication: >-
+      Confirm the component is deployed and internet-facing, then obtain patch status.
+
+  no_valid_tls:
+    behaviour: block
+    enabled: false          # <-- DECLARED, NOT LIVE. See below.
+    when: { signal: cert_validity, bands: [expired_serving_prod] }
+    basis: >-
+      An expired certificate on an endpoint that carries customer data means traffic is either
+      unprotected or being clicked through, and it evidences the absence of certificate lifecycle
+      automation rather than a single lapse.
+    disabled_because: >-
+      "DATA-BEARING" IS NOT OBSERVABLE FROM OUTSIDE. We handshake the apex, once. Blocking every
+      vendor with an expired apex certificate would gate on a marketing site as readily as on a
+      customer portal. It already applies the critical CEILING (posture capped at 49), which is the
+      proportionate response to evidence this coarse. Enable when E12 can identify a data-bearing
+      endpoint. NOTE for whoever does: CA/Browser Forum SC-081v3 compresses certificate lifetimes
+      to 100 days in March 2027 and 47 days in March 2029, so an expiry stops meaning "someone
+      forgot" and starts meaning "no lifecycle automation" — which strengthens this gate's case.
+    adjudication: >-
+      Confirm whether the endpoint carries customer data and obtain the remediation timeline.
+
+  # `ownership_unresolvable` from the E8 plan is NOT a separate gate: it is `entity_ambiguous`
+  # above, which already blocks when the registry match is too weak to carry an assessment.
+  # Adding a second gate for the same condition would double-count one fact — the mistake E3 fixed
+  # in the scoring arithmetic, repeated in the gate layer.
+
+# -----------------------------------------------------------------------------
+# FINDING MODIFIERS — NIST SP 1326. Decay is applied to the PENALTY, per finding.
+# -----------------------------------------------------------------------------
+# Applied per finding as: severity × age × frequency × mitigation.
+# FREQUENCY replaces summing, it does not stack on top of it: every (category, signal) group
+# collapses to its WORST decayed member, and recurrence is then expressed once by the factor.
+# Three breaches are a pattern (×1.5), not one breach counted three times (×3).
+modifiers:
+  age:
+    half_life_months: 36                              # 0.5^(months/36), never 0
+    floor: 0.15
+    # Age decay is for a HISTORIC OCCURRENCE — a breach, a KEV listing date. It is WRONG for a
+    # CURRENT-STATE observation, where event_date is a state boundary rather than an event: a
+    # cert's notAfter is in the past when expired, so decaying it made a cert expired 6 years ago
+    # score 10 while one expiring next week scored 20. The longer it stayed broken, the cheaper it
+    # got. Signals listed here are observed as CURRENT and never decay.
+    never_decays: [cert_validity]
+  frequency:
+    increment: 0.25                                   # 1 + 0.25×(n-1); recurring issues weigh more
+    cap: 2.0
+    # A bag of keyword-matched CVEs is coarse-match NOISE, not a pattern of distinct events:
+    # take the worst representative and do NOT amplify by count, or a clean estate tanks on
+    # match volume alone. Realized events (breaches, regulator actions) are not exempt.
+    exempt_signals: [kev_listed_cve, nvd_cve]
+  mitigation: { evidenced_factor: 0.6 }               # ×0.6 only where remediation is EVIDENCED
+
+# -----------------------------------------------------------------------------
+# EXCLUDED SIGNALS — proposed but refused on principle, not silently dropped (§4.2).
+# -----------------------------------------------------------------------------
+excluded_signals:
+  executive_brand_risk:        "natural persons — §4.2 (APP 10 / privacy tort / EU AI Act Art 6(3))"
+  pep_links:                   "natural persons — screening individuals; gate-territory, never scored"
+  beneficial_ownership_person: "natural persons — entity-level ownership only"
+  diversity_inclusion_signals: "natural persons — inferring demographics is profiling"
+  shadow_ai_usage:             "not lawfully observable externally"
+
+# -----------------------------------------------------------------------------
+# HELD ROADMAP — designed categories no free source feeds yet. Names only; out of the runtime
+# model so the config describes only what actually scores. There are no "target weights" to
+# record: a penalty model has no category weights at all, which is the point of it. When a
+# source clears, the category joins by getting SIGNALS and BANDS above — nothing else changes.
+# -----------------------------------------------------------------------------
+held_roadmap:
+  supply_chain_dependency: "needs subprocessor/DPA source; 4th-party enum buildable from dns/ct/trust"
+  data_privacy_leakage:    "no lawful free collector (HIBP domain paid; policy-page parse roadmap)"
+  geopolitical_foci:       "registry terms (open item 7) + DFAT licence; SOCI 2028"
+  esg_ethical:             "Modern Slavery licence (open item 2)"
+  emerging_tech_ai:        "no lawfully observable source"
+
+# -----------------------------------------------------------------------------
+# MULTI-ASSET AGGREGATION — a vendor is only as strong as its weakest exposed asset. The
+# vendor posture is the LOWEST asset posture (weakest-link), not the average. (PoC scores the
+# primary asset; multi-asset collection is a pipeline roadmap item.)
+# -----------------------------------------------------------------------------
+aggregation:
+  # --- E7a: DIMINISHING RETURNS WITHIN A CATEGORY. Live in the engine. ---
+  #
+  #     CategoryPenalty(c) = SUM_i  p_i * decay^(rank_i - 1)      rank by descending p_i
+  #
+  # The tenth missing header on a vendor who is already missing nine tells you almost nothing new:
+  # you already know nobody is minding the headers. Charging it in full is counting the same
+  # organisational fact ten times, and it is how twelve pieces of trivia came to outrank one
+  # actively-exploited vulnerability.
+  #
+  # decay = 0.7 is EXPERT JUDGEMENT, chosen with the widened ladder so that
+  # (4 Medium + 8 Low) : (1 Critical) lands at 3.06:1. It is not calibrated — that needs outcome
+  # labels (docs/e0.4-outcome-labels-deferral.md) — and must be labelled as judgement when published.
+  #
+  # WITHIN a category, never across. Categories are summed and divided by the fixed divisor, so a
+  # cross-category discount would let a vendor's worst category be cheapened by their second-worst
+  # — which is the compensatory behaviour the critical ceiling exists to prevent.
+  decay: 0.7
+
+  # --- multi-asset roll-up: DECLARED, NOT WIRED. The PoC scores one asset. ---
+  method: weakest_link
+  rule: "vendor_posture = min(asset_posture for each discovered in-scope asset)"
+
+# -----------------------------------------------------------------------------
+# ROOT-CAUSE DEDUPLICATION (E7c) — one remediation ticket, one penalty.
+#
+# A vendor who patches a KEV-listed CVE closes the NVD finding in the same action. Charging both
+# makes our arithmetic disagree with their work plan, and a model that cannot be reconciled with
+# the remediation it is asking for will not be acted on.
+#
+# SUPPRESSION ZEROES THE PENALTY, NEVER THE EVIDENCE. The finding stays on the record marked
+# `suppressed_by`, because "we saw this and did not charge for it" and "we did not see it" are
+# different statements and only one of them is true.
+#
+# Held in config rather than hardcoded so a new rule is a reviewable edit with a stated basis —
+# the discipline `industry_profiles` had, which was right even though its mechanism was wrong.
+# -----------------------------------------------------------------------------
+root_cause:
+  # PRECEDENCE — when both charge, only the dominant one does.
+  precedence:
+    - dominant: kev_listed_cve
+      suppresses: [nvd_cve]
+      basis: >-
+        KEV > EPSS > CVSS. CISA's Known Exploited Vulnerabilities catalogue is a statement that a
+        vulnerability is being used in the wild; an NVD CVSS score is a statement about its
+        theoretical severity. When both fire they are the same product line and the same patch.
+
+  # SATISFIED-BY — a control that is genuinely met by a different, superseding mechanism.
+  # Distinct from precedence: this fires when the DOMINANT SIGNAL PASSES, not when it fails.
+  satisfied_by:
+    - control: x_frame_opts
+      signal: csp
+      bands: [present]
+      basis: >-
+        CSP Level 2 `frame-ancestors` supersedes X-Frame-Options and takes precedence over it in
+        every modern browser (RFC 7034 s2.1 notes XFO was never standardised; CSP2 s7.4.1 defines
+        the override). A vendor serving CSP has the control; charging them for the legacy header
+        as well is charging for not doing something twice.
+
+# -----------------------------------------------------------------------------
+# PIPELINE ORDER — not negotiable (§5.1)
+#   entity-resolution -> collect -> EVIDENCE STORE (first) -> normalize (band -> severity ->
+#   penalty, x age x frequency x mitigation) -> COLLAPSE each (category, signal) group to its
+#   worst member -> sum penalties PER CATEGORY (each capped at 100) -> GATE (block) ->
+#   category posture = 100 - its penalties -> OVERALL posture = 100 - (total penalty /
+#   overall.penalty_divisor) -> CRITICAL CEILING -> grade + confidence (coverage)
+#
+#   The divisor is FIXED by the model, never set by how many categories answered — see the
+#   OVERALL POSTURE block above for why. Averaging the covered categories (the v4.1.0
+#   behaviour) let a clean receipt enter as a 100 and lift the score; v4.2.0 exists to kill
+#   exactly that.
+# -----------------------------------------------------------------------------

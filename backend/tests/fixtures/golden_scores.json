@@ -1,0 +1,499 @@
+{
+  "atlassian": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "attack_surface_hygiene": {
+        "coverage": 1.0,
+        "findings": 2,
+        "penalty": 21.05,
+        "posture": 79
+      },
+      "breach_compromise_history": {
+        "coverage": 1.0,
+        "findings": 13,
+        "penalty": 33.82,
+        "posture": 66
+      },
+      "compliance_regulatory": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "continuity_context": {
+        "coverage": 0.75,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "identity_email": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "transparency": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      }
+    },
+    "confidence": 0.963,
+    "confidence_band": "High",
+    "critical_ceiling_applied": false,
+    "ghost": false,
+    "grade": "B",
+    "posture": 79,
+    "refused": false
+  },
+  "myob": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "attack_surface_hygiene": {
+        "coverage": 1.0,
+        "findings": 2,
+        "penalty": 21.05,
+        "posture": 79
+      },
+      "breach_compromise_history": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "compliance_regulatory": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "continuity_context": {
+        "coverage": 0.5,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "identity_email": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "transparency": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 6.0,
+        "posture": 94
+      }
+    },
+    "confidence": 0.926,
+    "confidence_band": "High",
+    "critical_ceiling_applied": false,
+    "ghost": false,
+    "grade": "A",
+    "posture": 90,
+    "refused": false
+  },
+  "onetrust": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "attack_surface_hygiene": {
+        "coverage": 1.0,
+        "findings": 2,
+        "penalty": 7.05,
+        "posture": 93
+      },
+      "breach_compromise_history": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.17,
+        "posture": 99
+      },
+      "compliance_regulatory": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "continuity_context": {
+        "coverage": 0.75,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "identity_email": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "transparency": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 6.0,
+        "posture": 94
+      }
+    },
+    "confidence": 0.963,
+    "confidence_band": "High",
+    "critical_ceiling_applied": false,
+    "ghost": false,
+    "grade": "A",
+    "posture": 94,
+    "refused": false
+  },
+  "slack": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "attack_surface_hygiene": {
+        "coverage": 1.0,
+        "findings": 3,
+        "penalty": 3.28,
+        "posture": 97
+      },
+      "breach_compromise_history": {
+        "coverage": 1.0,
+        "findings": 25,
+        "penalty": 29.82,
+        "posture": 70
+      },
+      "compliance_regulatory": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "continuity_context": {
+        "coverage": 0.75,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "identity_email": {
+        "coverage": 0.667,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "transparency": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      }
+    },
+    "confidence": 0.926,
+    "confidence_band": "High",
+    "critical_ceiling_applied": false,
+    "ghost": false,
+    "grade": "A",
+    "posture": 87,
+    "refused": false
+  },
+  "snowflake": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "attack_surface_hygiene": {
+        "coverage": 1.0,
+        "findings": 2,
+        "penalty": 21.05,
+        "posture": 79
+      },
+      "breach_compromise_history": {
+        "coverage": 1.0,
+        "findings": 25,
+        "penalty": 49.55,
+        "posture": 50
+      },
+      "compliance_regulatory": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "continuity_context": {
+        "coverage": 0.5,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "identity_email": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "transparency": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      }
+    },
+    "confidence": 0.926,
+    "confidence_band": "High",
+    "critical_ceiling_applied": false,
+    "ghost": false,
+    "grade": "B",
+    "posture": 75,
+    "refused": false
+  },
+  "synthetic_floor": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "attack_surface_hygiene": {
+        "coverage": 1.0,
+        "findings": 7,
+        "penalty": 39.79,
+        "posture": 60
+      },
+      "breach_compromise_history": {
+        "coverage": 1.0,
+        "findings": 3,
+        "penalty": 79.86,
+        "posture": 20
+      },
+      "compliance_regulatory": {
+        "coverage": 1.0,
+        "findings": 2,
+        "penalty": 24.2,
+        "posture": 76
+      },
+      "continuity_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "identity_email": {
+        "coverage": 1.0,
+        "findings": 3,
+        "penalty": 24.93,
+        "posture": 75
+      },
+      "transparency": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 6.0,
+        "posture": 94
+      }
+    },
+    "confidence": 1.0,
+    "confidence_band": "High",
+    "critical_ceiling_applied": false,
+    "ghost": false,
+    "grade": "D",
+    "posture": 39,
+    "refused": false
+  },
+  "synthetic_gated": {
+    "blocked": true,
+    "categories": {},
+    "confidence": 0.0,
+    "confidence_band": "Low",
+    "critical_ceiling_applied": false,
+    "ghost": false,
+    "grade": null,
+    "posture": null,
+    "refused": false
+  },
+  "synthetic_ghost": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 0.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": null
+      },
+      "attack_surface_hygiene": {
+        "coverage": 0.2,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "breach_compromise_history": {
+        "coverage": 0.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": null
+      },
+      "compliance_regulatory": {
+        "coverage": 0.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": null
+      },
+      "continuity_context": {
+        "coverage": 0.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": null
+      },
+      "identity_email": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "transparency": {
+        "coverage": 0.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": null
+      }
+    },
+    "confidence": 0.185,
+    "confidence_band": "Low",
+    "critical_ceiling_applied": false,
+    "ghost": true,
+    "grade": null,
+    "posture": null,
+    "refused": true
+  },
+  "synthetic_smallco": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "attack_surface_hygiene": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "breach_compromise_history": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "compliance_regulatory": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "continuity_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "identity_email": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "transparency": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 6.0,
+        "posture": 94
+      }
+    },
+    "confidence": 0.98,
+    "confidence_band": "High",
+    "critical_ceiling_applied": false,
+    "ghost": false,
+    "grade": "A",
+    "posture": 97,
+    "refused": false
+  },
+  "synthetic_weak": {
+    "blocked": false,
+    "categories": {
+      "assurance_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "attack_surface_hygiene": {
+        "coverage": 1.0,
+        "findings": 3,
+        "penalty": 51.78,
+        "posture": 48
+      },
+      "breach_compromise_history": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "compliance_regulatory": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      },
+      "continuity_context": {
+        "coverage": 1.0,
+        "findings": 0,
+        "penalty": 0.0,
+        "posture": 100
+      },
+      "identity_email": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 6.0,
+        "posture": 94
+      },
+      "transparency": {
+        "coverage": 1.0,
+        "findings": 1,
+        "penalty": 1.5,
+        "posture": 98
+      }
+    },
+    "confidence": 1.0,
+    "confidence_band": "High",
+    "critical_ceiling_applied": true,
+    "ghost": false,
+    "grade": "D",
+    "posture": 49,
+    "refused": false
+  }
+}

@@ -1,0 +1,937 @@
+{
+  "vendor": {
+    "ref": "onetrust",
+    "name": "OneTrust",
+    "domain": "onetrust.com"
+  },
+  "results": [
+    {
+      "source": "dns",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:40.165411Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "onetrust.com",
+        "dmarc_txt": [
+          "v=DMARC1; p=reject; fo=1; rua=mailto:dmarc_rua@emaildefense.proofpoint.com; ruf=mailto:dmarc_ruf@emaildefense.proofpoint.com;"
+        ],
+        "dmarc_policy": "p_reject",
+        "root_txt": [
+          "neat-pulse-domain-verification-5NzDJwX=46fa0e63-a211-4939-a997-df0d44117a6c",
+          "onetrust-domain-verification=13bd8c4576464f41bbef560aaf52a6db",
+          "onetrust-domain-verification=1756b3ea6edb462aa3868360944c23ac",
+          "onetrust-domain-verification=19f6eeea61384ff59a9b4848fa36bd1c",
+          "onetrust-domain-verification=1b8fc70e00b94a3eb4fe94185bf0a7ef",
+          "onetrust-domain-verification=39707d5d22ba4edcbdc9bf357a517519",
+          "onetrust-domain-verification=57e0332429184605902c298bc904a247",
+          "onetrust-domain-verification=5e7b16c6ac0b4834a38c3af1a24dd7f0",
+          "onetrust-domain-verification=831ea95f8e1c4adeb515a600727869ae",
+          "onetrust-domain-verification=8cfa181a01254d9f9174db089e879065",
+          "onetrust-domain-verification=965acedf534242fa9631a45deb92cf58",
+          "onetrust-domain-verification=a9938eb634154a519ff8e84c8555e2e0",
+          "onetrust-domain-verification=b6736db26f364a1ebf3c223962f10ca5",
+          "onetrust-domain-verification=b872c9744c6d45a08d89efc4ff2a2b8f",
+          "onetrust-domain-verification=ca988fc173944f248144ff6cad8d863a",
+          "onetrust-domain-verification=d70376cb3f694b4fa8ece43853c17915",
+          "onetrust-domain-verification=e8702c62c3dd415fa37cafdf612bed97",
+          "onetrust-domain-verification=e891df1ec6344fd8941c2efd3bd73bee",
+          "onetrust-domain-verification=ec35ce06d03e40cfb02d68aea7ddc1dd",
+          "onetrust-domain-verification=fd41fe30068248fb9de4cc6855b8ef3b",
+          "openai-domain-verification=dv-tXvX13PHMEF8CFxijiw7c461",
+          "paloaltonetworks-site-verification=40470467ac8a2d654bc208b7e89b09b9cb4b5070f2ddb8fd61e00357412ea9e3",
+          "pendo-domain-verification=f8c3b117-306e-4234-acfc-88344e23c67a",
+          "postman-domain-verification=43b5f2e6ec2b82c9f50ac8af47fd100a6d89da11e8c6943458f015f94e11b6038500ddedcce57a4b71ebef47379c868333eb1d3b7b2d53bdd722b4285d73a142",
+          "smartsheet-site-validation=7BSvHYmHW05qswY71SS5fEd_j7vzG4aQ",
+          "stripe-verification=2D80C849099F72C41E3F94A59D15B9B24F84D5B4500CE1855C7A3A0A09A41DFE",
+          "sysQl-rM0ohY0Qo2f6gF-r61U8U",
+          "v=spf1 include:%{ir}.%{v}.%{d}.spf.has.pphosted.com include:docebosaas.com ~all",
+          "webexdomainverification.PH9L=beb51ab8-2645-4128-9fca-dc2f77f9dabe",
+          "wework-site-verification=Ya4tT8723R9RYWWe",
+          "windsurf-verification=6vl9-FcfFd-wDPvvw3v1YTLyyzjhidyGV4tJTd45gDU=",
+          "wiz-domain-verification=65d7cc0114a4cc0f057f12fb9b96f36c3b5ffe040c7da22e89bcded68b5c813c",
+          "00DEk00000e7hyr=1TBEk0000000qZh",
+          "00DO500000i1ANP=1TBO50000000sLN",
+          "0185d409-4776-4f17-a68f-1dd8b374986d",
+          "MJ_VFY=a74d382330d1924ef6abb929f8ff2124.txt",
+          "OSSRH-59088",
+          "XDb63QoAZrULlrBF",
+          "adobe-idp-site-verification=9de219b9cada3fc3788e293fd7d75bbe0db35b8d984958ef73e510ebf024545a",
+          "airtable-verification=3d3ecb4e021b7469e2364ac7c3fa4123",
+          "anthropic-domain-verification-axhwc0=Zs5IqwPnUDwcJw9N98ubdOImr",
+          "apple-domain-verification=VgUD9yr0AG9q6tQq",
+          "apple-domain-verification=xZdBFCwphv15y88N",
+          "asv=7ef25808b168d0c19e35042ed105e49d",
+          "atlassian-domain-verification=+2UZRd+hRXppTRczhr09TT2wwaWKd30IBwMbwKZrVkOxbyzMA8dzfMl50H8upKo8",
+          "canva-site-verification=JbaC9hDMM36Z1TVdufUvdw",
+          "cisco-ci-domain-verification=339b1cf9c229f4787c3905d17a7c89b9a915822530a01bf6006c168d29407b40",
+          "citrix-verification-code=e029a89e-34e9-4df9-aede-69bc398d508f",
+          "cursor-domain-verification-bnemd5=idl647hbmTakjCblGuNDX8RVP",
+          "docker-verification=8d348101-febf-465e-9db8-d5ea8ee59618",
+          "docusign=b164ee08-6b8d-4be0-ae34-2472cd60d7ab",
+          "drift-domain-verification=2e8de17fc6c7047e1e02fb3de199709716f873aea7adca6ffde7869a8e5d9b3b",
+          "expensify-domain-verification=ADAB8C6BA0",
+          "fastly-domain-delegation-AWE2EgDaAh-20230802",
+          "google-site-verification=s170_jausEPWddzj9qRDQ2XC27jhSJTYrKs0tBUVxSA",
+          "google-site-verification=s7VTRbsD2smQrldqyQ3U5zKp_r3CiALFUJFEVlaI-P0",
+          "mongodb-site-verification=qnpvpcXZbHR4ItsSQyx1pjHkKjqx3klY"
+        ],
+        "spf_state": "softfail_all",
+        "dkim_selector": "default",
+        "dnssec_dnskey_present": true,
+        "caa_present": false,
+        "mx": [
+          "10 mxa-0085c101.gslb.pphosted.com.",
+          "10 mxb-0085c101.gslb.pphosted.com."
+        ]
+      },
+      "findings": [
+        {
+          "source": "dns",
+          "signal": "dmarc",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "p_reject",
+          "value": {
+            "policy": "p_reject",
+            "record": "v=DMARC1; p=reject; fo=1; rua=mailto:dmarc_rua@emaildefense.proofpoint.com; ruf=mailto:dmarc_ruf@emaildefense.proofpoint.com;"
+          },
+          "event_date": null,
+          "locator": "_dmarc.onetrust.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "spf",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "softfail_all",
+          "value": {
+            "state": "softfail_all",
+            "record": "v=spf1 include:%{ir}.%{v}.%{d}.spf.has.pphosted.com include:docebosaas.com ~all"
+          },
+          "event_date": null,
+          "locator": "onetrust.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dkim",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "selector": "default"
+          },
+          "event_date": null,
+          "locator": "default._domainkey.onetrust.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dnssec",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "valid",
+          "value": {
+            "dnskey_present": true
+          },
+          "event_date": null,
+          "locator": "onetrust.com DNSKEY",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "caa",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "absent",
+          "value": {
+            "present": false
+          },
+          "event_date": null,
+          "locator": "onetrust.com CAA",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "tls",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:40.346652Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "onetrust.com",
+        "port": 443,
+        "version": "TLSv1.3",
+        "cipher": "TLS_AES_256_GCM_SHA384",
+        "not_after_raw": "Oct 12 21:22:38 2026 GMT",
+        "not_after_iso": "2026-10-12T21:22:38+00:00",
+        "days_to_expiry": 81,
+        "legacy_offered": []
+      },
+      "findings": [
+        {
+          "source": "tls",
+          "signal": "tls_version",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "TLSv1.3",
+          "value": {
+            "band": "tls_13",
+            "negotiated": "TLSv1.3",
+            "legacy_offered": []
+          },
+          "event_date": null,
+          "locator": "onetrust.com:443",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "tls",
+          "signal": "cert_validity",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "valid (81d)",
+          "value": {
+            "band": "valid",
+            "days_to_expiry": 81
+          },
+          "event_date": "2026-10-12T21:22:38Z",
+          "locator": "onetrust.com:443 leaf cert",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "headers",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:42.464561Z",
+      "source_version": "live",
+      "raw": {
+        "url": "https://www.onetrust.com/",
+        "status_code": 200,
+        "headers": {
+          "date": "Thu, 23 Jul 2026 08:55:38 GMT",
+          "content-type": "text/html;charset=utf-8",
+          "transfer-encoding": "chunked",
+          "connection": "keep-alive",
+          "x-frame-options": "SAMEORIGIN, SAMEORIGIN",
+          "permissions-policy": "microphone=(self)",
+          "cache-control": "private, max-age=14400",
+          "x-sky-isauth": "0",
+          "x-vhost": "onetrust.com",
+          "x-xss-protection": "1; mode=block",
+          "content-security-policy": "frame-ancestors 'self' https://www.onetrust.com https://connect.onetrust.com; default-src 'self' 'unsafe-inline' 'unsafe-eval' data: *.6sc.co *.adobe.com *.adobe.io *.adobeaemcloud.com *.adobedtm.com *.akamaihd.net *.amazonaws.com *.bing.com *.bizographics.com *.chargebee.com *.chargebeestatic.com *.cloudflare.com *.cloudflareinsights.com *.cookiebanners.com *.cookielaw.org *.crazyegg.com *.demdex.net *.driftt.com *.eloqua.com *.en25.com *.everestjs.net *.everesttech.net *.force.com *.g2.com *.goconsensus.com *.google-analytics.com *.google.com *.google.co.in *.googleadservices.com *.googleapis.com *.googleleadservices.com *.googletagmanager.com *.greenhouse.io *.gstatic.com *.hsforms.com *.hsforms.net *.jquery.com *.licdn.com *.linkedin.com *.marketo.net *.mktorest.com *.omtrdc.net *.onetrust.com  *.onetrust.ninja *.otprivacy.com *.platform.twitter.com *.salesforce.com *.salesforceliveagent.com *.twimg.com *.twitter.com unpkg.com *.wistia.com *.wistia.net *.youtube-nocookie.com *.youtube.com fonts.google.com *.mktoweb.com *.day.com www.day.com *.mktoresp.com cdn.linkedin.oribi.io cm.everesttech.net *.adobeaemcloud.net *.litix.io *.tugboatlogic.com *.bizible.com *.bizibly.com *.scene7.com *.cvent.com *.cvent.cloud *.turtl.co *.mktoutil.com pactsafe.io *.pactsafe.io *.cloudfront.net *.adnxs.com *.qualified.com wss://*.qualified.com wss://ws7.qualified.com *.daily.co wss://*.daily.co *.doubleclick.net *.redditstatic.com *.reddit.com *.googlesyndication.com *.clarity.ms; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.6sc.co *.adobe.com *.adobe.io *.adobeaemcloud.com *.adobedtm.com *.akamaihd.net *.amazonaws.com *.bing.com *.bizographics.com *.chargebee.com *.chargebeestatic.com *.cloudflare.com *.cloudflareinsights.com *.cookiebanners.com *.cookielaw.org *.crazyegg.com *.demdex.net *.driftt.com *.eloqua.com *.en25.com *.everestjs.net *.everesttech.net *.force.com *.g2.com *.goconsensus.com *.google-analytics.com *.google.com *.google.co.in *.googleadservices.com *.googleapis.com *.googleleadservices.com *.googletagmanager.com *.greenhouse.io *.gstatic.com *.hsforms.com *.hsforms.net *.jquery.com *.licdn.com *.linkedin.com *.marketo.net *.mktorest.com *.omtrdc.net *.onetrust.com *.aem.onetrust.com *.onetrust.ninja *.otprivacy.com *.platform.twitter.com *.salesforce.com *.salesforceliveagent.com *.twimg.com *.twitter.com unpkg.com *.wistia.com *.wistia.net *.youtube-nocookie.com *.youtube.com fonts.google.com *.mktoweb.com *.day.com www.day.com *.mktoresp.com cdn.linkedin.oribi.io cm.everesttech.net *.adobeaemcloud.net *.litix.io *.tugboatlogic.com *.bizible.com *.bizibly.com *.scene7.com *.cvent.com *.cvent.cloud *.turtl.co *.mktoutil.com pactsafe.io *.pactsafe.io *.cloudfront.net *.adnxs.com *.qualified.com wss://*.qualified.com wss://ws7.qualified.com *.daily.co wss://*.daily.co *.doubleclick.net *.redditstatic.com *.reddit.com *.googlesyndication.com *.clarity.ms; connect-src 'self' blob: *.6sc.co *.adobe.com *.adobe.io *.adobeaemcloud.com *.adobedtm.com *.akamaihd.net *.amazonaws.com *.bing.com *.bizographics.com *.chargebee.com *.chargebeestatic.com *.cloudflare.com *.cloudflareinsights.com *.cookiebanners.com *.cookielaw.org *.crazyegg.com *.demdex.net *.driftt.com *.eloqua.com *.en25.com *.everestjs.net *.everesttech.net *.force.com *.g2.com *.goconsensus.com *.google-analytics.com *.google.com *.google.co.in *.googleadservices.com *.googleapis.com *.googleleadservices.com *.googletagmanager.com *.greenhouse.io *.gstatic.com *.hsforms.com *.hsforms.net *.jquery.com *.licdn.com *.linkedin.com *.marketo.net *.mktorest.com *.omtrdc.net *.onetrust.com *.aem.onetrust.com *.onetrust.ninja *.otprivacy.com *.platform.twitter.com *.salesforce.com *.salesforceliveagent.com *.twimg.com *.twitter.com unpkg.com *.wistia.com *.wistia.net *.youtube-nocookie.com *.youtube.com fonts.google.com *.mktoweb.com *.day.com www.day.com *.mktoresp.com cdn.linkedin.oribi.io cm.everesttech.net *.adobeaemcloud.net *.litix.io *.tugboatlogic.com *.bizible.com *.bizibly.com *.scene7.com *.cvent.com *.cvent.cloud *.turtl.co *.mktoutil.com pactsafe.io *.pactsafe.io *.cloudfront.net *.adnxs.com *.qualified.com wss://*.qualified.com wss://ws7.qualified.com *.daily.co wss://*.daily.co *.doubleclick.net *.redditstatic.com *.reddit.com *.googlesyndication.com *.clarity.ms; img-src 'self' data: https://www.googleadservices.com https://www.google.com https://www.google.co.kr https://www.google.co.in *.6sc.co *.adobe.com *.adobe.io *.adobeaemcloud.com *.adobedtm.com *.akamaihd.net *.amazonaws.com *.bing.com *.bizographics.com *.chargebee.com *.chargebeestatic.com *.cloudflare.com *.cloudflareinsights.com *.cookiebanners.com *.cookielaw.org *.crazyegg.com *.demdex.net *.driftt.com *.eloqua.com *.en25.com *.everestjs.net *.everesttech.net *.force.com *.g2.com *.goconsensus.com *.google-analytics.com *.google.com *.google.co.in *.googleadservices.com *.googleapis.com *.googleleadservices.com *.googletagmanager.com *.greenhouse.io *.gstatic.com *.hsforms.com *.hsforms.net *.jquery.com *.licdn.com *.linkedin.com *.marketo.net *.mktorest.com *.omtrdc.net *.onetrust.com *.aem.onetrust.com *.onetrust.ninja *.otprivacy.com *.platform.twitter.com *.salesforce.com *.salesforceliveagent.com *.twimg.com *.twitter.com unpkg.com *.wistia.com *.wistia.net *.youtube-nocookie.com *.youtube.com fonts.google.com *.mktoweb.com *.day.com www.day.com *.mktoresp.com cdn.linkedin.oribi.io cm.everesttech.net *.adobeaemcloud.net *.litix.io *.tugboatlogic.com *.bizible.com *.bizibly.com *.scene7.com *.cvent.com *.cvent.cloud *.turtl.co *.mktoutil.com pactsafe.io *.pactsafe.io *.cloudfront.net *.adnxs.com *.qualified.com wss://*.qualified.com wss://ws7.qualified.com *.daily.co wss://*.daily.co *.doubleclick.net *.redditstatic.com *.reddit.com *.googlesyndication.com *.clarity.ms; style-src 'self' 'unsafe-inline' *.googleapis.com *.turtl.co *.onetrust.com *.aem.onetrust.com; media-src * blob:; worker-src * blob:; base-uri 'self';",
+          "vary": "Accept-Encoding",
+          "x-content-type-options": "nosniff",
+          "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+          "x-served-by": "cache-bom-vanm7210078-BOM",
+          "x-cache": "MISS",
+          "x-timer": "S1784796553.068525,VS0,VS0,VE1366",
+          "set-cookie": "__cf_bm=3nDKE8KX7fcD5df.JMYg1nqfCpWGIW_kLm6hPmPrHos-1784796938.6392217-1.0.1.1-JDIGfF5h860uYhLsL06MVsMMZs8yXsSStYZ_4oOPBbIipWiwEIptKUtjRisxgQbhIwsCVrC78gpX.JJFNCnaaL7vMuihSTKwD7ViyKN_ubfTBz73Se6prkh.fO8lgrqV; HttpOnly; SameSite=None; Secure; Path=/; Domain=www.onetrust.com; Expires=Thu, 23 Jul 2026 09:25:38 GMT",
+          "last-modified": "Thu, 23 Jul 2026 08:55:38 GMT",
+          "cf-cache-status": "HIT",
+          "content-encoding": "gzip",
+          "server": "cloudflare",
+          "cf-ray": "a1f977a279f724d9-KHI"
+        },
+        "security_txt_present": false
+      },
+      "findings": [
+        {
+          "source": "headers",
+          "signal": "hsts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "max-age=31536000; includeSubDomains; preload"
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/ [strict-transport-security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "csp",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "frame-ancestors 'self' https://www.onetrust.com https://connect.onetrust.com; default-src 'self' 'unsafe-inline' 'unsafe-eval' data: *.6sc.co *.adobe.com *.adobe.io *.adobeaemcloud.com *.adobedtm.com *.akamaihd.net *.amazonaws.com *.bing.com *.bizographics.com *.chargebee.com *.chargebeestatic.com *.cloudflare.com *.cloudflareinsights.com *.cookiebanners.com *.cookielaw.org *.crazyegg.com *.demdex.net *.driftt.com *.eloqua.com *.en25.com *.everestjs.net *.everesttech.net *.force.com *.g2.com *.goconsensus.com *.google-analytics.com *.google.com *.google.co.in *.googleadservices.com *.googleapis.com *.googleleadservices.com *.googletagmanager.com *.greenhouse.io *.gstatic.com *.hsforms.com *.hsforms.net *.jquery.com *.licdn.com *.linkedin.com *.marketo.net *.mktorest.com *.omtrdc.net *.onetrust.com  *.onetrust.ninja *.otprivacy.com *.platform.twitter.com *.salesforce.com *.salesforceliveagent.com *.twimg.com *.twitter.com unpkg.com *.wistia.com *.wistia.net *.youtube-nocookie.com *.youtube.com fonts.google.com *.mktoweb.com *.day.com www.day.com *.mktoresp.com cdn.linkedin.oribi.io cm.everesttech.net *.adobeaemcloud.net *.litix.io *.tugboatlogic.com *.bizible.com *.bizibly.com *.scene7.com *.cvent.com *.cvent.cloud *.turtl.co *.mktoutil.com pactsafe.io *.pactsafe.io *.cloudfront.net *.adnxs.com *.qualified.com wss://*.qualified.com wss://ws7.qualified.com *.daily.co wss://*.daily.co *.doubleclick.net *.redditstatic.com *.reddit.com *.googlesyndication.com *.clarity.ms; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.6sc.co *.adobe.com *.adobe.io *.adobeaemcloud.com *.adobedtm.com *.akamaihd.net *.amazonaws.com *.bing.com *.bizographics.com *.chargebee.com *.chargebeestatic.com *.cloudflare.com *.cloudflareinsights.com *.cookiebanners.com *.cookielaw.org *.crazyegg.com *.demdex.net *.driftt.com *.eloqua.com *.en25.com *.everestjs.net *.everesttech.net *.force.com *.g2.com *.goconsensus.com *.google-analytics.com *.google.com *.google.co.in *.googleadservices.com *.googleapis.com *.googleleadservices.com *.googletagmanager.com *.greenhouse.io *.gstatic.com *.hsforms.com *.hsforms.net *.jquery.com *.licdn.com *.linkedin.com *.marketo.net *.mktorest.com *.omtrdc.net *.onetrust.com *.aem.onetrust.com *.onetrust.ninja *.otprivacy.com *.platform.twitter.com *.salesforce.com *.salesforceliveagent.com *.twimg.com *.twitter.com unpkg.com *.wistia.com *.wistia.net *.youtube-nocookie.com *.youtube.com fonts.google.com *.mktoweb.com *.day.com www.day.com *.mktoresp.com cdn.linkedin.oribi.io cm.everesttech.net *.adobeaemcloud.net *.litix.io *.tugboatlogic.com *.bizible.com *.bizibly.com *.scene7.com *.cvent.com *.cvent.cloud *.turtl.co *.mktoutil.com pactsafe.io *.pactsafe.io *.cloudfront.net *.adnxs.com *.qualified.com wss://*.qualified.com wss://ws7.qualified.com *.daily.co wss://*.daily.co *.doubleclick.net *.redditstatic.com *.reddit.com *.googlesyndication.com *.clarity.ms; connect-src 'self' blob: *.6sc.co *.adobe.com *.adobe.io *.adobeaemcloud.com *.adobedtm.com *.akamaihd.net *.amazonaws.com *.bing.com *.bizographics.com *.chargebee.com *.chargebeestatic.com *.cloudflare.com *.cloudflareinsights.com *.cookiebanners.com *.cookielaw.org *.crazyegg.com *.demdex.net *.driftt.com *.eloqua.com *.en25.com *.everestjs.net *.everesttech.net *.force.com *.g2.com *.goconsensus.com *.google-analytics.com *.google.com *.google.co.in *.googleadservices.com *.googleapis.com *.googleleadservices.com *.googletagmanager.com *.greenhouse.io *.gstatic.com *.hsforms.com *.hsforms.net *.jquery.com *.licdn.com *.linkedin.com *.marketo.net *.mktorest.com *.omtrdc.net *.onetrust.com *.aem.onetrust.com *.onetrust.ninja *.otprivacy.com *.platform.twitter.com *.salesforce.com *.salesforceliveagent.com *.twimg.com *.twitter.com unpkg.com *.wistia.com *.wistia.net *.youtube-nocookie.com *.youtube.com fonts.google.com *.mktoweb.com *.day.com www.day.com *.mktoresp.com cdn.linkedin.oribi.io cm.everesttech.net *.adobeaemcloud.net *.litix.io *.tugboatlogic.com *.bizible.com *.bizibly.com *.scene7.com *.cvent.com *.cvent.cloud *.turtl.co *.mktoutil.com pactsafe.io *.pactsafe.io *.cloudfront.net *.adnxs.com *.qualified.com wss://*.qualified.com wss://ws7.qualified.com *.daily.co wss://*.daily.co *.doubleclick.net *.redditstatic.com *.reddit.com *.googlesyndication.com *.clarity.ms; img-src 'self' data: https://www.googleadservices.com https://www.google.com https://www.google.co.kr https://www.google.co.in *.6sc.co *.adobe.com *.adobe.io *.adobeaemcloud.com *.adobedtm.com *.akamaihd.net *.amazonaws.com *.bing.com *.bizographics.com *.chargebee.com *.chargebeestatic.com *.cloudflare.com *.cloudflareinsights.com *.cookiebanners.com *.cookielaw.org *.crazyegg.com *.demdex.net *.driftt.com *.eloqua.com *.en25.com *.everestjs.net *.everesttech.net *.force.com *.g2.com *.goconsensus.com *.google-analytics.com *.google.com *.google.co.in *.googleadservices.com *.googleapis.com *.googleleadservices.com *.googletagmanager.com *.greenhouse.io *.gstatic.com *.hsforms.com *.hsforms.net *.jquery.com *.licdn.com *.linkedin.com *.marketo.net *.mktorest.com *.omtrdc.net *.onetrust.com *.aem.onetrust.com *.onetrust.ninja *.otprivacy.com *.platform.twitter.com *.salesforce.com *.salesforceliveagent.com *.twimg.com *.twitter.com unpkg.com *.wistia.com *.wistia.net *.youtube-nocookie.com *.youtube.com fonts.google.com *.mktoweb.com *.day.com www.day.com *.mktoresp.com cdn.linkedin.oribi.io cm.everesttech.net *.adobeaemcloud.net *.litix.io *.tugboatlogic.com *.bizible.com *.bizibly.com *.scene7.com *.cvent.com *.cvent.cloud *.turtl.co *.mktoutil.com pactsafe.io *.pactsafe.io *.cloudfront.net *.adnxs.com *.qualified.com wss://*.qualified.com wss://ws7.qualified.com *.daily.co wss://*.daily.co *.doubleclick.net *.redditstatic.com *.reddit.com *.googlesyndication.com *.clarity.ms; style-src 'self' 'unsafe-inline' *.googleapis.com *.turtl.co *.onetrust.com *.aem.onetrust.com; media-src * blob:; worker-src * blob:; base-uri 'self';"
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/ [content-security-policy]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "x_frame_opts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "SAMEORIGIN, SAMEORIGIN"
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/ [x-frame-options]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "security_txt",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "absent",
+          "value": {
+            "present": false
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "vd_program",
+          "subcategory": "vuln_disclosure_program",
+          "category": "vendor_transparency_gov",
+          "observed": "none",
+          "value": {
+            "band": "none",
+            "security_txt": false
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "published vulnerability-disclosure path inferred from security.txt (RFC 9116)"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "ct",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:47.432225Z",
+      "source_version": "certspotter",
+      "raw": {
+        "domain": "onetrust.com",
+        "ct_source": "certspotter",
+        "raw_names": 536,
+        "unique_subdomains": 99,
+        "stale_candidates": [
+          "aem-stage.onetrust.com",
+          "bofa-test-privacy.my.onetrust.com",
+          "bofa-test.my.onetrust.com",
+          "uat-de.onetrust.com",
+          "uat.onetrust.com",
+          "walmart-uat.my.onetrust.com",
+          "www.uat-de.onetrust.com",
+          "www.uat.onetrust.com",
+          "www.walmart-uat.my.onetrust.com"
+        ],
+        "wildcard_seen": true,
+        "subdomains_sample": [
+          "admin-portal-idp-sso-myot.onetrust.com",
+          "aem-int.onetrust.com",
+          "aem-preview.onetrust.com",
+          "aem-rde.onetrust.com",
+          "aem-rde2.onetrust.com",
+          "aem-stage.onetrust.com",
+          "aem.onetrust.com",
+          "app-ae.onetrust.com",
+          "app-bofa.onetrust.com",
+          "app-ca.onetrust.com",
+          "app-de.onetrust.com",
+          "app-eu.onetrust.com",
+          "app-in.onetrust.com",
+          "app-samsung.onetrust.com",
+          "app-synchrony.onetrust.com",
+          "app-uk.onetrust.com",
+          "app.onetrust.com",
+          "assets.onetrust.com",
+          "bofa-test-privacy.my.onetrust.com",
+          "bofa-test.my.onetrust.com",
+          "brand.onetrust.com",
+          "cgd.my.onetrust.com",
+          "connect.onetrust.com",
+          "cvs.my.onetrust.com",
+          "dazn.my.onetrust.com",
+          "demotour.onetrust.com",
+          "directv.my.onetrust.com",
+          "entints.onetrust.com",
+          "google.my.onetrust.com",
+          "gslink.onetrust.com",
+          "harborfreight.my.onetrust.com",
+          "hcsc.my.onetrust.com",
+          "hdfcbank.my.onetrust.com",
+          "highmark.my.onetrust.com",
+          "hsbc.my.onetrust.com",
+          "labs.my.onetrust.com",
+          "live.jp.onetrust.com",
+          "maf.my.onetrust.com",
+          "mcdonalds.my.onetrust.com",
+          "mvw-global-privacy.my.onetrust.com",
+          "nexus.onetrust.com",
+          "nonprod-danskebank.my.onetrust.com",
+          "omnicom.my.onetrust.com",
+          "onetrust.com",
+          "pentest-app.onetrust.com",
+          "prod-danskebank.my.onetrust.com",
+          "securemail.onetrust.com",
+          "smetrics.onetrust.com",
+          "store.onetrust.com",
+          "t-mobile-plab.my.onetrust.com",
+          "tcf.onetrust.com",
+          "thecignagroup.my.onetrust.com",
+          "tugboat-salesloft.onetrust.com",
+          "tv.onetrust.com",
+          "uat-de.onetrust.com",
+          "uat.onetrust.com",
+          "usbank.my.onetrust.com",
+          "walmart-uat.my.onetrust.com",
+          "wba.my.onetrust.com",
+          "web01.onetrust.com",
+          "www.admin-portal-idp-sso-myot.onetrust.com",
+          "www.app-ae.onetrust.com",
+          "www.app-bofa.onetrust.com",
+          "www.app-ca.onetrust.com",
+          "www.app-de.onetrust.com",
+          "www.app-eu.onetrust.com",
+          "www.app-in.onetrust.com",
+          "www.app-samsung.onetrust.com",
+          "www.app-synchrony.onetrust.com",
+          "www.app-uk.onetrust.com",
+          "www.app.onetrust.com",
+          "www.cgd.my.onetrust.com",
+          "www.cvs.my.onetrust.com",
+          "www.dazn.my.onetrust.com",
+          "www.directv.my.onetrust.com",
+          "www.google.my.onetrust.com",
+          "www.harborfreight.my.onetrust.com",
+          "www.hcsc.my.onetrust.com",
+          "www.hdfcbank.my.onetrust.com",
+          "www.highmark.my.onetrust.com",
+          "www.hsbc.my.onetrust.com",
+          "www.labs.my.onetrust.com",
+          "www.live.jp.onetrust.com",
+          "www.maf.my.onetrust.com",
+          "www.mcdonalds.my.onetrust.com",
+          "www.mvw-global-privacy.my.onetrust.com",
+          "www.nexus.onetrust.com",
+          "www.nonprod-danskebank.my.onetrust.com",
+          "www.omnicom.my.onetrust.com",
+          "www.pentest-app.onetrust.com",
+          "www.prod-danskebank.my.onetrust.com",
+          "www.securemail.onetrust.com",
+          "www.t-mobile-plab.my.onetrust.com",
+          "www.thecignagroup.my.onetrust.com",
+          "www.uat-de.onetrust.com",
+          "www.uat.onetrust.com",
+          "www.usbank.my.onetrust.com",
+          "www.walmart-uat.my.onetrust.com",
+          "www.wba.my.onetrust.com"
+        ]
+      },
+      "findings": [
+        {
+          "source": "ct",
+          "signal": "subdomain_estate",
+          "subcategory": "subdomain_hygiene",
+          "category": "digital_footprint_assets",
+          "observed": "99 subdomains",
+          "value": {
+            "count": 99
+          },
+          "event_date": null,
+          "locator": "certspotter %.onetrust.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "ct",
+          "signal": "stale_hosts",
+          "subcategory": "abandoned_shadow_assets",
+          "category": "digital_footprint_assets",
+          "observed": "9 stale/dev/staging names",
+          "value": {
+            "count": 9
+          },
+          "event_date": null,
+          "locator": "certspotter %.onetrust.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "certs issued, not hosts live \u2014 possible forgotten hosts"
+        },
+        {
+          "source": "ct",
+          "signal": "weak_issuance",
+          "subcategory": "certificate_transparency_issues",
+          "category": "digital_footprint_assets",
+          "observed": "wildcard_sprawl",
+          "value": {
+            "wildcard_sprawl": true
+          },
+          "event_date": null,
+          "locator": "certspotter %.onetrust.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "hibp",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:47.863400Z",
+      "source_version": null,
+      "raw": {
+        "domain": "onetrust.com",
+        "breaches": []
+      },
+      "findings": [
+        {
+          "source": "hibp",
+          "signal": "breach_by_data_class",
+          "subcategory": "confirmed_breaches",
+          "category": "breach_compromise_history",
+          "observed": "no known public breach",
+          "value": {
+            "band": "no_known_breach"
+          },
+          "event_date": null,
+          "locator": "HIBP /breaches Domain=onetrust.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no PUBLICLY known breach; absence is not proof of security"
+        }
+      ],
+      "reliability": 0.55,
+      "notes": "no breach record \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "kev",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:48.935199Z",
+      "source_version": "2026.07.22",
+      "raw": {
+        "catalog_version": "2026.07.22",
+        "total_kev": 1653,
+        "matched": 0
+      },
+      "findings": [
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "no KEV product match",
+          "value": {
+            "band": "no_kev_match"
+          },
+          "event_date": null,
+          "locator": "CISA KEV 2026.07.22",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no known-exploited CVE name-matches (or vendor ships no software)"
+        }
+      ],
+      "reliability": 0.6,
+      "notes": "no KEV match \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "nvd",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:50.913591Z",
+      "source_version": "live",
+      "raw": {
+        "keyword": "OneTrust",
+        "returned": 1,
+        "summaries": [
+          {
+            "cve": "CVE-2024-57708",
+            "score": 5.7,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2025-06-25T16:15:25.590000Z",
+            "epss": 0.009
+          }
+        ],
+        "scored_recent": 1,
+        "epss_enriched": 1
+      },
+      "findings": [
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2024-57708 MEDIUM (CVSS 5.7; EPSS 0.01)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2024-57708",
+            "cvss": 5.7,
+            "severity": "MEDIUM",
+            "epss": 0.009
+          },
+          "event_date": "2025-06-25T16:15:25.590000Z",
+          "locator": "NVD CVE-2024-57708",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "ita",
+      "vendor_ref": "onetrust",
+      "status": "empty",
+      "fetched_at": "2026-07-23T08:55:51.951250Z",
+      "source_version": "unknown",
+      "raw": {
+        "query": "onetrust",
+        "list_size": 25909,
+        "match_count": 0,
+        "screened": true
+      },
+      "findings": [],
+      "reliability": 0.95,
+      "notes": "clean screen vs 25909 CSL entries (retained as s16(7) defence record)"
+    },
+    {
+      "source": "gleif",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:52.729179Z",
+      "source_version": "live",
+      "raw": {
+        "query": "OneTrust",
+        "candidates": 2,
+        "resolved": {
+          "lei": "984500WD5532BB49FA33",
+          "legalName": "ONETRUST LLC",
+          "jurisdiction": "US-DE",
+          "entityStatus": "ACTIVE",
+          "regStatus": "ISSUED"
+        },
+        "other_candidates": [
+          {
+            "lei": "984500F4FE79FE407C73",
+            "legalName": "ONETRUST TECHNOLOGY LIMITED",
+            "jurisdiction": "GB",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          }
+        ],
+        "ambiguous": true,
+        "name_match": 3,
+        "strong_matches": 2,
+        "exact_matches": 2
+      },
+      "findings": [
+        {
+          "source": "gleif",
+          "signal": "entity_status",
+          "subcategory": "legal_entity_status",
+          "category": "business_financial_stability",
+          "observed": "ONETRUST LLC \u2014 ACTIVE/ISSUED",
+          "value": {
+            "band": "active_good_standing",
+            "lei": "984500WD5532BB49FA33",
+            "jurisdiction": "US-DE",
+            "entity_status": "ACTIVE",
+            "registration_status": "ISSUED"
+          },
+          "event_date": null,
+          "locator": "GLEIF LEI 984500WD5532BB49FA33",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "ENTITY-level standing; MULTIPLE strong name matches \u2014 review attribution"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "wikidata",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:53.881970Z",
+      "source_version": "live",
+      "raw": {
+        "query": "OneTrust",
+        "target_domain": "onetrust.com",
+        "candidates_inspected": 1,
+        "qid": "Q96756948",
+        "label": "OneTrust",
+        "official_website": [
+          "http://www.onetrust.com/"
+        ],
+        "dissolved": false
+      },
+      "findings": [
+        {
+          "source": "wikidata",
+          "signal": "entity_existence",
+          "subcategory": "legal_entity_status",
+          "category": "business_financial_stability",
+          "observed": "OneTrust \u2014 live (domain-verified via official website)",
+          "value": {
+            "band": "entity_active_confirmed",
+            "qid": "Q96756948",
+            "official_website": [
+              "http://www.onetrust.com/"
+            ]
+          },
+          "event_date": null,
+          "locator": "Wikidata Q96756948",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "CORROBORATION of entity standing \u2014 domain-verified (P856 matches vendor domain); combines with GLEIF at higher confidence when they agree (\u00a75.4.3)"
+        }
+      ],
+      "reliability": 0.7,
+      "notes": null
+    },
+    {
+      "source": "rdap",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:55.014412Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "onetrust.com",
+        "ldhName": "ONETRUST.COM",
+        "status": [
+          "client transfer prohibited"
+        ],
+        "created": "2004-01-12T19:08:04+00:00",
+        "expires": "2027-01-12T19:08:04+00:00"
+      },
+      "findings": [
+        {
+          "source": "rdap",
+          "signal": "domain_registration",
+          "subcategory": "domain_standing",
+          "category": "business_financial_stability",
+          "observed": "domain established ~22 year(s), active",
+          "value": {
+            "band": "domain_established",
+            "created": "2004-01-12T19:08:04+00:00",
+            "expires": "2027-01-12T19:08:04+00:00",
+            "status": [
+              "client transfer prohibited"
+            ]
+          },
+          "event_date": null,
+          "locator": "RDAP onetrust.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "domain STANDING (entity-level) \u2014 a domain is not the company; minority weight"
+        }
+      ],
+      "reliability": 0.85,
+      "notes": null
+    },
+    {
+      "source": "regulatory",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:56.239664Z",
+      "source_version": null,
+      "raw": {
+        "tokens": [
+          "onetrust"
+        ],
+        "feeds_reached": [
+          "FTC",
+          "SEC",
+          "DOJ",
+          "UK-CMA",
+          "UK-ICO",
+          "CNIL"
+        ],
+        "match_count": 0,
+        "matches": []
+      },
+      "findings": [
+        {
+          "source": "regulatory",
+          "signal": "regulator_action",
+          "subcategory": "regulatory_actions",
+          "category": "adverse_media_reputation",
+          "observed": "no regulatory action found (recent window)",
+          "value": {
+            "band": "no_action_found",
+            "feeds": [
+              "FTC",
+              "SEC",
+              "DOJ",
+              "UK-CMA",
+              "UK-ICO",
+              "CNIL"
+            ]
+          },
+          "event_date": null,
+          "locator": "regulator feeds: FTC, SEC, DOJ, UK-CMA, UK-ICO, CNIL",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 recent-window, US-weighted; absence is weak (\u00a75.4.2)"
+        }
+      ],
+      "reliability": 0.4,
+      "notes": "no regulator match \u2014 clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "gdelt",
+      "vendor_ref": "onetrust",
+      "status": "error",
+      "fetched_at": "2026-07-23T08:56:07.504846Z",
+      "source_version": null,
+      "raw": null,
+      "findings": [],
+      "reliability": 0.6,
+      "notes": "GDELT returned 429"
+    },
+    {
+      "source": "trust",
+      "vendor_ref": "onetrust",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:56:15.678909Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "onetrust.com",
+        "pages_found": [
+          "security",
+          "security-and-compliance",
+          "trust",
+          "trust-center"
+        ],
+        "certifications_claimed": [
+          "ISO 27001",
+          "PCI DSS",
+          "SOC 2"
+        ],
+        "role_contacts": []
+      },
+      "findings": [
+        {
+          "source": "trust",
+          "signal": "cert_posture",
+          "subcategory": "certifications_attestations",
+          "category": "compliance_regulatory",
+          "observed": "ISO 27001, PCI DSS, SOC 2",
+          "value": {
+            "band": "claimed_unverified",
+            "certs": [
+              "ISO 27001",
+              "PCI DSS",
+              "SOC 2"
+            ]
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/[security,security-and-compliance,trust,trust-center]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "SELF-REPORTED claim \u2014 corroborate against cert registry where possible"
+        },
+        {
+          "source": "trust",
+          "signal": "program_disclosure",
+          "subcategory": "security_program_disclosure",
+          "category": "vendor_transparency_gov",
+          "observed": "detailed_policies",
+          "value": {
+            "pages": [
+              "security",
+              "security-and-compliance",
+              "trust",
+              "trust-center"
+            ],
+            "chars": 662211
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported program disclosure"
+        },
+        {
+          "source": "trust",
+          "signal": "contactability",
+          "subcategory": "contactability_responsiveness",
+          "category": "vendor_transparency_gov",
+          "observed": "none published",
+          "value": {
+            "role_contacts": [],
+            "band": "none_published"
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "trust",
+          "signal": "reporting_posture",
+          "subcategory": "disclosure_reporting",
+          "category": "compliance_regulatory",
+          "observed": "substantive",
+          "value": {
+            "band": "substantive",
+            "chars": 662211
+          },
+          "event_date": null,
+          "locator": "https://onetrust.com/[security,security-and-compliance,trust,trust-center]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported \u2014 published policies/reports inferred from trust-page substance"
+        }
+      ],
+      "reliability": 0.5,
+      "notes": null
+    }
+  ]
+}

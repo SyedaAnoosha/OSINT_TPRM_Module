@@ -1,0 +1,629 @@
+{
+  "results": [
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "identity_email",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/dmarc",
+          "notes": null,
+          "observed": "absent",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "dmarc",
+          "source": "dns",
+          "subcategory": "dmarc",
+          "value": {
+            "band": "absent"
+          }
+        },
+        {
+          "category": "identity_email",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/spf",
+          "notes": null,
+          "observed": "absent",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "spf",
+          "source": "dns",
+          "subcategory": "spf",
+          "value": {
+            "band": "absent"
+          }
+        },
+        {
+          "category": "identity_email",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/dkim",
+          "notes": null,
+          "observed": "absent",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "dkim",
+          "source": "dns",
+          "subcategory": "dkim",
+          "value": {
+            "band": "absent"
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/dnssec",
+          "notes": null,
+          "observed": "misconfigured",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "dnssec",
+          "source": "dns",
+          "subcategory": "dnssec",
+          "value": {
+            "band": "misconfigured"
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/caa",
+          "notes": null,
+          "observed": "absent",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "caa",
+          "source": "dns",
+          "subcategory": "caa",
+          "value": {
+            "band": "absent"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.95,
+      "source": "dns",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/tls_version",
+          "notes": null,
+          "observed": "tls_10_or_11",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "tls_version",
+          "source": "tls",
+          "subcategory": "tls_version",
+          "value": {
+            "band": "tls_10_or_11"
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/cert_validity",
+          "notes": null,
+          "observed": "valid",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "cert_validity",
+          "source": "tls",
+          "subcategory": "cert_validity",
+          "value": {
+            "band": "valid"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.95,
+      "source": "tls",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/hsts",
+          "notes": null,
+          "observed": "absent",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "hsts",
+          "source": "headers",
+          "subcategory": "hsts",
+          "value": {
+            "band": "absent"
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/csp",
+          "notes": null,
+          "observed": "absent",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "csp",
+          "source": "headers",
+          "subcategory": "csp",
+          "value": {
+            "band": "absent"
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/x_frame_opts",
+          "notes": null,
+          "observed": "absent",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "x_frame_opts",
+          "source": "headers",
+          "subcategory": "x_frame_opts",
+          "value": {
+            "band": "absent"
+          }
+        },
+        {
+          "category": "transparency",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/security_txt",
+          "notes": null,
+          "observed": "absent",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "security_txt",
+          "source": "headers",
+          "subcategory": "security_txt",
+          "value": {
+            "band": "absent"
+          }
+        },
+        {
+          "category": "transparency",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/vd_program",
+          "notes": null,
+          "observed": "none",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "vd_program",
+          "source": "headers",
+          "subcategory": "vd_program",
+          "value": {
+            "band": "none"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.9,
+      "source": "headers",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/subdomain_estate",
+          "notes": null,
+          "observed": "340 (large)",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "subdomain_estate",
+          "source": "ct",
+          "subcategory": "subdomain_estate",
+          "value": {
+            "count": 340
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/stale_hosts",
+          "notes": null,
+          "observed": "61 (many)",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "stale_hosts",
+          "source": "ct",
+          "subcategory": "stale_hosts",
+          "value": {
+            "count": 61
+          }
+        },
+        {
+          "category": "attack_surface_hygiene",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/weak_issuance",
+          "notes": null,
+          "observed": "deprecated_ca_or_key",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "weak_issuance",
+          "source": "ct",
+          "subcategory": "weak_issuance",
+          "value": {
+            "band": "deprecated_ca_or_key"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.9,
+      "source": "ct",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "breach_compromise_history",
+          "event_date": "2025-11-14T00:00:00Z",
+          "locator": "synthetic://floor-archetype.example/breach_by_data_class",
+          "notes": null,
+          "observed": "passwords_or_cards",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "breach_by_data_class",
+          "source": "hibp",
+          "subcategory": "breach_by_data_class",
+          "value": {
+            "band": "passwords_or_cards"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.55,
+      "source": "hibp",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "breach_compromise_history",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/kev_listed_cve",
+          "notes": null,
+          "observed": "listed",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "kev_listed_cve",
+          "source": "kev",
+          "subcategory": "kev_listed_cve",
+          "value": {
+            "band": "listed"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.95,
+      "source": "kev",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "breach_compromise_history",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/nvd_cve",
+          "notes": null,
+          "observed": "cvss_critical",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "nvd_cve",
+          "source": "nvd",
+          "subcategory": "nvd_cve",
+          "value": {
+            "band": "cvss_critical"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.55,
+      "source": "nvd",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.95,
+      "source": "ita",
+      "source_version": "synthetic-1",
+      "status": "empty",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "continuity_context",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/entity_status",
+          "notes": null,
+          "observed": "registration_lapsed",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "entity_status",
+          "source": "gleif",
+          "subcategory": "entity_status",
+          "value": {
+            "band": "registration_lapsed"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.9,
+      "source": "gleif",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "continuity_context",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/entity_existence",
+          "notes": null,
+          "observed": "entity_active_confirmed",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "entity_existence",
+          "source": "wikidata",
+          "subcategory": "entity_existence",
+          "value": {
+            "band": "entity_active_confirmed"
+          }
+        },
+        {
+          "category": "continuity_context",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/entity_maturity",
+          "notes": null,
+          "observed": "mature_gt_10",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "entity_maturity",
+          "source": "wikidata",
+          "subcategory": "entity_maturity",
+          "value": {
+            "band": "mature_gt_10"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.7,
+      "source": "wikidata",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "continuity_context",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/domain_registration",
+          "notes": null,
+          "observed": "domain_expiring",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "domain_registration",
+          "source": "rdap",
+          "subcategory": "domain_registration",
+          "value": {
+            "band": "domain_expiring"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.85,
+      "source": "rdap",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "compliance_regulatory",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/regulator_action",
+          "notes": null,
+          "observed": "enforcement_action",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "regulator_action",
+          "source": "regulatory",
+          "subcategory": "regulator_action",
+          "value": {
+            "band": "enforcement_action"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.4,
+      "source": "regulatory",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.6,
+      "source": "gdelt",
+      "source_version": "synthetic-1",
+      "status": "empty",
+      "vendor_ref": "synthetic_floor"
+    },
+    {
+      "fetched_at": "2026-07-23T00:00:00Z",
+      "findings": [
+        {
+          "category": "compliance_regulatory",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/cert_posture",
+          "notes": null,
+          "observed": "claimed_expired",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "cert_posture",
+          "source": "trust",
+          "subcategory": "cert_posture",
+          "value": {
+            "band": "claimed_expired"
+          }
+        },
+        {
+          "category": "assurance_context",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/contactability",
+          "notes": null,
+          "observed": "none_published",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "contactability",
+          "source": "trust",
+          "subcategory": "contactability",
+          "value": {
+            "band": "none_published"
+          }
+        },
+        {
+          "category": "assurance_context",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/program_disclosure",
+          "notes": null,
+          "observed": "marketing_only",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "program_disclosure",
+          "source": "trust",
+          "subcategory": "program_disclosure",
+          "value": {
+            "band": "marketing_only"
+          }
+        },
+        {
+          "category": "assurance_context",
+          "event_date": null,
+          "locator": "synthetic://floor-archetype.example/reporting_posture",
+          "notes": null,
+          "observed": "none",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "signal": "reporting_posture",
+          "source": "trust",
+          "subcategory": "reporting_posture",
+          "value": {
+            "band": "none"
+          }
+        }
+      ],
+      "notes": "constructed fixture \u2014 see tests/build_archetypes.py",
+      "raw": {
+        "archetype": "synthetic_floor",
+        "synthetic": true
+      },
+      "reliability": 0.5,
+      "source": "trust",
+      "source_version": "synthetic-1",
+      "status": "ok",
+      "vendor_ref": "synthetic_floor"
+    }
+  ],
+  "synthetic": {
+    "builder": "tests/build_archetypes.py",
+    "constructed": true,
+    "not_a_real_company": "No real entity is named, described or implied. The domain is under .example, reserved by RFC 2606 and unregistrable. This fixture must never enter a peer cohort, a benchmark population or a published report.",
+    "purpose": "E0.2 \u2014 engine archetypes the real five-vendor corpus cannot contain",
+    "why_this_one": "Comprehensively badly run: no email authentication, TLS 1.0, an abandoned estate, a credential breach, a KEV listing and a regulator enforcement action. Its purpose is the BOTTOM of the scale, which `synthetic_weak` cannot test because the ceiling caps it first. E7's ladder and E13's log-odds both land here, and today the corpus would stay green through a change that flattened everything under 30."
+  },
+  "vendor": {
+    "domain": "floor-archetype.example",
+    "name": "Floor Archetype GmbH (synthetic)",
+    "ref": "synthetic_floor"
+  }
+}

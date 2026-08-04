@@ -1,0 +1,21 @@
+# OSINT TPRM — continuous monitoring.
+#
+# Install:   crontab -l | cat - ops/schedule/crontab | crontab -
+# Verify:    python -m app.scheduler --health
+#
+# 03:17 rather than 03:00 on purpose. Every scheduled job on every host in the world lands on the
+# hour, and this sweep queries a dozen free public services that are all being hit hardest at
+# exactly that minute. An off-minute is politeness, and politeness is how free-source access is kept.
+#
+# DAILY, though no vendor is re-scored daily. Under --by-tier each relationship carries its own
+# interval (quarterly for T1 Critical down to passive for T4 Low), and a finding's recheck_after can
+# pull one forward to 7 days. The sweep runs often so that whichever relationships come due that day
+# are picked up; vendors that are not due cost a timestamp comparison and no collector traffic.
+
+17 3 * * *  /opt/osint-tprm/ops/schedule/run-monitor.sh >> /var/log/osint-tprm/monitor.log 2>&1
+
+# Health check, on the hour, every 6 hours. Exits 1 when no run has completed inside the tolerance,
+# which is the signal to page — SILENCE IS THE ALARM, not error. Without this line the schedule can
+# die and every currency metric on the dashboard keeps rendering as though it had not.
+
+41 */6 * * *  cd /opt/osint-tprm/backend && .venv/bin/python -m app.scheduler --health >/dev/null || echo "OSINT TPRM monitoring is not running" | logger -t osint-tprm -p daemon.err

@@ -1,0 +1,858 @@
+{
+  "vendor": {
+    "ref": "myob",
+    "name": "MYOB",
+    "domain": "myob.com"
+  },
+  "results": [
+    {
+      "source": "dns",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:48.561554Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "myob.com",
+        "dmarc_txt": [
+          "v=DMARC1; p=reject; rua=mailto:fc6c5627cba8530@rep.dmarcanalyzer.com; ruf=mailto:fc6c5627cba8530@for.dmarcanalyzer.com; sp=reject; fo=1"
+        ],
+        "dmarc_policy": "p_reject",
+        "root_txt": [
+          "/TviIfjMldvpwUEm8uGP+VVsgGbePIx7rezAaz6lgXmhLmCbkuwp0gxdPGfVeRGWwTZo/PkvQwA9XafJTvT52A==",
+          "2pM4jS+vgpvgGQETjvNJRXR34G+f4gpjYQokq8iwujW28THFX0juegs7e16Iz9mjHDZyGbce5ZTdWspg+HETxg==",
+          "MS=ms96484721",
+          "MYTX6khrALR0dRzH+Dph+XItZJwqBazyleV3+8PnpkU=",
+          "PXyHSIfoIt2lUkWlczaUtx4J+ixuveJMUQmDiDE2Vso=",
+          "_cvmpg2lzzjca7lkmr0kr6ltroxhle69",
+          "_u9omw6swdvyikeuw559bx0hqrio3w12",
+          "a6UBQMPRL58DLducDOH6m2uTGPqGd60zih1TUX/bAQM=",
+          "adobe-idp-site-verification=23b3b83b712f334ad3b4f83c49af05b17a4d848148e3b9a2677ca52925938390",
+          "adobe-idp-site-verification=b0fbf0a3-bb03-4b62-8403-6325bd050cd8",
+          "anthropic-domain-verification-dppw0r=N9Gr0hcUQxEuWGlL5BxyHnFCW",
+          "apple-domain-verification=X5AdBUZmHnuKgBQN",
+          "asv=5b257e3235d702bc06460015bef6b2f4",
+          "atlassian-domain-verification=uAPLQFG05dbItvC+wAm1vQKO8er+49G00VVqdW4mZuX0Sx1iEnMLB2dJEO09eKOa",
+          "canva-site-verification=rhuJtITQzhaHAqpYDtNe8g",
+          "cisco-ci-domain-verification=6d4788b3ed7502a6b743a48a8041c5d984f449a49218366a769ea197216b4a88",
+          "coda-verification=cf33a90e-9d1f-492f-87b8-9ff1de54ac7e",
+          "cursor-domain-verification-3d1r5g=tu9vTtxtzeHj5qE3HSKr25RTv",
+          "docker-verification=c80d99cc-aa6d-463c-80cb-87a053cd3f9f",
+          "docusign=a964f161-25ce-4d52-ab4d-79887eea0d1f",
+          "facebook-domain-verification=a7k9k4g8t3oomdrzyp7hnkx6ul8e4h",
+          "facebook-domain-verification=nvb13govwvqnom15dja76e1gtpjkyt",
+          "formstack-domain-verification=0de6852b756797a50e5a619d39b5c1b3",
+          "google-site-verification=4EHtCqmnbxPcMJJWC645-yET5bYZG-xG1GZ1UTmUfq8",
+          "have-i-been-pwned-verification=450602a23653f70e3b7e47797258b699",
+          "infoblox-domain-mastery=529eb9b6cc78b2758a6cc4259eb21545be635f0b3f9a87184ed787a508720f4fd7",
+          "ljx7gcwzjnl4ymw3h3tg8w6kq1b7nwhq",
+          "loaderio=c8f625ea448bc3509ab4187fedc37aa1",
+          "miro-verification=c8717ce3e53da32df9148164075ce92e56a384df",
+          "mixpanel-domain-verify=5f852dbe-051c-4c0c-bdbe-aea450c9c710",
+          "openai-domain-verification=dv-pyZQ9mVte0TSt8lluoYV5zUw",
+          "pardot502331=167a8c24d6076bb706394ad7b177e6b9d183f9717644db4926ac7ff3b2a64654",
+          "parkable-domain-verification=3t3wCe9oF8s9aAAZuRtww-mUYWyGZPfUCj_WbSn8I0I=",
+          "segment-site-verification=WZo7PUSeqfCxcNrKca9iSJkyG9uOwQsr",
+          "shopify-verification-code=XJZb5qDDFPVJ2Mu1tcWJWZpAtHdRzU",
+          "slack-domain-verification=hqjwVFyVYGCGmpvbzSA7xTNI79ZvrI05QlHD8fDQ",
+          "stripe-verification=0eaa4a1da6f07a4d16fdf1fcfb55b06e082def1b42b0f79bee886863bd07937a",
+          "stripe-verification=2CFB9ED4C04253B07DB72150A3E2A73A52E0795AB3E50445CD37DA6195CEDDE4",
+          "stripe-verification=5457772769139adb19b5e8c4524ef397bea0e5f2473f441dfdd121f75e76a147",
+          "stripe-verification=8011bf849cc0fa6ac396543e379b916b431f7493b8b4e6783352437c9c4f9116",
+          "stripe-verification=bfd3c2b13105ea404855929058e8b9b41d1611fec72b8c91950eb33746c8f32a",
+          "teamviewer-sso-verification=7f6d0864c09c404e93bcf9dcf2ab9542",
+          "twilio-domain-verification=4ff55b329c8e649f626a8c558396a552",
+          "v8jhw3d7jsfwhq5ztr6g7fcftqy5ktwz",
+          "v=spf1 include:spf.protection.outlook.com include:spf.mandrillapp.com include:au._netblocks.mimecast.com include:spf.myob.com ip4:54.153.226.176 ip4:198.37.156.227 -all",
+          "vmware-cloud-verification-8b3af40b-a811-4de4-8e35-ce48ee1af132",
+          "whimsical=c965a16fa450f3d334f01be8d7f6ae4d1726bc24"
+        ],
+        "spf_state": "hardfail_all",
+        "dkim_selector": "selector1",
+        "dnssec_dnskey_present": false,
+        "caa_present": false,
+        "mx": [
+          "20 au-smtp-inbound-2.mimecast.com.",
+          "10 au-smtp-inbound-1.mimecast.com."
+        ]
+      },
+      "findings": [
+        {
+          "source": "dns",
+          "signal": "dmarc",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "p_reject",
+          "value": {
+            "policy": "p_reject",
+            "record": "v=DMARC1; p=reject; rua=mailto:fc6c5627cba8530@rep.dmarcanalyzer.com; ruf=mailto:fc6c5627cba8530@for.dmarcanalyzer.com; sp=reject; fo=1"
+          },
+          "event_date": null,
+          "locator": "_dmarc.myob.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "spf",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "hardfail_all",
+          "value": {
+            "state": "hardfail_all",
+            "record": "v=spf1 include:spf.protection.outlook.com include:spf.mandrillapp.com include:au._netblocks.mimecast.com include:spf.myob.com ip4:54.153.226.176 ip4:198.37.156.227 -all"
+          },
+          "event_date": null,
+          "locator": "myob.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dkim",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "selector": "selector1"
+          },
+          "event_date": null,
+          "locator": "selector1._domainkey.myob.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dnssec",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "absent",
+          "value": {
+            "dnskey_present": false
+          },
+          "event_date": null,
+          "locator": "myob.com DNSKEY",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "no DNSKEY \u2014 DNSSEC not deployed (presence check, not validation)"
+        },
+        {
+          "source": "dns",
+          "signal": "caa",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "absent",
+          "value": {
+            "present": false
+          },
+          "event_date": null,
+          "locator": "myob.com CAA",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "tls",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:49.226514Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "myob.com",
+        "port": 443,
+        "version": "TLSv1.3",
+        "cipher": "TLS_AES_256_GCM_SHA384",
+        "not_after_raw": "Oct  9 09:47:18 2026 GMT",
+        "not_after_iso": "2026-10-09T09:47:18+00:00",
+        "days_to_expiry": 78,
+        "legacy_offered": []
+      },
+      "findings": [
+        {
+          "source": "tls",
+          "signal": "tls_version",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "TLSv1.3",
+          "value": {
+            "band": "tls_13",
+            "negotiated": "TLSv1.3",
+            "legacy_offered": []
+          },
+          "event_date": null,
+          "locator": "myob.com:443",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "tls",
+          "signal": "cert_validity",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "valid (78d)",
+          "value": {
+            "band": "valid",
+            "days_to_expiry": 78
+          },
+          "event_date": "2026-10-09T09:47:18Z",
+          "locator": "myob.com:443 leaf cert",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "headers",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:54:54.815144Z",
+      "source_version": "live",
+      "raw": {
+        "url": "https://www.myob.com/au",
+        "status_code": 200,
+        "headers": {
+          "server": "CloudFront",
+          "content-type": "text/html; charset=utf-8",
+          "transfer-encoding": "chunked",
+          "connection": "keep-alive",
+          "date": "Thu, 23 Jul 2026 07:58:32 GMT",
+          "x-xss-protection": "1; mode=block",
+          "x-content-type-options": "nosniff",
+          "content-security-policy": "default-src 'self' cdn.segment.com myob.com *.myob.com *.myobdev.com *.ninetailed.co *.clarity.ms *.bing.com *.linkedin.com *.reddit.com connect.facebook.net *.facebook.com *.fullstory.com *.segmentapis.com *.google.com.au *.redditstatic.com d.impactradius-event.com analytics.tiktok.com analytics-ipv6.tiktokw.us www.googletagmanager.com *.hsforms.net *.hsforms.com *.hs-scripts.com *.hs-banner.com *.hubspot.com *.hubspotfeedback.com *.hs-analytics.net *.segment.io *.hsappstatic.net *.clickagy.com *.adsrvr.org *.zoominfo.com feedback.hubapi.com *.survicate.com snap.licdn.com *.pinimg.com *.google.com *.google-analytics.com fast.wistia.net *.mypurecloud.com.au *.newrelic.com *.pinterest.com *.zi-scripts.com *.doubleclick.net *.wistia.com *.youtube.com *.youtu.be *.jsdelivr.net *.algolia.io *.algolia.net *.algolia.com alg.li *.algolianet.com *.ctfassets.net *.sentry-cdn.com *.sentry.io *.contentful.com *.survicate-cdn.com *.googleapis.com *.zdassets.com *.zendesk.com *.googleadservices.com myob.74xz8u.net d.impct.site google.com recaptcha.net *.gstatic.com d34r8q7sht0t9k.cloudfront.net ipv4.pdscrb.com tracking-api.g2.com cdn.veritonic.com *.veritonicmetrics.com tr.capterra.com bzrcdn.openai.com bzr.openai.com ws: blob:; script-src 'self' cdn.segment.com myob.com *.myob.com *.myobdev.com *.ninetailed.co *.clarity.ms *.bing.com *.linkedin.com *.reddit.com connect.facebook.net *.facebook.com *.fullstory.com *.segmentapis.com *.google.com.au *.redditstatic.com d.impactradius-event.com analytics.tiktok.com analytics-ipv6.tiktokw.us www.googletagmanager.com *.hsforms.net *.hsforms.com *.hs-scripts.com *.hs-banner.com *.hubspot.com *.hubspotfeedback.com *.hs-analytics.net *.segment.io *.hsappstatic.net *.clickagy.com *.adsrvr.org *.zoominfo.com feedback.hubapi.com *.survicate.com snap.licdn.com *.pinimg.com *.google.com *.google-analytics.com fast.wistia.net *.mypurecloud.com.au *.newrelic.com *.pinterest.com *.zi-scripts.com *.doubleclick.net *.wistia.com *.youtube.com *.youtu.be *.jsdelivr.net *.algolia.io *.algolia.net *.algolia.com alg.li *.algolianet.com *.ctfassets.net *.sentry-cdn.com *.sentry.io *.contentful.com *.survicate-cdn.com *.googleapis.com *.zdassets.com *.zendesk.com *.googleadservices.com myob.74xz8u.net d.impct.site google.com recaptcha.net *.gstatic.com d34r8q7sht0t9k.cloudfront.net ipv4.pdscrb.com tracking-api.g2.com cdn.veritonic.com *.veritonicmetrics.com tr.capterra.com bzrcdn.openai.com bzr.openai.com 'unsafe-eval' 'unsafe-inline' ws: blob:; style-src 'self' *.myob.com *.myobdev.com *.wistia.com *.survicate.com *.survicate-cdn.com www.googletagmanager.com *.googleapis.com 'unsafe-inline' ws: blob:; img-src 'self' *.myob.com *.myobdev.com *.wistia.com *.ctfassets.net *.survicate-cdn.com data: https: ws: blob:; font-src 'self' *.myob.com *.myobdev.com *.wistia.com *.survicate-cdn.com fonts.gstatic.com data:; object-src 'none'; frame-src *; frame-ancestors *;",
+          "referrer-policy": "origin-when-cross-origin",
+          "cache-control": "public,max-age=3609",
+          "x-powered-by": "MYOB",
+          "content-encoding": "gzip",
+          "strict-transport-security": "max-age=31536000; includeSubDomains",
+          "x-frame-options": "sameorigin",
+          "vary": "Accept-Encoding",
+          "via": "1.1 a8a0d32871a1e6321cffd1ee97c8a4be.cloudfront.net (CloudFront)",
+          "alt-svc": "h3=\":443\"; ma=86400",
+          "age": "3377",
+          "x-cache": "Hit from cloudfront",
+          "x-amz-cf-pop": "DXB53-P3",
+          "x-amz-cf-id": "Zf4voeWSVKebTCMmjWTKGPsPLFy19CTH3u_d5VLYQnJdbITHPhbvbw=="
+        },
+        "security_txt_present": false
+      },
+      "findings": [
+        {
+          "source": "headers",
+          "signal": "hsts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "max-age=31536000; includeSubDomains"
+          },
+          "event_date": null,
+          "locator": "https://myob.com/ [strict-transport-security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "csp",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "default-src 'self' cdn.segment.com myob.com *.myob.com *.myobdev.com *.ninetailed.co *.clarity.ms *.bing.com *.linkedin.com *.reddit.com connect.facebook.net *.facebook.com *.fullstory.com *.segmentapis.com *.google.com.au *.redditstatic.com d.impactradius-event.com analytics.tiktok.com analytics-ipv6.tiktokw.us www.googletagmanager.com *.hsforms.net *.hsforms.com *.hs-scripts.com *.hs-banner.com *.hubspot.com *.hubspotfeedback.com *.hs-analytics.net *.segment.io *.hsappstatic.net *.clickagy.com *.adsrvr.org *.zoominfo.com feedback.hubapi.com *.survicate.com snap.licdn.com *.pinimg.com *.google.com *.google-analytics.com fast.wistia.net *.mypurecloud.com.au *.newrelic.com *.pinterest.com *.zi-scripts.com *.doubleclick.net *.wistia.com *.youtube.com *.youtu.be *.jsdelivr.net *.algolia.io *.algolia.net *.algolia.com alg.li *.algolianet.com *.ctfassets.net *.sentry-cdn.com *.sentry.io *.contentful.com *.survicate-cdn.com *.googleapis.com *.zdassets.com *.zendesk.com *.googleadservices.com myob.74xz8u.net d.impct.site google.com recaptcha.net *.gstatic.com d34r8q7sht0t9k.cloudfront.net ipv4.pdscrb.com tracking-api.g2.com cdn.veritonic.com *.veritonicmetrics.com tr.capterra.com bzrcdn.openai.com bzr.openai.com ws: blob:; script-src 'self' cdn.segment.com myob.com *.myob.com *.myobdev.com *.ninetailed.co *.clarity.ms *.bing.com *.linkedin.com *.reddit.com connect.facebook.net *.facebook.com *.fullstory.com *.segmentapis.com *.google.com.au *.redditstatic.com d.impactradius-event.com analytics.tiktok.com analytics-ipv6.tiktokw.us www.googletagmanager.com *.hsforms.net *.hsforms.com *.hs-scripts.com *.hs-banner.com *.hubspot.com *.hubspotfeedback.com *.hs-analytics.net *.segment.io *.hsappstatic.net *.clickagy.com *.adsrvr.org *.zoominfo.com feedback.hubapi.com *.survicate.com snap.licdn.com *.pinimg.com *.google.com *.google-analytics.com fast.wistia.net *.mypurecloud.com.au *.newrelic.com *.pinterest.com *.zi-scripts.com *.doubleclick.net *.wistia.com *.youtube.com *.youtu.be *.jsdelivr.net *.algolia.io *.algolia.net *.algolia.com alg.li *.algolianet.com *.ctfassets.net *.sentry-cdn.com *.sentry.io *.contentful.com *.survicate-cdn.com *.googleapis.com *.zdassets.com *.zendesk.com *.googleadservices.com myob.74xz8u.net d.impct.site google.com recaptcha.net *.gstatic.com d34r8q7sht0t9k.cloudfront.net ipv4.pdscrb.com tracking-api.g2.com cdn.veritonic.com *.veritonicmetrics.com tr.capterra.com bzrcdn.openai.com bzr.openai.com 'unsafe-eval' 'unsafe-inline' ws: blob:; style-src 'self' *.myob.com *.myobdev.com *.wistia.com *.survicate.com *.survicate-cdn.com www.googletagmanager.com *.googleapis.com 'unsafe-inline' ws: blob:; img-src 'self' *.myob.com *.myobdev.com *.wistia.com *.ctfassets.net *.survicate-cdn.com data: https: ws: blob:; font-src 'self' *.myob.com *.myobdev.com *.wistia.com *.survicate-cdn.com fonts.gstatic.com data:; object-src 'none'; frame-src *; frame-ancestors *;"
+          },
+          "event_date": null,
+          "locator": "https://myob.com/ [content-security-policy]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "x_frame_opts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "sameorigin"
+          },
+          "event_date": null,
+          "locator": "https://myob.com/ [x-frame-options]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "security_txt",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "absent",
+          "value": {
+            "present": false
+          },
+          "event_date": null,
+          "locator": "https://myob.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "vd_program",
+          "subcategory": "vuln_disclosure_program",
+          "category": "vendor_transparency_gov",
+          "observed": "none",
+          "value": {
+            "band": "none",
+            "security_txt": false
+          },
+          "event_date": null,
+          "locator": "https://myob.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "published vulnerability-disclosure path inferred from security.txt (RFC 9116)"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "ct",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:01.050535Z",
+      "source_version": "certspotter",
+      "raw": {
+        "domain": "myob.com",
+        "ct_source": "certspotter",
+        "raw_names": 187,
+        "unique_subdomains": 84,
+        "stale_candidates": [
+          "cashbook.dev.myob.com",
+          "clients-ui-module.sit.contacts.dev.myob.com",
+          "crm-platform-service-dev.pfs-crm-preprod.myob.com",
+          "data-converter.dev.myob.com",
+          "dev-cashbook.dev.myob.com",
+          "dev.secure.myob.com",
+          "prod1.cashbook.dev.myob.com",
+          "prod2.cashbook.dev.myob.com",
+          "relaycloud-stage.api.myob.com",
+          "test-sandbox-mf.sit.myaccount.myob.com",
+          "www.relaycloud-stage.api.myob.com"
+        ],
+        "wildcard_seen": true,
+        "subdomains_sample": [
+          "account-details-feature.sit.myaccount.myob.com",
+          "account-details.bedrock-sit.myaccount.myob.com",
+          "account-details.myaccount.myob.com",
+          "account-details.sit.myaccount.myob.com",
+          "agencyapi.myob.com",
+          "api-preprod.ledger-cache.myob.com",
+          "archiesrvint.myob.com",
+          "bedrock-sit.backoffice.myob.com",
+          "bedrock-sit.myaccount.myob.com",
+          "cashbook.dev.myob.com",
+          "chncitrix.myob.com",
+          "clients-ui-module.sit.contacts.dev.myob.com",
+          "collabmaintenance.myob.com",
+          "communitystage.myob.com",
+          "crm-platform-service-dev.pfs-crm-preprod.myob.com",
+          "data-converter.dev.myob.com",
+          "data-converter.myob.com",
+          "dev-cashbook.dev.myob.com",
+          "dev.secure.myob.com",
+          "digital-case.bedrock-sit.myaccount.myob.com",
+          "digital-case.sit.myaccount.myob.com",
+          "enterprise-support.myob.com",
+          "exoservices.myob.com",
+          "fds.preprod.myob.com",
+          "fs-oip-onboarding.svc.platform.myob.com",
+          "greentree.myob.com",
+          "gtcoe-uksupport.myob.com",
+          "home.bedrock-sit.myaccount.myob.com",
+          "iap.myob.com",
+          "ideas.myob.com",
+          "image.email.myob.com",
+          "importmap.bedrock-sit.myaccount.myob.com",
+          "importmap.sit.myaccount.myob.com",
+          "invoices-plat-34944.sit.backoffice.myob.com",
+          "invoices-plat34944.sit.backoffice.myob.com",
+          "management-console-preprod.ledger-cache.myob.com",
+          "maps.greentree.myob.com",
+          "my-account-mf.bedrock-sit.myaccount.myob.com",
+          "my-account-mf.sit.myaccount.myob.com",
+          "myob-inproduct-messaging-api.myob.com",
+          "myob-inproduct-messaging.myob.com",
+          "myob-sit-inproduct-messaging-api.myob.com",
+          "myob-sit-inproduct-messaging.myob.com",
+          "navigation-mf-feature.sit.myaccount.myob.com",
+          "navigation-mf.myaccount.myob.com",
+          "navigation-mf.sit.myaccount.myob.com",
+          "nz.agencyapi.myob.com",
+          "olp-api.myob.com",
+          "onecloud-sme-web.app.myob.com",
+          "practice-support.myob.com",
+          "prod1.cashbook.dev.myob.com",
+          "prod2.cashbook.dev.myob.com",
+          "products-mf.sit.myaccount.myob.com",
+          "relaycloud-stage.api.myob.com",
+          "relaycloud.api.myob.com",
+          "relaycloud.exo.api.myob.com",
+          "secure.myob.com",
+          "sit.myaccount.myob.com",
+          "sit.services.myob.com",
+          "stp.agencyapi.myob.com",
+          "swagger.email-service.preprod.myob.com",
+          "swagger.email-service.sit.myob.com",
+          "tds.myob.com",
+          "test-sandbox-mf.sit.myaccount.myob.com",
+          "tools.bedrock-sit.myaccount.myob.com",
+          "tools.sit.myaccount.myob.com",
+          "validation.agencyapi.myob.com",
+          "vpn.myob.com",
+          "www.agencyapi.myob.com",
+          "www.archiesrvint.myob.com",
+          "www.chncitrix.myob.com",
+          "www.collabmaintenance.myob.com",
+          "www.exoservices.myob.com",
+          "www.fs-oip-onboarding.svc.platform.myob.com",
+          "www.nz.agencyapi.myob.com",
+          "www.olp-api.myob.com",
+          "www.relaycloud-stage.api.myob.com",
+          "www.relaycloud.api.myob.com",
+          "www.relaycloud.exo.api.myob.com",
+          "www.sit.services.myob.com",
+          "www.stp.agencyapi.myob.com",
+          "www.tds.myob.com",
+          "www.validation.agencyapi.myob.com",
+          "www.vpn.myob.com"
+        ]
+      },
+      "findings": [
+        {
+          "source": "ct",
+          "signal": "subdomain_estate",
+          "subcategory": "subdomain_hygiene",
+          "category": "digital_footprint_assets",
+          "observed": "84 subdomains",
+          "value": {
+            "count": 84
+          },
+          "event_date": null,
+          "locator": "certspotter %.myob.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "ct",
+          "signal": "stale_hosts",
+          "subcategory": "abandoned_shadow_assets",
+          "category": "digital_footprint_assets",
+          "observed": "11 stale/dev/staging names",
+          "value": {
+            "count": 11
+          },
+          "event_date": null,
+          "locator": "certspotter %.myob.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "certs issued, not hosts live \u2014 possible forgotten hosts"
+        },
+        {
+          "source": "ct",
+          "signal": "weak_issuance",
+          "subcategory": "certificate_transparency_issues",
+          "category": "digital_footprint_assets",
+          "observed": "wildcard_sprawl",
+          "value": {
+            "wildcard_sprawl": true
+          },
+          "event_date": null,
+          "locator": "certspotter %.myob.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "hibp",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:01.264819Z",
+      "source_version": null,
+      "raw": {
+        "domain": "myob.com",
+        "breaches": []
+      },
+      "findings": [
+        {
+          "source": "hibp",
+          "signal": "breach_by_data_class",
+          "subcategory": "confirmed_breaches",
+          "category": "breach_compromise_history",
+          "observed": "no known public breach",
+          "value": {
+            "band": "no_known_breach"
+          },
+          "event_date": null,
+          "locator": "HIBP /breaches Domain=myob.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no PUBLICLY known breach; absence is not proof of security"
+        }
+      ],
+      "reliability": 0.55,
+      "notes": "no breach record \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "kev",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:02.317203Z",
+      "source_version": "2026.07.22",
+      "raw": {
+        "catalog_version": "2026.07.22",
+        "total_kev": 1653,
+        "matched": 0
+      },
+      "findings": [
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "no KEV product match",
+          "value": {
+            "band": "no_kev_match"
+          },
+          "event_date": null,
+          "locator": "CISA KEV 2026.07.22",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no known-exploited CVE name-matches (or vendor ships no software)"
+        }
+      ],
+      "reliability": 0.6,
+      "notes": "no KEV match \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "nvd",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:03.281995Z",
+      "source_version": null,
+      "raw": {
+        "keyword": "MYOB",
+        "total": 0
+      },
+      "findings": [
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "no recent critical/high CVE keyword-match",
+          "value": {
+            "band": "no_critical_cve"
+          },
+          "event_date": null,
+          "locator": "NVD keywordSearch=MYOB",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no recent CVE keyword-matches this vendor (coarse match, \u00a75.4.2)"
+        }
+      ],
+      "reliability": 0.55,
+      "notes": "no scorable CVE \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "ita",
+      "vendor_ref": "myob",
+      "status": "empty",
+      "fetched_at": "2026-07-23T08:55:04.864734Z",
+      "source_version": "unknown",
+      "raw": {
+        "query": "myob",
+        "list_size": 25909,
+        "match_count": 0,
+        "screened": true
+      },
+      "findings": [],
+      "reliability": 0.95,
+      "notes": "clean screen vs 25909 CSL entries (retained as s16(7) defence record)"
+    },
+    {
+      "source": "gleif",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:05.460849Z",
+      "source_version": "live",
+      "raw": {
+        "query": "MYOB",
+        "candidates": 1,
+        "resolved": {
+          "lei": "549300JOVGPXKIWGAT22",
+          "legalName": "MYOB INVEST CO PTY LTD",
+          "jurisdiction": "AU",
+          "entityStatus": "ACTIVE",
+          "regStatus": "LAPSED"
+        },
+        "other_candidates": [],
+        "ambiguous": false,
+        "name_match": 2,
+        "strong_matches": 1,
+        "exact_matches": 0
+      },
+      "findings": [
+        {
+          "source": "gleif",
+          "signal": "entity_status",
+          "subcategory": "legal_entity_status",
+          "category": "business_financial_stability",
+          "observed": "MYOB INVEST CO PTY LTD \u2014 ACTIVE/LAPSED",
+          "value": {
+            "band": "registration_lapsed",
+            "lei": "549300JOVGPXKIWGAT22",
+            "jurisdiction": "AU",
+            "entity_status": "ACTIVE",
+            "registration_status": "LAPSED"
+          },
+          "event_date": null,
+          "locator": "GLEIF LEI 549300JOVGPXKIWGAT22",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "ENTITY-level standing; single best name match"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "wikidata",
+      "vendor_ref": "myob",
+      "status": "empty",
+      "fetched_at": "2026-07-23T08:55:10.970876Z",
+      "source_version": null,
+      "raw": {
+        "query": "MYOB",
+        "target_domain": "myob.com",
+        "candidates_inspected": 7
+      },
+      "findings": [],
+      "reliability": 0.7,
+      "notes": "no domain-verified Wikidata entity (no corroboration rather than a wrong match)"
+    },
+    {
+      "source": "rdap",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:12.133156Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "myob.com",
+        "ldhName": "MYOB.COM",
+        "status": [
+          "server delete prohibited",
+          "server transfer prohibited",
+          "server update prohibited"
+        ],
+        "created": "1996-08-30T04:00:00+00:00",
+        "expires": "2028-08-29T04:00:00+00:00"
+      },
+      "findings": [
+        {
+          "source": "rdap",
+          "signal": "domain_registration",
+          "subcategory": "domain_standing",
+          "category": "business_financial_stability",
+          "observed": "domain established ~29 year(s), active",
+          "value": {
+            "band": "domain_established",
+            "created": "1996-08-30T04:00:00+00:00",
+            "expires": "2028-08-29T04:00:00+00:00",
+            "status": [
+              "server delete prohibited",
+              "server transfer prohibited",
+              "server update prohibited"
+            ]
+          },
+          "event_date": null,
+          "locator": "RDAP myob.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "domain STANDING (entity-level) \u2014 a domain is not the company; minority weight"
+        }
+      ],
+      "reliability": 0.85,
+      "notes": null
+    },
+    {
+      "source": "regulatory",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:12.914517Z",
+      "source_version": null,
+      "raw": {
+        "tokens": [
+          "myob"
+        ],
+        "feeds_reached": [
+          "FTC",
+          "SEC",
+          "DOJ",
+          "UK-CMA",
+          "UK-ICO",
+          "CNIL"
+        ],
+        "match_count": 0,
+        "matches": []
+      },
+      "findings": [
+        {
+          "source": "regulatory",
+          "signal": "regulator_action",
+          "subcategory": "regulatory_actions",
+          "category": "adverse_media_reputation",
+          "observed": "no regulatory action found (recent window)",
+          "value": {
+            "band": "no_action_found",
+            "feeds": [
+              "FTC",
+              "SEC",
+              "DOJ",
+              "UK-CMA",
+              "UK-ICO",
+              "CNIL"
+            ]
+          },
+          "event_date": null,
+          "locator": "regulator feeds: FTC, SEC, DOJ, UK-CMA, UK-ICO, CNIL",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 recent-window, US-weighted; absence is weak (\u00a75.4.2)"
+        }
+      ],
+      "reliability": 0.4,
+      "notes": "no regulator match \u2014 clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "gdelt",
+      "vendor_ref": "myob",
+      "status": "error",
+      "fetched_at": "2026-07-23T08:55:25.415748Z",
+      "source_version": null,
+      "raw": null,
+      "findings": [],
+      "reliability": 0.6,
+      "notes": "GDELT returned 429"
+    },
+    {
+      "source": "trust",
+      "vendor_ref": "myob",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:55:38.711731Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "myob.com",
+        "pages_found": [
+          "security"
+        ],
+        "certifications_claimed": [
+          "ISO 27001",
+          "PCI DSS"
+        ],
+        "role_contacts": []
+      },
+      "findings": [
+        {
+          "source": "trust",
+          "signal": "cert_posture",
+          "subcategory": "certifications_attestations",
+          "category": "compliance_regulatory",
+          "observed": "ISO 27001, PCI DSS",
+          "value": {
+            "band": "claimed_unverified",
+            "certs": [
+              "ISO 27001",
+              "PCI DSS"
+            ]
+          },
+          "event_date": null,
+          "locator": "https://myob.com/[security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "SELF-REPORTED claim \u2014 corroborate against cert registry where possible"
+        },
+        {
+          "source": "trust",
+          "signal": "program_disclosure",
+          "subcategory": "security_program_disclosure",
+          "category": "vendor_transparency_gov",
+          "observed": "detailed_policies",
+          "value": {
+            "pages": [
+              "security"
+            ],
+            "chars": 200000
+          },
+          "event_date": null,
+          "locator": "https://myob.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported program disclosure"
+        },
+        {
+          "source": "trust",
+          "signal": "contactability",
+          "subcategory": "contactability_responsiveness",
+          "category": "vendor_transparency_gov",
+          "observed": "none published",
+          "value": {
+            "role_contacts": [],
+            "band": "none_published"
+          },
+          "event_date": null,
+          "locator": "https://myob.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "trust",
+          "signal": "reporting_posture",
+          "subcategory": "disclosure_reporting",
+          "category": "compliance_regulatory",
+          "observed": "substantive",
+          "value": {
+            "band": "substantive",
+            "chars": 200000
+          },
+          "event_date": null,
+          "locator": "https://myob.com/[security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported \u2014 published policies/reports inferred from trust-page substance"
+        }
+      ],
+      "reliability": 0.5,
+      "notes": null
+    }
+  ]
+}

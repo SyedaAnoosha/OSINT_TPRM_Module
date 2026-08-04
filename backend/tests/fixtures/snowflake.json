@@ -1,0 +1,2330 @@
+{
+  "vendor": {
+    "ref": "snowflake",
+    "name": "Snowflake",
+    "domain": "snowflake.com"
+  },
+  "results": [
+    {
+      "source": "dns",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:02.356502Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "snowflake.com",
+        "dmarc_txt": [
+          "v=DMARC1; p=reject; fo=1; ri=3600; rua=mailto:snowflake@rua.agari.com,mailto:dmarc_agg@dmarc.everest.email; ruf=mailto:snowflake@ruf.agari.com,mailto:dmarc_fr@dmarc.everest.email"
+        ],
+        "dmarc_policy": "p_reject",
+        "root_txt": [
+          "google-site-verification=-39oHu7hEa0ZvN5klZTkCwvvwy2unKE0NDd_NYUo4g0",
+          "google-site-verification=X8PCkacJg5mO_z7MCRO8NNavuEKx22b7N7CRKGU9WgE",
+          "google-site-verification=r0IcOJLU3Y5Nt3Sn1sl8w9_Be-W7_f0H3gmrjGmfUCc",
+          "google-site-verification=t6Db9EJ6LNFI1MLgoZYBFA3pH9f-XuMoWG231GR_zoY",
+          "google-site-verification=wKp_7znvsBM8SnAtqR7g9YzZfKCPdqOft7DzrzGxmCU",
+          "google-site-verification=wSXptz0CSQ2wmnTlHfjiTc4os82FEvlGwtG8RD4RDvE",
+          "hpe-greenlake-domain-verification=36396d5a69312d7664704136587a7264397670744248412d6b507a5445427746",
+          "jamf-site-verification=97YHiyv1lgEIwuZQCQX5Ig",
+          "jamf-site-verification=VYeXZVXUpC2QZszl-hbVVw",
+          "linear-domain-verification=5ig3mksyb8ft",
+          "mandrill_verify.dCMIszfLNCGJjeuJlpuS-Q",
+          "notion-domain-verification=4EL230BBXjEPsduiGDGuXX5ofhPLJpnZ08VuVOMur0i",
+          "openai-domain-verification=dv-4E6hygK00EH3tQU9RooR5iK2",
+          "openai-domain-verification=dv-AuJPMHaGhcObHgFq6h2R3zPm",
+          "paloaltonetworks-site-verification=3b855f131c3e32a1be7a1c9cb1e8f9b6a18a92c3f352856c7587450b0220fb32",
+          "parallels-domain-verification=cbd5858ad72a42fbbd93175adceeae5d3e78863f800440b9add3f7b16d53d0fc",
+          "postman-domain-verification=e2df20c10a70a04d37cb55d68524d055ac13b337716ce295f7f094183aaee2026cc59adaee3774032ce921537bdb800fe67d238222e4fff47ec825212f1ddf7a",
+          "serval-domain-verification-spe3wp=gLaHYtTSRh0YvIy3EiU3DVrQo",
+          "sinch-domain-verification=082db01f-e0f4-466a-be6f-30b4c357a6b9",
+          "smartsheet-site-validation=zrfKqfuefJezWqvanE92G_vAxVBT7aUv",
+          "status-page-domain-verification=55fcxbdng7tp",
+          "stripe-verification=2ac6aa6906a2fceb63242f8d6af6410fdd0a34a06bb633c2c29bbae650f18dbd",
+          "stripe-verification=54e6275bfe0f1471d3f3a0ccdf592715c299b36b638a03e43ad96429d468b45a",
+          "stripe-verification=a492b3578c4a5c1adee028fd7e7b6702112ed0a0de002a31cc0fca9e470afb17",
+          "v=spf1 include:%{d}.6f.spf-protect.agari.com exists:%{i}._i.%{d}._d.espf.agari.com include:_spf.google.com include:mktomail.com include:docebosaas.com include:stspg-customer.com include:_spf.salesforce.com -all",
+          "9114ab5b03d844a0a4fdff7f1d72baed",
+          "HupXEQiLjlaXqp58eB80hfXTC3UiYw0h4nRnERE+wWE=",
+          "_6ae83f5fi2jfo6jxad3rwu5jxywvj2z",
+          "_uq6u8pt0fw11usqdp2g3ol43cmwymad",
+          "adobe-idp-site-verification=4c309451879d960ae26f8728b0e960b9fc55f21668dd7174a85828f8d1e4bf12",
+          "amazonses:GdaOA4Viy3KMq85MYvsFIsXYfLf9vhqruELdYW1NaZE=",
+          "amazonses:dK4WC3QF6AWsrLsDyDg4XE9Jam5nZXWQr/HeqgsYTj0=",
+          "amazonses:xXi3hIIbTRoY9gsCyC3T7zvb0FxB6sVEkx173ADIEGw=",
+          "anthropic-domain-verification-adaqec=bCNQK0BDbbkXHVPU0sgLBzkoE",
+          "atlassian-domain-verification=NwgzE+tmHQ7MBuFrR4NDQoKjTo2LfCzN8/pVDH+MCPhZlk+3kD3cW0M7zopzth4Q",
+          "autodesk-domain-verification=KczUjLrDq3dGEjeFM9yX",
+          "c25vd2ZsYWtl",
+          "canva-site-verification=vYfRxcXk_iQcM8l8YfrMgA",
+          "cloudflare-verify.snowflake.com=666295925-245390659",
+          "docker-verification=05e11f8d-d401-45e3-a095-daa889b90bc5",
+          "docusign=2522c4cd-d7f8-4a82-bed0-133da45af644",
+          "docusign=a4072258-4636-4c33-a520-f8b5ead8c9c6",
+          "dtm-domain-verification=89biHljpeeNOc30NWx6VVNLVx_CxsyIGRgYL1VP9Y6A"
+        ],
+        "spf_state": "hardfail_all",
+        "dkim_selector": "google",
+        "dnssec_dnskey_present": false,
+        "caa_present": false,
+        "mx": [
+          "5 alt2.aspmx.l.google.com.",
+          "1 aspmx.l.google.com.",
+          "10 aspmx2.googlemail.com.",
+          "10 aspmx3.googlemail.com.",
+          "5 alt1.aspmx.l.google.com."
+        ]
+      },
+      "findings": [
+        {
+          "source": "dns",
+          "signal": "dmarc",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "p_reject",
+          "value": {
+            "policy": "p_reject",
+            "record": "v=DMARC1; p=reject; fo=1; ri=3600; rua=mailto:snowflake@rua.agari.com,mailto:dmarc_agg@dmarc.everest.email; ruf=mailto:snowflake@ruf.agari.com,mailto:dmarc_fr@dmarc.everest.email"
+          },
+          "event_date": null,
+          "locator": "_dmarc.snowflake.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "spf",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "hardfail_all",
+          "value": {
+            "state": "hardfail_all",
+            "record": "v=spf1 include:%{d}.6f.spf-protect.agari.com exists:%{i}._i.%{d}._d.espf.agari.com include:_spf.google.com include:mktomail.com include:docebosaas.com include:stspg-customer.com include:_spf.salesforce.com -all"
+          },
+          "event_date": null,
+          "locator": "snowflake.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dkim",
+          "subcategory": "email_authentication",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "selector": "google"
+          },
+          "event_date": null,
+          "locator": "google._domainkey.snowflake.com TXT",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "dns",
+          "signal": "dnssec",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "absent",
+          "value": {
+            "dnskey_present": false
+          },
+          "event_date": null,
+          "locator": "snowflake.com DNSKEY",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "no DNSKEY \u2014 DNSSEC not deployed (presence check, not validation)"
+        },
+        {
+          "source": "dns",
+          "signal": "caa",
+          "subcategory": "dns_infrastructure",
+          "category": "cyber_hygiene_technical",
+          "observed": "absent",
+          "value": {
+            "present": false
+          },
+          "event_date": null,
+          "locator": "snowflake.com CAA",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "tls",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:02.733945Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "snowflake.com",
+        "port": 443,
+        "version": "TLSv1.3",
+        "cipher": "TLS_AES_256_GCM_SHA384",
+        "not_after_raw": "Nov  6 23:59:59 2026 GMT",
+        "not_after_iso": "2026-11-06T23:59:59+00:00",
+        "days_to_expiry": 106,
+        "legacy_offered": []
+      },
+      "findings": [
+        {
+          "source": "tls",
+          "signal": "tls_version",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "TLSv1.3",
+          "value": {
+            "band": "tls_13",
+            "negotiated": "TLSv1.3",
+            "legacy_offered": []
+          },
+          "event_date": null,
+          "locator": "snowflake.com:443",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "tls",
+          "signal": "cert_validity",
+          "subcategory": "transport_security",
+          "category": "cyber_hygiene_technical",
+          "observed": "valid (106d)",
+          "value": {
+            "band": "valid",
+            "days_to_expiry": 106
+          },
+          "event_date": "2026-11-06T23:59:59Z",
+          "locator": "snowflake.com:443 leaf cert",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.95,
+      "notes": null
+    },
+    {
+      "source": "headers",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:03.773503Z",
+      "source_version": "live",
+      "raw": {
+        "url": "https://www.snowflake.com/en/",
+        "status_code": 200,
+        "headers": {
+          "date": "Thu, 23 Jul 2026 08:53:01 GMT",
+          "content-type": "text/html;charset=utf-8",
+          "content-length": "12336",
+          "connection": "keep-alive",
+          "cf-ray": "a1f973c9ab50815b-KHI",
+          "cf-cache-status": "BYPASS",
+          "accept-ranges": "bytes",
+          "access-control-allow-origin": "*",
+          "cache-control": "private, max-age=300, stale-while-revalidate=3600",
+          "content-encoding": "gzip",
+          "etag": "\"29df2-65743513425d9-gzip\"",
+          "last-modified": "Thu, 23 Jul 2026 08:48:17 GMT",
+          "server": "cloudflare",
+          "set-cookie": "affinity=\"6a4f066d0144ef8d\"; Path=/; HttpOnly; secure",
+          "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+          "vary": "X-Original-Host,Accept-Encoding,X-Geo-Country,X-Device-Type",
+          "content-security-policy": "frame-ancestors https://www.snowflake.com",
+          "x-detected-country": "PK",
+          "x-proxy-by": "Cloudflare Worker",
+          "cross-origin-opener-policy": "same-origin",
+          "cross-origin-resource-policy": "same-site",
+          "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+          "referrer-policy": "no-referrer-when-downgrade",
+          "x-cache": "MISS",
+          "x-content-type-options": "nosniff",
+          "x-debug-cloudflare-country": "PK",
+          "x-debug-cloudflare-forwarded-host": "publish-p57963-e462109.adobeaemcloud.com",
+          "x-debug-cloudflare-original-host": "www.snowflake.com",
+          "x-debug-cloudflare-region": "SD",
+          "x-debug-device-type": "desktop",
+          "x-debug-edge-key": "present",
+          "x-frame-options": "DENY",
+          "x-served-by": "cache-bom-vanm7210055-BOM",
+          "x-timer": "S1784796781.213966,VS0,VS0,VE266",
+          "x-vhost": "prod-snowflake",
+          "x-xss-protection": "1; mode=block",
+          "speculation-rules": "\"/cdn-cgi/speculation\"",
+          "alt-svc": "h3=\":443\"; ma=86400"
+        },
+        "security_txt_present": true
+      },
+      "findings": [
+        {
+          "source": "headers",
+          "signal": "hsts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "max-age=31536000; includeSubDomains; preload"
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/ [strict-transport-security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "csp",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "frame-ancestors https://www.snowflake.com"
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/ [content-security-policy]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "x_frame_opts",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true,
+            "value": "DENY"
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/ [x-frame-options]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "security_txt",
+          "subcategory": "web_hardening",
+          "category": "cyber_hygiene_technical",
+          "observed": "present",
+          "value": {
+            "present": true
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "headers",
+          "signal": "vd_program",
+          "subcategory": "vuln_disclosure_program",
+          "category": "vendor_transparency_gov",
+          "observed": "security_txt_only",
+          "value": {
+            "band": "security_txt_only",
+            "security_txt": true
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/.well-known/security.txt",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "published vulnerability-disclosure path inferred from security.txt (RFC 9116)"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "ct",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:14.249767Z",
+      "source_version": "certspotter",
+      "raw": {
+        "domain": "snowflake.com",
+        "ct_source": "certspotter",
+        "raw_names": 674,
+        "unique_subdomains": 211,
+        "stale_candidates": [
+          "a360-dev.snowflake.com",
+          "a360-uat.snowflake.com",
+          "account-recon-tag-dev.snowflake.com",
+          "account-recon-tag-uat.snowflake.com",
+          "action-tracker-dev.snowflake.com",
+          "ai-qa-dev.snowflake.com",
+          "analytics-observability-dev.snowflake.com",
+          "analytics-observability-uat.snowflake.com",
+          "anaplan-dev.snowflake.com",
+          "app-domain-health-scorecard-dev.snowflake.com",
+          "app-domain-health-scorecard-uat.snowflake.com",
+          "assistant-api-uat.snowflake.com",
+          "assistant-dev.snowflake.com",
+          "assistant-uat.snowflake.com",
+          "bonobo-uat.snowflake.com",
+          "chat-uat.snowflake.com",
+          "clmdown-dev.snowflake.com",
+          "clmdown-uat.snowflake.com",
+          "coeus-uat.snowflake.com",
+          "como-finance-dev.snowflake.com",
+          "como-finance-uat.snowflake.com",
+          "crmanalyst-dev.snowflake.com",
+          "crmanalyst-uat.snowflake.com",
+          "customer-support-assistant-uat.snowflake.com",
+          "demo.streamlit-dev.snowflake.com",
+          "dev-fleetdm.snowflake.com",
+          "devtemptest1.westus2.azure-dev.app.snowflake.com",
+          "e2e-tool-dev.snowflake.com",
+          "employee-assistant-uat.snowflake.com",
+          "fedramp-sandbox-jira.snowflake.com",
+          "finance-calendar-dev.snowflake.com",
+          "freestyle-qa.snowflake.com",
+          "github-sizer-uat.snowflake.com",
+          "gopher-uat.snowflake.com",
+          "gts-skill-matrix-uat.snowflake.com",
+          "hrcalculator-test.snowflake.com",
+          "hrcalculator-uat.snowflake.com",
+          "infragenie-uat.snowflake.com",
+          "internal-audit-uat.snowflake.com",
+          "investment-data-cloud-dev.snowflake.com",
+          "investment-data-cloud-uat.snowflake.com",
+          "jenkinsnonprod1.us-west-2.aws-dev.app.snowflake.com",
+          "jenkinsstaging1.us-west-2.aws-dev.app.snowflake.com",
+          "jira-analytics-qa.snowflake.com",
+          "jira-incident-analytics-dev.snowflake.com",
+          "jira-incident-analytics-uat.snowflake.com",
+          "jiravalidator-dev.snowflake.com",
+          "knowledge-assistant-uat.snowflake.com",
+          "kronos-uat.snowflake.com",
+          "kudos-dev.snowflake.com",
+          "kudos-uat.snowflake.com",
+          "legal-analytics-dev.snowflake.com",
+          "legal-analytics-uat.snowflake.com",
+          "legal-contracts-uat.snowflake.com",
+          "legalone-dev.snowflake.com",
+          "legalone-uat.snowflake.com",
+          "license-optimization-uat.snowflake.com",
+          "ordevtemptest2.us-west-2.aws-dev.app.snowflake.com",
+          "otc-integration-services-dev.snowflake.com",
+          "otc-integration-services-uat.snowflake.com",
+          "otc-orchestration-services-dev.snowflake.com",
+          "otc-orchestration-services-uat.snowflake.com",
+          "partner-payment-api-uat.snowflake.com",
+          "partner-payment-oauth-uat.snowflake.com",
+          "partner-payment-ui-uat.snowflake.com",
+          "pd-schedule-manager-dev.snowflake.com",
+          "pd-schedule-manager-uat.snowflake.com",
+          "pmo-dashboard-dev.snowflake.com",
+          "preprod13e1.us-west-2.aws-dev.app.snowflake.com",
+          "preprod6c1.us-west-2.aws-dev.app.snowflake.com",
+          "preprod9.us-west-2.aws-dev.app.snowflake.com",
+          "preprod9e1.us-west-2.aws-dev.app.snowflake.com",
+          "procurement-deals-dashboard-uat.snowflake.com",
+          "product-owners-app-dev.snowflake.com",
+          "product-owners-app-uat.snowflake.com",
+          "qa-assistant-poc-wbd-dev.snowflake.com",
+          "qacore1.eastus2.azure-dev.app.snowflake.com",
+          "riskpilot-uat.snowflake.com",
+          "sales-knowledge-assistant-dev.snowflake.com",
+          "salesassistant-dev.snowflake.com",
+          "salesassistant-uat.snowflake.com",
+          "salesforce-cortex-app-uat.snowflake.com",
+          "scheduler-service-dev.snowflake.com",
+          "security-compliance-ai-assistant-uat.snowflake.com",
+          "snowamp-uat.snowflake.com",
+          "snowaudit-dev.snowflake.com",
+          "snowbridge-dev.snowflake.com",
+          "snowcap-uat.snowflake.com",
+          "snowcoach-uat.snowflake.com",
+          "snowfin-dev.snowflake.com",
+          "snowfin-qa.snowflake.com",
+          "snowfin-uat.snowflake.com",
+          "snowflakelinks-dev.snowflake.com",
+          "snowflakelinks-uat.snowflake.com",
+          "snowidm-dev.snowflake.com",
+          "snowidm-uat.snowflake.com",
+          "snowpkg.stage.snowflake.com",
+          "snowplan-uat.snowflake.com",
+          "snowpulse-dev.snowflake.com",
+          "snowpulse-uat.snowflake.com",
+          "snowqa-dev.snowflake.com",
+          "snowqa-uat.snowflake.com",
+          "snowscout-dev.snowflake.com",
+          "snowscout-uat.snowflake.com",
+          "snowtower-qa-2.corp.snowflake.com",
+          "snowtower-qa-assistant-uat.snowflake.com",
+          "uar-compliance-dev.snowflake.com",
+          "uar-compliance-uat.snowflake.com",
+          "uar-manager-dev.snowflake.com",
+          "uar-manager-uat.snowflake.com",
+          "ux-score-dev.snowflake.com",
+          "ux-score-uat.snowflake.com",
+          "winternet-qa.snowflake.com",
+          "winternet-uat.snowflake.com",
+          "winternetllm-dev.snowflake.com",
+          "winternetllm-uat.snowflake.com",
+          "workforce-management-uat.snowflake.com",
+          "workplace-analytics-uat.snowflake.com",
+          "zoom-qss-uat.snowflake.com"
+        ],
+        "wildcard_seen": true,
+        "subdomains_sample": [
+          "a360-dev.snowflake.com",
+          "a360-uat.snowflake.com",
+          "a360.snowflake.com",
+          "account-recon-tag-dev.snowflake.com",
+          "account-recon-tag-uat.snowflake.com",
+          "account-recon-tag.snowflake.com",
+          "action-tracker-dev.snowflake.com",
+          "ai-qa-dev.snowflake.com",
+          "amzwh1.us-east-1.aws.app.snowflake.com",
+          "amzwh1.us-east-2.aws.app.snowflake.com",
+          "amzwhcore1.us-east-1.aws.app.snowflake.com",
+          "amzwhcore1.us-east-2.aws.app.snowflake.com",
+          "amzwhe1.us-east-1.aws.app.snowflake.com",
+          "amzwhe1.us-east-2.aws.app.snowflake.com",
+          "analytics-observability-dev.snowflake.com",
+          "analytics-observability-uat.snowflake.com",
+          "analytics-observability.snowflake.com",
+          "anaplan-dev.snowflake.com",
+          "app-domain-health-scorecard-dev.snowflake.com",
+          "app-domain-health-scorecard-uat.snowflake.com",
+          "app-domain-health-scorecard.snowflake.com",
+          "assistant-api-uat.snowflake.com",
+          "assistant-api.snowflake.com",
+          "assistant-dev.snowflake.com",
+          "assistant-uat.snowflake.com",
+          "assistant.snowflake.com",
+          "bonobo-uat.snowflake.com",
+          "bonobo.snowflake.com",
+          "c1.swedencentral.azure.app.snowflake.com",
+          "c1.us-west-2.aws-gov.app.snowflake.com",
+          "chat-uat.snowflake.com",
+          "chat.snowflake.com",
+          "clmdown-dev.snowflake.com",
+          "clmdown-uat.snowflake.com",
+          "clmdown.snowflake.com",
+          "coeus-uat.snowflake.com",
+          "coeus.snowflake.com",
+          "como-finance-dev.snowflake.com",
+          "como-finance-uat.snowflake.com",
+          "como-finance.snowflake.com",
+          "core1.swedencentral.azure.app.snowflake.com",
+          "core1.uaenorth.azure.app.snowflake.com",
+          "crmanalyst-dev.snowflake.com",
+          "crmanalyst-uat.snowflake.com",
+          "crmanalyst.snowflake.com",
+          "customer-support-assistant-uat.snowflake.com",
+          "customer-support-assistant.snowflake.com",
+          "demo.streamlit-dev.snowflake.com",
+          "demo.streamlit.snowflake.com",
+          "dev-fleetdm.snowflake.com",
+          "devtemptest1.westus2.azure-dev.app.snowflake.com",
+          "dtcc.us-east-1.aws.app.snowflake.com",
+          "dtcc.us-west-2.aws.app.snowflake.com",
+          "e1.ap-southeast-2.aws.app.snowflake.com",
+          "e1.ap-southeast-3.aws.app.snowflake.com",
+          "e1.ca-central-1.aws.app.snowflake.com",
+          "e1.sa-east-1.aws.app.snowflake.com",
+          "e2e-tool-dev.snowflake.com",
+          "employee-assistant-uat.snowflake.com",
+          "employee-assistant.snowflake.com",
+          "event.snowflake.com",
+          "fededge.snowflake.com",
+          "fedramp-sandbox-jira.snowflake.com",
+          "finance-calendar-dev.snowflake.com",
+          "flosum-gitlab.snowflake.com",
+          "freestyle-qa.snowflake.com",
+          "gem1.us-west-2.aws.app.snowflake.com",
+          "github-sizer-uat.snowflake.com",
+          "gopher-uat.snowflake.com",
+          "gts-applications.snowflake.com",
+          "gts-skill-matrix-uat.snowflake.com",
+          "gts-skill-matrix.snowflake.com",
+          "hassium1.eu-central-2.aws.app.snowflake.com",
+          "hassiume1.eu-central-2.aws.app.snowflake.com",
+          "hrcalculator-test.snowflake.com",
+          "hrcalculator-uat.snowflake.com",
+          "infragenie-uat.snowflake.com",
+          "infragenie.snowflake.com",
+          "internal-audit-uat.snowflake.com",
+          "investment-data-cloud-dev.snowflake.com",
+          "investment-data-cloud-uat.snowflake.com",
+          "investment-data-cloud.snowflake.com",
+          "ipe-em-fluentbit-logshipping.snowflake.com",
+          "jenkinsnonprod1.us-west-2.aws-dev.app.snowflake.com",
+          "jenkinsstaging1.us-west-2.aws-dev.app.snowflake.com",
+          "jira-analytics-qa.snowflake.com",
+          "jira-analytics.snowflake.com",
+          "jira-incident-analytics-dev.snowflake.com",
+          "jira-incident-analytics-uat.snowflake.com",
+          "jiravalidator-dev.snowflake.com",
+          "knowledge-assistant-uat.snowflake.com",
+          "knowledge-assistant.snowflake.com",
+          "kronos-uat.snowflake.com",
+          "kronos.snowflake.com",
+          "kudos-dev.snowflake.com",
+          "kudos-uat.snowflake.com",
+          "kudos.snowflake.com",
+          "legal-analytics-dev.snowflake.com",
+          "legal-analytics-uat.snowflake.com",
+          "legal-analytics.snowflake.com",
+          "legal-contracts-uat.snowflake.com",
+          "legal-contracts.snowflake.com",
+          "legalone-dev.snowflake.com",
+          "legalone-uat.snowflake.com",
+          "legalone.snowflake.com",
+          "license-optimization-uat.snowflake.com",
+          "license-optimization.snowflake.com",
+          "metacore1.us-gov-west-1-fhplus.aws-gov.app.snowflake.com",
+          "ordevtemptest2.us-west-2.aws-dev.app.snowflake.com",
+          "otc-integration-services-dev.snowflake.com",
+          "otc-integration-services-uat.snowflake.com",
+          "otc-orchestration-services-dev.snowflake.com",
+          "otc-orchestration-services-uat.snowflake.com",
+          "partner-payment-api-uat.snowflake.com",
+          "partner-payment-api.snowflake.com",
+          "partner-payment-oauth-uat.snowflake.com",
+          "partner-payment-oauth.snowflake.com",
+          "partner-payment-ui-uat.snowflake.com",
+          "partner-payment-ui.snowflake.com",
+          "partnerfinder.snowflake.com",
+          "pd-schedule-manager-dev.snowflake.com",
+          "pd-schedule-manager-uat.snowflake.com",
+          "pd-schedule-manager.snowflake.com",
+          "pmo-dashboard-dev.snowflake.com",
+          "pmo-dashboard.snowflake.com",
+          "preprod13e1.us-west-2.aws-dev.app.snowflake.com",
+          "preprod6c1.us-west-2.aws-dev.app.snowflake.com",
+          "preprod9.us-west-2.aws-dev.app.snowflake.com",
+          "preprod9e1.us-west-2.aws-dev.app.snowflake.com",
+          "procurement-deals-dashboard-uat.snowflake.com",
+          "procurement-deals-dashboard.snowflake.com",
+          "prod1c1.us-west-2.aws.app.snowflake.com",
+          "prod2c1.us-west-2.aws.app.snowflake.com",
+          "prod3c1.us-west-2.aws.app.snowflake.com",
+          "product-owners-app-dev.snowflake.com",
+          "product-owners-app-uat.snowflake.com",
+          "product-owners-app.snowflake.com",
+          "qa-assistant-poc-wbd-dev.snowflake.com",
+          "qaaiassistant.snowflake.com",
+          "qacore1.eastus2.azure-dev.app.snowflake.com",
+          "retl-job-monitor.snowflake.com",
+          "riskpilot-uat.snowflake.com",
+          "sales-ai-assistant.snowflake.com",
+          "sales-knowledge-assistant-dev.snowflake.com",
+          "salesassistant-dev.snowflake.com",
+          "salesassistant-uat.snowflake.com",
+          "salesassistant.snowflake.com",
+          "salesforce-cortex-app-uat.snowflake.com",
+          "scheduler-service-dev.snowflake.com",
+          "se-arch-landing-page.snowflake.com",
+          "security-compliance-ai-assistant-uat.snowflake.com",
+          "security-compliance-ai-assistant.snowflake.com",
+          "slack-thread-summ.snowflake.com",
+          "snowamp-uat.snowflake.com",
+          "snowamp.snowflake.com",
+          "snowaudit-dev.snowflake.com",
+          "snowaudit.snowflake.com",
+          "snowbridge-dev.snowflake.com",
+          "snowbridge-sbx.snowflake.com",
+          "snowbridge.snowflake.com",
+          "snowcap-uat.snowflake.com",
+          "snowcap.snowflake.com",
+          "snowcoach-uat.snowflake.com",
+          "snowcomp.snowflake.com",
+          "snowfin-dev.snowflake.com",
+          "snowfin-preprod.snowflake.com",
+          "snowfin-qa.snowflake.com",
+          "snowfin-uat.snowflake.com",
+          "snowfin.snowflake.com",
+          "snowflakelinks-dev.snowflake.com",
+          "snowflakelinks-uat.snowflake.com",
+          "snowflakelinks.snowflake.com",
+          "snowidm-dev.snowflake.com",
+          "snowidm-uat.snowflake.com",
+          "snowidm.snowflake.com",
+          "snowpkg.stage.snowflake.com",
+          "snowplan-uat.snowflake.com",
+          "snowplan.snowflake.com",
+          "snowpulse-dev.snowflake.com",
+          "snowpulse-uat.snowflake.com",
+          "snowpulse.snowflake.com",
+          "snowqa-dev.snowflake.com",
+          "snowqa-uat.snowflake.com",
+          "snowscout-dev.snowflake.com",
+          "snowscout-uat.snowflake.com",
+          "snowscout.snowflake.com",
+          "snowtax-api.snowflake.com",
+          "snowtower-qa-2.corp.snowflake.com",
+          "snowtower-qa-assistant-uat.snowflake.com",
+          "uar-compliance-dev.snowflake.com",
+          "uar-compliance-uat.snowflake.com",
+          "uar-manager-dev.snowflake.com",
+          "uar-manager-uat.snowflake.com",
+          "uar.snowflake.com",
+          "uarcompliance.snowflake.com",
+          "ux-score-dev.snowflake.com",
+          "ux-score-uat.snowflake.com",
+          "ux-score.snowflake.com",
+          "va3c1.us-east-1.aws.app.snowflake.com",
+          "vac1.us-east-1.aws.app.snowflake.com"
+        ]
+      },
+      "findings": [
+        {
+          "source": "ct",
+          "signal": "subdomain_estate",
+          "subcategory": "subdomain_hygiene",
+          "category": "digital_footprint_assets",
+          "observed": "211 subdomains",
+          "value": {
+            "count": 211
+          },
+          "event_date": null,
+          "locator": "certspotter %.snowflake.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "ct",
+          "signal": "stale_hosts",
+          "subcategory": "abandoned_shadow_assets",
+          "category": "digital_footprint_assets",
+          "observed": "119 stale/dev/staging names",
+          "value": {
+            "count": 119
+          },
+          "event_date": null,
+          "locator": "certspotter %.snowflake.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "certs issued, not hosts live \u2014 possible forgotten hosts"
+        },
+        {
+          "source": "ct",
+          "signal": "weak_issuance",
+          "subcategory": "certificate_transparency_issues",
+          "category": "digital_footprint_assets",
+          "observed": "wildcard_sprawl",
+          "value": {
+            "wildcard_sprawl": true
+          },
+          "event_date": null,
+          "locator": "certspotter %.snowflake.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "hibp",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:14.320501Z",
+      "source_version": null,
+      "raw": {
+        "domain": "snowflake.com",
+        "breaches": []
+      },
+      "findings": [
+        {
+          "source": "hibp",
+          "signal": "breach_by_data_class",
+          "subcategory": "confirmed_breaches",
+          "category": "breach_compromise_history",
+          "observed": "no known public breach",
+          "value": {
+            "band": "no_known_breach"
+          },
+          "event_date": null,
+          "locator": "HIBP /breaches Domain=snowflake.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no PUBLICLY known breach; absence is not proof of security"
+        }
+      ],
+      "reliability": 0.55,
+      "notes": "no breach record \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "kev",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:15.371098Z",
+      "source_version": "2026.07.22",
+      "raw": {
+        "catalog_version": "2026.07.22",
+        "total_kev": 1653,
+        "matched": 0
+      },
+      "findings": [
+        {
+          "source": "kev",
+          "signal": "kev_listed_cve",
+          "subcategory": "exploited_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "no KEV product match",
+          "value": {
+            "band": "no_kev_match"
+          },
+          "event_date": null,
+          "locator": "CISA KEV 2026.07.22",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 no known-exploited CVE name-matches (or vendor ships no software)"
+        }
+      ],
+      "reliability": 0.6,
+      "notes": "no KEV match \u2014 recorded as clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "nvd",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:17.214548Z",
+      "source_version": "live",
+      "raw": {
+        "keyword": "Snowflake",
+        "returned": 50,
+        "summaries": [
+          {
+            "cve": "CVE-2022-42965",
+            "score": 3.7,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2022-11-09T20:15:10.820000Z"
+          },
+          {
+            "cve": "CVE-2023-30535",
+            "score": 7.3,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2023-04-14T20:15:09.963000Z",
+            "epss": 0.01668
+          },
+          {
+            "cve": "CVE-2023-34231",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2023-06-08T20:15:09.483000Z",
+            "epss": 0.01962
+          },
+          {
+            "cve": "CVE-2023-34230",
+            "score": 7.3,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2023-06-08T21:15:17.513000Z",
+            "epss": 0.01431
+          },
+          {
+            "cve": "CVE-2023-34232",
+            "score": 7.3,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2023-06-08T21:15:17.593000Z",
+            "epss": 0.01897
+          },
+          {
+            "cve": "CVE-2023-34233",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2023-06-08T21:15:17.663000Z",
+            "epss": 0.01841
+          },
+          {
+            "cve": "CVE-2023-51662",
+            "score": 6.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2023-12-22T17:15:10.413000Z",
+            "epss": 0.00348
+          },
+          {
+            "cve": "CVE-2024-28851",
+            "score": 4.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2024-03-15T19:15:07.410000Z"
+          },
+          {
+            "cve": "CVE-2024-42474",
+            "score": 6.5,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2024-08-12T17:15:17.513000Z",
+            "epss": 0.00568
+          },
+          {
+            "cve": "CVE-2024-49750",
+            "score": 5.5,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2024-10-24T22:15:04.490000Z"
+          },
+          {
+            "cve": "CVE-2024-43382",
+            "score": 5.9,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2024-10-30T21:15:14.160000Z"
+          },
+          {
+            "cve": "CVE-2025-24792",
+            "score": 4.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2025-01-29T16:15:44.273000Z"
+          },
+          {
+            "cve": "CVE-2025-24791",
+            "score": 4.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2025-01-29T17:15:30.020000Z"
+          },
+          {
+            "cve": "CVE-2025-24789",
+            "score": 7.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2025-01-29T18:15:47.030000Z",
+            "epss": 0.00252
+          },
+          {
+            "cve": "CVE-2025-24790",
+            "score": 4.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2025-01-29T18:15:47.207000Z"
+          },
+          {
+            "cve": "CVE-2025-24788",
+            "score": 5.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2025-01-29T21:15:21.140000Z"
+          },
+          {
+            "cve": "CVE-2025-24793",
+            "score": 7.0,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2025-01-29T21:15:21.270000Z",
+            "epss": 0.003
+          },
+          {
+            "cve": "CVE-2025-24794",
+            "score": 6.7,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2025-01-29T21:15:21.397000Z",
+            "epss": 0.00246
+          },
+          {
+            "cve": "CVE-2025-24795",
+            "score": 4.4,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2025-01-29T21:15:21.533000Z"
+          },
+          {
+            "cve": "CVE-2025-27496",
+            "score": 3.3,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2025-03-13T19:15:52.050000Z"
+          },
+          {
+            "cve": "CVE-2024-8055",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2025-03-20T10:15:40.127000Z",
+            "epss": 0.00617
+          },
+          {
+            "cve": "CVE-2025-46614",
+            "score": 3.3,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2025-04-28T16:15:35.083000Z"
+          },
+          {
+            "cve": "CVE-2025-46326",
+            "score": 3.3,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2025-04-28T23:15:44.250000Z"
+          },
+          {
+            "cve": "CVE-2025-46327",
+            "score": 3.3,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2025-04-28T23:15:44.803000Z"
+          },
+          {
+            "cve": "CVE-2025-46328",
+            "score": 3.3,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2025-04-28T23:15:44.943000Z"
+          },
+          {
+            "cve": "CVE-2025-46329",
+            "score": 3.3,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2025-04-29T05:15:46.650000Z"
+          },
+          {
+            "cve": "CVE-2025-46330",
+            "score": 3.3,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2025-04-29T05:15:46.817000Z"
+          },
+          {
+            "cve": "CVE-2025-50213",
+            "score": 9.8,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2025-06-24T08:15:24.253000Z",
+            "epss": 0.00593
+          },
+          {
+            "cve": "CVE-2026-3293",
+            "score": 3.3,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2026-02-27T06:18:00.250000Z"
+          },
+          {
+            "cve": "CVE-2026-6442",
+            "score": 8.3,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-04-16T19:16:35.560000Z",
+            "epss": 0.00358
+          },
+          {
+            "cve": "CVE-2026-42237",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-05-04T19:16:06.483000Z",
+            "epss": 0.00254
+          },
+          {
+            "cve": "CVE-2026-41490",
+            "score": 8.3,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-05-07T14:16:02.527000Z",
+            "epss": 0.00265
+          },
+          {
+            "cve": "CVE-2026-46427",
+            "score": 7.7,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-05-27T18:16:26.600000Z",
+            "epss": 0.00223
+          },
+          {
+            "cve": "CVE-2026-28381",
+            "score": 9.6,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2026-06-22T14:16:35.820000Z",
+            "epss": 0.00205
+          },
+          {
+            "cve": "CVE-2026-13744",
+            "score": 8.3,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-06-29T16:16:39.260000Z",
+            "epss": 0.0032
+          },
+          {
+            "cve": "CVE-2026-13746",
+            "score": 3.6,
+            "severity": "LOW",
+            "band": "cvss_medium_or_low",
+            "published": "2026-06-29T16:16:39.403000Z"
+          },
+          {
+            "cve": "CVE-2026-13748",
+            "score": 6.3,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2026-06-29T16:16:39.517000Z",
+            "epss": 0.00139
+          },
+          {
+            "cve": "CVE-2026-13749",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-06-29T16:16:39.640000Z",
+            "epss": 0.0037
+          },
+          {
+            "cve": "CVE-2026-13750",
+            "score": 5.5,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2026-06-29T16:16:39.750000Z"
+          },
+          {
+            "cve": "CVE-2026-13751",
+            "score": 4.1,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2026-06-29T17:16:30.050000Z"
+          },
+          {
+            "cve": "CVE-2026-13752",
+            "score": 6.0,
+            "severity": "MEDIUM",
+            "band": "cvss_medium_or_low",
+            "published": "2026-06-29T17:16:30.160000Z",
+            "epss": 0.00188
+          },
+          {
+            "cve": "CVE-2026-58375",
+            "score": 7.5,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-06-30T17:16:25.743000Z",
+            "epss": 0.00458
+          },
+          {
+            "cve": "CVE-2026-15062",
+            "score": 9.6,
+            "severity": "CRITICAL",
+            "band": "cvss_critical",
+            "published": "2026-07-08T15:16:26.320000Z",
+            "epss": 0.00279
+          },
+          {
+            "cve": "CVE-2026-15067",
+            "score": 8.8,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-07-08T15:16:26.433000Z",
+            "epss": 0.00371
+          },
+          {
+            "cve": "CVE-2026-15736",
+            "score": 8.3,
+            "severity": "HIGH",
+            "band": "cvss_high",
+            "published": "2026-07-14T15:17:01.073000Z",
+            "epss": 0.00267
+          }
+        ],
+        "scored_recent": 25,
+        "epss_enriched": 25
+      },
+      "findings": [
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2025-50213 CRITICAL (CVSS 9.8; EPSS 0.01)",
+          "value": {
+            "band": "cvss_critical",
+            "cve": "CVE-2025-50213",
+            "cvss": 9.8,
+            "severity": "CRITICAL",
+            "epss": 0.00593
+          },
+          "event_date": "2025-06-24T08:15:24.253000Z",
+          "locator": "NVD CVE-2025-50213",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-28381 CRITICAL (CVSS 9.6; EPSS 0.00)",
+          "value": {
+            "band": "cvss_critical",
+            "cve": "CVE-2026-28381",
+            "cvss": 9.6,
+            "severity": "CRITICAL",
+            "epss": 0.00205
+          },
+          "event_date": "2026-06-22T14:16:35.820000Z",
+          "locator": "NVD CVE-2026-28381",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-15062 CRITICAL (CVSS 9.6; EPSS 0.00)",
+          "value": {
+            "band": "cvss_critical",
+            "cve": "CVE-2026-15062",
+            "cvss": 9.6,
+            "severity": "CRITICAL",
+            "epss": 0.00279
+          },
+          "event_date": "2026-07-08T15:16:26.320000Z",
+          "locator": "NVD CVE-2026-15062",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-34231 HIGH (CVSS 8.8; EPSS 0.02)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2023-34231",
+            "cvss": 8.8,
+            "severity": "HIGH",
+            "epss": 0.01962
+          },
+          "event_date": "2023-06-08T20:15:09.483000Z",
+          "locator": "NVD CVE-2023-34231",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-34233 HIGH (CVSS 8.8; EPSS 0.02)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2023-34233",
+            "cvss": 8.8,
+            "severity": "HIGH",
+            "epss": 0.01841
+          },
+          "event_date": "2023-06-08T21:15:17.663000Z",
+          "locator": "NVD CVE-2023-34233",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-42237 HIGH (CVSS 8.8; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-42237",
+            "cvss": 8.8,
+            "severity": "HIGH",
+            "epss": 0.00254
+          },
+          "event_date": "2026-05-04T19:16:06.483000Z",
+          "locator": "NVD CVE-2026-42237",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-13749 HIGH (CVSS 8.8; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-13749",
+            "cvss": 8.8,
+            "severity": "HIGH",
+            "epss": 0.0037
+          },
+          "event_date": "2026-06-29T16:16:39.640000Z",
+          "locator": "NVD CVE-2026-13749",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-15067 HIGH (CVSS 8.8; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-15067",
+            "cvss": 8.8,
+            "severity": "HIGH",
+            "epss": 0.00371
+          },
+          "event_date": "2026-07-08T15:16:26.433000Z",
+          "locator": "NVD CVE-2026-15067",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-6442 HIGH (CVSS 8.3; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-6442",
+            "cvss": 8.3,
+            "severity": "HIGH",
+            "epss": 0.00358
+          },
+          "event_date": "2026-04-16T19:16:35.560000Z",
+          "locator": "NVD CVE-2026-6442",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-41490 HIGH (CVSS 8.3; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-41490",
+            "cvss": 8.3,
+            "severity": "HIGH",
+            "epss": 0.00265
+          },
+          "event_date": "2026-05-07T14:16:02.527000Z",
+          "locator": "NVD CVE-2026-41490",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-13744 HIGH (CVSS 8.3; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-13744",
+            "cvss": 8.3,
+            "severity": "HIGH",
+            "epss": 0.0032
+          },
+          "event_date": "2026-06-29T16:16:39.260000Z",
+          "locator": "NVD CVE-2026-13744",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-15736 HIGH (CVSS 8.3; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-15736",
+            "cvss": 8.3,
+            "severity": "HIGH",
+            "epss": 0.00267
+          },
+          "event_date": "2026-07-14T15:17:01.073000Z",
+          "locator": "NVD CVE-2026-15736",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2025-24789 HIGH (CVSS 7.8; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2025-24789",
+            "cvss": 7.8,
+            "severity": "HIGH",
+            "epss": 0.00252
+          },
+          "event_date": "2025-01-29T18:15:47.030000Z",
+          "locator": "NVD CVE-2025-24789",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-46427 HIGH (CVSS 7.7; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-46427",
+            "cvss": 7.7,
+            "severity": "HIGH",
+            "epss": 0.00223
+          },
+          "event_date": "2026-05-27T18:16:26.600000Z",
+          "locator": "NVD CVE-2026-46427",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2024-8055 HIGH (CVSS 7.5; EPSS 0.01)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2024-8055",
+            "cvss": 7.5,
+            "severity": "HIGH",
+            "epss": 0.00617
+          },
+          "event_date": "2025-03-20T10:15:40.127000Z",
+          "locator": "NVD CVE-2024-8055",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-58375 HIGH (CVSS 7.5; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2026-58375",
+            "cvss": 7.5,
+            "severity": "HIGH",
+            "epss": 0.00458
+          },
+          "event_date": "2026-06-30T17:16:25.743000Z",
+          "locator": "NVD CVE-2026-58375",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-30535 HIGH (CVSS 7.3; EPSS 0.02)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2023-30535",
+            "cvss": 7.3,
+            "severity": "HIGH",
+            "epss": 0.01668
+          },
+          "event_date": "2023-04-14T20:15:09.963000Z",
+          "locator": "NVD CVE-2023-30535",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-34230 HIGH (CVSS 7.3; EPSS 0.01)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2023-34230",
+            "cvss": 7.3,
+            "severity": "HIGH",
+            "epss": 0.01431
+          },
+          "event_date": "2023-06-08T21:15:17.513000Z",
+          "locator": "NVD CVE-2023-34230",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-34232 HIGH (CVSS 7.3; EPSS 0.02)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2023-34232",
+            "cvss": 7.3,
+            "severity": "HIGH",
+            "epss": 0.01897
+          },
+          "event_date": "2023-06-08T21:15:17.593000Z",
+          "locator": "NVD CVE-2023-34232",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2025-24793 HIGH (CVSS 7.0; EPSS 0.00)",
+          "value": {
+            "band": "cvss_high",
+            "cve": "CVE-2025-24793",
+            "cvss": 7.0,
+            "severity": "HIGH",
+            "epss": 0.003
+          },
+          "event_date": "2025-01-29T21:15:21.270000Z",
+          "locator": "NVD CVE-2025-24793",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2025-24794 MEDIUM (CVSS 6.7; EPSS 0.00)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2025-24794",
+            "cvss": 6.7,
+            "severity": "MEDIUM",
+            "epss": 0.00246
+          },
+          "event_date": "2025-01-29T21:15:21.397000Z",
+          "locator": "NVD CVE-2025-24794",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2024-42474 MEDIUM (CVSS 6.5; EPSS 0.01)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2024-42474",
+            "cvss": 6.5,
+            "severity": "MEDIUM",
+            "epss": 0.00568
+          },
+          "event_date": "2024-08-12T17:15:17.513000Z",
+          "locator": "NVD CVE-2024-42474",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-13748 MEDIUM (CVSS 6.3; EPSS 0.00)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2026-13748",
+            "cvss": 6.3,
+            "severity": "MEDIUM",
+            "epss": 0.00139
+          },
+          "event_date": "2026-06-29T16:16:39.517000Z",
+          "locator": "NVD CVE-2026-13748",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2023-51662 MEDIUM (CVSS 6.0; EPSS 0.00)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2023-51662",
+            "cvss": 6.0,
+            "severity": "MEDIUM",
+            "epss": 0.00348
+          },
+          "event_date": "2023-12-22T17:15:10.413000Z",
+          "locator": "NVD CVE-2023-51662",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        },
+        {
+          "source": "nvd",
+          "signal": "nvd_cve",
+          "subcategory": "known_vulnerabilities",
+          "category": "breach_compromise_history",
+          "observed": "CVE-2026-13752 MEDIUM (CVSS 6.0; EPSS 0.00)",
+          "value": {
+            "band": "cvss_medium_or_low",
+            "cve": "CVE-2026-13752",
+            "cvss": 6.0,
+            "severity": "MEDIUM",
+            "epss": 0.00188
+          },
+          "event_date": "2026-06-29T17:16:30.160000Z",
+          "locator": "NVD CVE-2026-13752",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "keyword-matched \u2014 review before attributing to a live product (EPSS via FIRST, CC0)"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "ita",
+      "vendor_ref": "snowflake",
+      "status": "empty",
+      "fetched_at": "2026-07-23T08:53:18.269864Z",
+      "source_version": "unknown",
+      "raw": {
+        "query": "snowflake",
+        "list_size": 25909,
+        "match_count": 0,
+        "screened": true
+      },
+      "findings": [],
+      "reliability": 0.95,
+      "notes": "clean screen vs 25909 CSL entries (retained as s16(7) defence record)"
+    },
+    {
+      "source": "gleif",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:19.256422Z",
+      "source_version": "live",
+      "raw": {
+        "query": "Snowflake",
+        "candidates": 15,
+        "resolved": {
+          "lei": "254900CJNSY1K7T53Z16",
+          "legalName": "SNOWFLAKE INC.",
+          "jurisdiction": "US-DE",
+          "entityStatus": "ACTIVE",
+          "regStatus": "ISSUED"
+        },
+        "other_candidates": [
+          {
+            "lei": "9695003WJBT5TII7LB57",
+            "legalName": "SNOWFLAKE HOLDING",
+            "jurisdiction": "FR",
+            "entityStatus": "ACTIVE",
+            "regStatus": "LAPSED"
+          },
+          {
+            "lei": "8945008FBO2NMLLAIB33",
+            "legalName": "Snowflake O\u00dc",
+            "jurisdiction": "EE",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "254900HC25HU6D3ZWW51",
+            "legalName": "Snowflake AB",
+            "jurisdiction": "SE",
+            "entityStatus": "ACTIVE",
+            "regStatus": "LAPSED"
+          },
+          {
+            "lei": "7245007JA8A9ZT01L779",
+            "legalName": "Snowflake Holding B.V.",
+            "jurisdiction": "NL",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "8945005PV4T8GUNIBX04",
+            "legalName": "Snowflake Society Oy",
+            "jurisdiction": "FI",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "3912005LR2JEEYOM1X96",
+            "legalName": "Snowflake Innovation GmbH",
+            "jurisdiction": "DE",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "724500XPTVR9VHPKD096",
+            "legalName": "Snowflake Puma B.V.",
+            "jurisdiction": "NL",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          },
+          {
+            "lei": "254900PPKJ1GRWSWGG45",
+            "legalName": "SNOWFLAKE CAPITAL AS",
+            "jurisdiction": "NO",
+            "entityStatus": "ACTIVE",
+            "regStatus": "LAPSED"
+          },
+          {
+            "lei": "549300N0BZ47Z2GFSP97",
+            "legalName": "SNOWFLAKE SOFTWARE LIMITED",
+            "jurisdiction": "GB",
+            "entityStatus": "INACTIVE",
+            "regStatus": "RETIRED"
+          },
+          {
+            "lei": "2549005N8C1G8YDVKH35",
+            "legalName": "Spring Snowflake Limited",
+            "jurisdiction": "BS",
+            "entityStatus": "ACTIVE",
+            "regStatus": "ISSUED"
+          }
+        ],
+        "ambiguous": true,
+        "name_match": 3,
+        "strong_matches": 15,
+        "exact_matches": 4
+      },
+      "findings": [
+        {
+          "source": "gleif",
+          "signal": "entity_status",
+          "subcategory": "legal_entity_status",
+          "category": "business_financial_stability",
+          "observed": "SNOWFLAKE INC. \u2014 ACTIVE/ISSUED",
+          "value": {
+            "band": "active_good_standing",
+            "lei": "254900CJNSY1K7T53Z16",
+            "jurisdiction": "US-DE",
+            "entity_status": "ACTIVE",
+            "registration_status": "ISSUED"
+          },
+          "event_date": null,
+          "locator": "GLEIF LEI 254900CJNSY1K7T53Z16",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "ENTITY-level standing; MULTIPLE strong name matches \u2014 review attribution"
+        }
+      ],
+      "reliability": 0.9,
+      "notes": null
+    },
+    {
+      "source": "wikidata",
+      "vendor_ref": "snowflake",
+      "status": "empty",
+      "fetched_at": "2026-07-23T08:53:25.193241Z",
+      "source_version": null,
+      "raw": {
+        "query": "Snowflake",
+        "target_domain": "snowflake.com",
+        "candidates_inspected": 7
+      },
+      "findings": [],
+      "reliability": 0.7,
+      "notes": "no domain-verified Wikidata entity (no corroboration rather than a wrong match)"
+    },
+    {
+      "source": "rdap",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:26.439713Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "snowflake.com",
+        "ldhName": "SNOWFLAKE.COM",
+        "status": [
+          "client delete prohibited",
+          "client transfer prohibited",
+          "client update prohibited",
+          "server delete prohibited",
+          "server transfer prohibited",
+          "server update prohibited"
+        ],
+        "created": "1995-07-08T04:00:00+00:00",
+        "expires": "2034-06-15T20:14:48+00:00"
+      },
+      "findings": [
+        {
+          "source": "rdap",
+          "signal": "domain_registration",
+          "subcategory": "domain_standing",
+          "category": "business_financial_stability",
+          "observed": "domain established ~31 year(s), active",
+          "value": {
+            "band": "domain_established",
+            "created": "1995-07-08T04:00:00+00:00",
+            "expires": "2034-06-15T20:14:48+00:00",
+            "status": [
+              "client delete prohibited",
+              "client transfer prohibited",
+              "client update prohibited",
+              "server delete prohibited",
+              "server transfer prohibited",
+              "server update prohibited"
+            ]
+          },
+          "event_date": null,
+          "locator": "RDAP snowflake.com",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "domain STANDING (entity-level) \u2014 a domain is not the company; minority weight"
+        }
+      ],
+      "reliability": 0.85,
+      "notes": null
+    },
+    {
+      "source": "regulatory",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:27.658882Z",
+      "source_version": null,
+      "raw": {
+        "tokens": [
+          "snowflake"
+        ],
+        "feeds_reached": [
+          "FTC",
+          "SEC",
+          "DOJ",
+          "UK-CMA",
+          "UK-ICO",
+          "CNIL"
+        ],
+        "match_count": 0,
+        "matches": []
+      },
+      "findings": [
+        {
+          "source": "regulatory",
+          "signal": "regulator_action",
+          "subcategory": "regulatory_actions",
+          "category": "adverse_media_reputation",
+          "observed": "no regulatory action found (recent window)",
+          "value": {
+            "band": "no_action_found",
+            "feeds": [
+              "FTC",
+              "SEC",
+              "DOJ",
+              "UK-CMA",
+              "UK-ICO",
+              "CNIL"
+            ]
+          },
+          "event_date": null,
+          "locator": "regulator feeds: FTC, SEC, DOJ, UK-CMA, UK-ICO, CNIL",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "clean receipt \u2014 recent-window, US-weighted; absence is weak (\u00a75.4.2)"
+        }
+      ],
+      "reliability": 0.4,
+      "notes": "no regulator match \u2014 clean receipt (\u00a75.4.2)"
+    },
+    {
+      "source": "gdelt",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:39.998721Z",
+      "source_version": "live",
+      "raw": {
+        "query": "\"Snowflake\" (breach OR hack OR lawsuit OR fine OR investigation OR scandal OR outage OR ransomware)",
+        "article_count": 50,
+        "articles": [
+          {
+            "title": "Chaos erupts as cyberattack disrupts learning platform Canvas amid finals",
+            "url": "https://arstechnica.com/security/2026/05/chaos-erupts-as-cyberattack-disrupts-learning-platform-canvas-amid-finals/",
+            "domain": "arstechnica.com",
+            "seendate": "20260508T193000Z",
+            "language": "English"
+          },
+          {
+            "title": "ShinyHunters published 45GB of Madison Square Garden data , including facial recognition surveillance records",
+            "url": "https://thenextweb.com/news/shinyhunters-madison-square-garden-45gb-data-leak-facial-recognition",
+            "domain": "thenextweb.com",
+            "seendate": "20260620T141500Z",
+            "language": "English"
+          },
+          {
+            "title": "Canvas E - Learning Platform Breached by Cybercriminals",
+            "url": "https://www.bankinfosecurity.com/canvas-e-learning-platform-breached-by-cybercriminals-a-31639",
+            "domain": "bankinfosecurity.com",
+            "seendate": "20260508T213000Z",
+            "language": "English"
+          },
+          {
+            "title": "The Vimeo breach and the dangers of delegated trust",
+            "url": "https://www.techradar.com/pro/the-vimeo-breach-and-the-dangers-of-delegated-trust",
+            "domain": "techradar.com",
+            "seendate": "20260619T113000Z",
+            "language": "English"
+          },
+          {
+            "title": "Bronstein , Gewirtz & Grossman LLC Urges Snowflake Inc . Investors to Act : Class Action Filed Alleging Investor Harm",
+            "url": "http://www.prnewswire.com/news-releases/bronstein-gewirtz--grossman-llc-urges-snowflake-inc-investors-to-act-class-action-filed-alleging-investor-harm-302749934.html",
+            "domain": "prnewswire.com",
+            "seendate": "20260424T163000Z",
+            "language": "English"
+          },
+          {
+            "title": "Live Nation , Ticketmaster Lawsuit Tracker : Pending Cases",
+            "url": "https://www.hypebot.com/live-nation-ticketmaster-lawsuit-tracker-pending-cases/",
+            "domain": "hypebot.com",
+            "seendate": "20260525T150000Z",
+            "language": "English"
+          },
+          {
+            "title": "SNOW Deadline : SNOW Investors Have Opportunity to Lead Snowflake Inc . Securities Fraud Lawsuit",
+            "url": "http://www.prnewswire.com/news-releases/snow-deadline-snow-investors-have-opportunity-to-lead-snowflake-inc-securities-fraud-lawsuit-302753171.html",
+            "domain": "prnewswire.com",
+            "seendate": "20260424T201500Z",
+            "language": "English"
+          },
+          {
+            "title": "Klue hack results in data breach at several cybersecurity firms",
+            "url": "https://techcrunch.com/2026/06/22/klue-hack-results-in-data-breach-at-several-cybersecurity-firms/",
+            "domain": "techcrunch.com",
+            "seendate": "20260622T154500Z",
+            "language": "English"
+          },
+          {
+            "title": "SNOW FINAL DEADLINE : ROSEN , A LEADING INVESTOR RIGHTS LAW FIRM , Encourages Snowflake Inc . Investors to Secure Counsel Before Important April 27 Deadline in Securities Class Action - SNOW",
+            "url": "https://www.wallstreet-online.de/nachricht/20780185-snow-final-deadline-rosen-a-leading-investor-rights-law-firm-encourages-snowflake-inc-investors-to-secure-counsel-before-april-27-deadline-securities-class-action-snow",
+            "domain": "wallstreet-online.de",
+            "seendate": "20260424T230000Z",
+            "language": "English"
+          },
+          {
+            "title": "SNOW IMPORTANT DEADLINE : ROSEN , TOP RANKED GLOBAL COUNSEL , Encourages Snowflake Inc . Investors with Losses in Excess of $100K to Secure Counsel Before Important April 27 Deadline in Securities Class Action - SNOW",
+            "url": "https://www.wallstreet-online.de/nachricht/20781133-snow-deadline-rosen-top-ranked-global-counsel-encourages-snowflake-inc-investors-with-losses-excess-of-100k-to-secure-counsel-before-april-27-deadline-securities-class-action-snow",
+            "domain": "wallstreet-online.de",
+            "seendate": "20260425T224500Z",
+            "language": "English"
+          },
+          {
+            "title": "FinancialContent - Snowflake ( SNOW ) Stock Trades Up , Here Is Why",
+            "url": "https://markets.financialcontent.com/stocks/article/stockstory-2026-4-27-snowflake-snow-stock-trades-up-here-is-why",
+            "domain": "markets.financialcontent.com",
+            "seendate": "20260427T191500Z",
+            "language": "English"
+          },
+          {
+            "title": "Snowflake unveils platform upgrades for CoCo , CoWork",
+            "url": "https://channellife.co.nz/story/snowflake-unveils-platform-upgrades-for-coco-cowork",
+            "domain": "channellife.co.nz",
+            "seendate": "20260619T083000Z",
+            "language": "English"
+          },
+          {
+            "title": "SNOW DEADLINE ALERT : ROSEN , RECOGNIZED INVESTOR COUNSEL , Encourages ... ",
+            "url": "https://www.pr-inside.com/snow-deadline-alert-rosen-recognized-investor-counsel-encourages-r5182577.htm",
+            "domain": "pr-inside.com",
+            "seendate": "20260427T011500Z",
+            "language": "English"
+          },
+          {
+            "title": "Canvas Hackers Warn  Pay or Leak  as Ransom Deadline Looms Over 30 Million Student Stolen Records",
+            "url": "https://www.ibtimes.co.uk/shinyhunters-threatens-canvas-data-leak-1795925",
+            "domain": "ibtimes.co.uk",
+            "seendate": "20260509T144500Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.edp24.co.uk/news/national/26177292.us-tech-race-go-public-full-swing-openai-plots-stock-market-float/",
+            "domain": "edp24.co.uk",
+            "seendate": "20260609T084500Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.thetelegraphandargus.co.uk/news/national/26177292.us-tech-race-go-public-full-swing-openai-plots-stock-market-float/",
+            "domain": "thetelegraphandargus.co.uk",
+            "seendate": "20260609T090000Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.theargus.co.uk/news/national/26177292.us-tech-race-go-public-full-swing-openai-plots-stock-market-float/",
+            "domain": "theargus.co.uk",
+            "seendate": "20260609T084500Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.lbc.co.uk/article/9ef2139044794f1d9aa3981b669ad2d4-5HjdbJq_2/",
+            "domain": "lbc.co.uk",
+            "seendate": "20260609T091500Z",
+            "language": "English"
+          },
+          {
+            "title": "Snowflake bets on autonomous AI agents as enterprise software race heats up",
+            "url": "https://www.thehindu.com/sci-tech/technology/snowflake-bets-on-autonomous-ai-agents-as-enterprise-software-race-heats-up/article71059694.ece",
+            "domain": "thehindu.com",
+            "seendate": "20260604T053000Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.thenorthernecho.co.uk/news/national/26177292.us-tech-race-go-public-full-swing-openai-plots-stock-market-float/",
+            "domain": "thenorthernecho.co.uk",
+            "seendate": "20260609T074500Z",
+            "language": "English"
+          },
+          {
+            "title": "Denuncian que una ciudadana cubana habr\u00eda ejercido como m\u00e9dica sin t\u00edtulo en Santiago del Estero",
+            "url": "https://www.diariopanorama.com/noticia/552040/denuncian-ciudadana-cubana-habria-ejercido-como-medica-sin-titulo-santiago-estero",
+            "domain": "diariopanorama.com",
+            "seendate": "20260512T110000Z",
+            "language": "Spanish"
+          },
+          {
+            "title": "Kodak investigates data breach after ShinyHunters cyberattack",
+            "url": "https://arynews.tv/kodak-investigates-data-breach-after-shinyhunters-cyberattack",
+            "domain": "arynews.tv",
+            "seendate": "20260617T100000Z",
+            "language": "English"
+          },
+          {
+            "title": "Desconocidos atacaron a tiros a un perro y lo dejaron al borde de la muerte\u00a0 - Los propietarios del can realizaron la denuncia penal por el delito de maltrato animal , por lo que se inici\u00f3 una investigaci\u00f3n penal . ",
+            "url": "https://www.elliberal.com.ar/nota/83486/2026/06/desconocidos-atacaron-a-tiros-a-un-perro-y-lo-dejaron-al-borde-de-la-muerte-",
+            "domain": "elliberal.com.ar",
+            "seendate": "20260621T190000Z",
+            "language": "Spanish"
+          },
+          {
+            "title": "AVEVA Announces Collaboration with Snowflake to Accelerate Industrial AI and Unify IT / OT Data Ecosystems",
+            "url": "https://www.finanznachrichten.de/nachrichten-2026-05/68533814-aveva-announces-collaboration-with-snowflake-to-accelerate-industrial-ai-and-unify-it-ot-data-ecosystems-008.htm",
+            "domain": "finanznachrichten.de",
+            "seendate": "20260519T101500Z",
+            "language": "English"
+          },
+          {
+            "title": "Chinese AI role in stopping rogue OpenAI agent shows cost of US guardrails",
+            "url": "https://www.asiaone.com/digital/chinese-ais-role-stopping-rogue-openai-agent-shows-cost-us-guardrails",
+            "domain": "asiaone.com",
+            "seendate": "20260723T080000Z",
+            "language": "English"
+          },
+          {
+            "title": "Chinese AI role in stopping rogue OpenAI agent shows cost of US guardrails",
+            "url": "https://www.asiaone.com:443/digital/chinese-ais-role-stopping-rogue-openai-agent-shows-cost-us-guardrails",
+            "domain": "asiaone.com",
+            "seendate": "20260723T064500Z",
+            "language": "English"
+          },
+          {
+            "title": "Snowflake Buys Natoma To Govern The Agents Acting On Its Data",
+            "url": "https://www.forbes.com/sites/janakirammsv/2026/05/31/snowflake-buys-natoma-to-govern-the-agents-acting-on-its-data/",
+            "domain": "forbes.com",
+            "seendate": "20260601T064500Z",
+            "language": "English"
+          },
+          {
+            "title": "RelationalAI beefs up its reasoning capabilities to enhance AI agent decision - making",
+            "url": "https://siliconangle.com/2026/06/02/relationalai-beefs-reasoning-capabilities-enhance-ai-agent-decision-making/",
+            "domain": "siliconangle.com",
+            "seendate": "20260607T213000Z",
+            "language": "English"
+          },
+          {
+            "title": "Chinese AI role in stopping rogue OpenAI agent shows cost of US guardrails",
+            "url": "https://www.dealstreetasia.com/stories/chinese-ai-rogue-openai-agent-489919",
+            "domain": "dealstreetasia.com",
+            "seendate": "20260723T004500Z",
+            "language": "English"
+          },
+          {
+            "title": "ThoughtSpot Expands Governed Enterprise AI with Snowflake Cortex AI and Semantic Views",
+            "url": "https://www.manilatimes.net/2026/06/03/tmt-newswire/globenewswire/thoughtspot-expands-governed-enterprise-ai-with-snowflake-cortex-ai-and-semantic-views/2357277",
+            "domain": "manilatimes.net",
+            "seendate": "20260602T200000Z",
+            "language": "English"
+          },
+          {
+            "title": "Microsoft CEO Warns That AI Winners Could Hollow  Entire Industries  ",
+            "url": "https://www.businessinsider.com/microsoft-ceo-warns-ai-winners-hurt-whole-industries-satya-nadella-2026-6",
+            "domain": "businessinsider.com",
+            "seendate": "20260615T051500Z",
+            "language": "English"
+          },
+          {
+            "title": "Florida sues OpenAI and Sam Altman over AI safety - claiming the company has an  utter disregard for risk to human life  ",
+            "url": "https://www.lbc.co.uk/article/florida-openai-sam-altman-chatgpt-5HjdZzL_2/",
+            "domain": "lbc.co.uk",
+            "seendate": "20260602T083000Z",
+            "language": "English"
+          },
+          {
+            "title": "Why custom model training matters for enterprise AI",
+            "url": "https://siliconangle.com/2026/06/02/custom-model-training-matters-enterprise-ai-snowflakesummit/",
+            "domain": "siliconangle.com",
+            "seendate": "20260603T021500Z",
+            "language": "English"
+          },
+          {
+            "title": "Snowflake moves up the AI stack \u2013 but the System of Intelligence is still being built",
+            "url": "https://siliconangle.com/2026/06/02/snowflake-moves-ai-stack-system-intelligence-still-built/",
+            "domain": "siliconangle.com",
+            "seendate": "20260602T170000Z",
+            "language": "English"
+          },
+          {
+            "title": "ShinyHunters breach Instructure Canvas LMS , claim 275M users and 3 . 65TB of student data from 9 , 000 schools including 44 Dutch institutions",
+            "url": "https://thenextweb.com/news/the-largest-education-data-breach-in-history-was-not-an-attack-on-a-school-it-was-an-attack-on-a-vendor",
+            "domain": "thenextweb.com",
+            "seendate": "20260507T161500Z",
+            "language": "English"
+          },
+          {
+            "title": "Komprise Delivers Query - Ready Enterprise Unstructured Data to AI and Data Lakehouses Without Moving a Single File",
+            "url": "https://www.manilatimes.net/2026/06/23/tmt-newswire/globenewswire/komprise-delivers-query-ready-enterprise-unstructured-data-to-ai-and-data-lakehouses-without-moving-a-single-file/2370889",
+            "domain": "manilatimes.net",
+            "seendate": "20260623T124500Z",
+            "language": "English"
+          },
+          {
+            "title": "Wake County schools restore Canvas access after nationwide data breach",
+            "url": "https://www.wral.com/news/local/wake-county-schools-restore-canvas-access-may-2026/",
+            "domain": "wral.com",
+            "seendate": "20260511T213000Z",
+            "language": "English"
+          },
+          {
+            "title": "Wake County schools restore Canvas access after nationwide ransomware attack",
+            "url": "https://www.wral.com/news/education/wake-county-schools-restore-canvas-access-may-2026/",
+            "domain": "wral.com",
+            "seendate": "20260511T213000Z",
+            "language": "English"
+          },
+          {
+            "title": "Vimeo breach exposes data of 119 , 000 users",
+            "url": "https://www.computing.co.uk/news/2026/security/vimeo-breach-exposes-data-119000-users",
+            "domain": "computing.co.uk",
+            "seendate": "20260506T113000Z",
+            "language": "English"
+          },
+          {
+            "title": "Zara Data Breach Impacts Nearly 200 , 000 Customers - Infosecurity Magazine",
+            "url": "https://www.infosecurity-magazine.com/news/zara-data-breach-impacts-200000/",
+            "domain": "infosecurity-magazine.com",
+            "seendate": "20260511T123000Z",
+            "language": "English"
+          },
+          {
+            "title": "Trust3 AI Delivers One Policy Layer for the Agentic , Multi - Engine Lakehouse",
+            "url": "https://www.finanznachrichten.de/nachrichten-2026-06/68779258-trust3-ai-delivers-one-policy-layer-for-the-agentic-multi-engine-lakehouse-008.htm",
+            "domain": "finanznachrichten.de",
+            "seendate": "20260616T113000Z",
+            "language": "English"
+          },
+          {
+            "title": "\u0427\u0442\u043e \u043c\u043e\u0436\u043d\u043e \u0441\u0434\u0435\u043b\u0430\u0442\u044c \u0441 \u0431\u0443\u043c\u0430\u0433\u0438 \u04304 : \u043f\u043e\u0448\u0430\u0433\u043e\u0432\u0430\u044f \u0438\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0438\u044f 2026",
+            "url": "https://glavpost.com/stati/2026/07/11/chto-mozhno-sdelat-s-paperu-a4-30-idey-za-5-minut/",
+            "domain": "glavpost.com",
+            "seendate": "20260711T111500Z",
+            "language": "Russian"
+          },
+          {
+            "title": "Geraldo Rivera Accuses Adam Mockler Of Being A  Dick  To Scott Jennings",
+            "url": "https://crooksandliars.com/2026/05/geraldo-rivera-accuses-adam-mockler-being",
+            "domain": "crooksandliars.com",
+            "seendate": "20260503T151500Z",
+            "language": "English"
+          },
+          {
+            "title": "AI disaster recovery planning is years behind AI adoption",
+            "url": "https://www.informationweek.com/incident-response/ai-disaster-recovery-planning-is-years-behind-ai-adoption",
+            "domain": "informationweek.com",
+            "seendate": "20260623T211500Z",
+            "language": "English"
+          },
+          {
+            "title": "Snowflake ( SNOW ) Q1 2027 Earnings Transcript",
+            "url": "https://www.fool.com/earnings/call-transcripts/2026/05/27/snowflake-snow-q1-2027-earnings-transcript/?source=iedfolrf0000001",
+            "domain": "fool.com",
+            "seendate": "20260528T011500Z",
+            "language": "English"
+          },
+          {
+            "title": "What If the Best Way to Protect Data Was to Delete It First ? ",
+            "url": "https://www.prnewswire.com/news-releases/what-if-the-best-way-to-protect-data-was-to-delete-it-first-302790427.html",
+            "domain": "prnewswire.com",
+            "seendate": "20260603T161500Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.rhyljournal.co.uk/news/national/26177292.us-tech-race-go-public-full-swing-openai-plots-stock-market-float/",
+            "domain": "rhyljournal.co.uk",
+            "seendate": "20260609T084500Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.peeblesshirenews.com/news/national/26177292.us-tech-race-go-public-full-swing-openai-plots-stock-market-float/",
+            "domain": "peeblesshirenews.com",
+            "seendate": "20260609T084500Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.countytimes.co.uk/news/national/26177292.us-tech-race-go-public-full-swing-openai-plots-stock-market-float/",
+            "domain": "countytimes.co.uk",
+            "seendate": "20260609T084500Z",
+            "language": "English"
+          },
+          {
+            "title": "US tech race to go public in full swing as OpenAI plots stock market float",
+            "url": "https://www.dumbartonreporter.co.uk/news/national/26177292.us-tech-race-go-public-full-swing-openai-plots-stock-market-float/",
+            "domain": "dumbartonreporter.co.uk",
+            "seendate": "20260609T084500Z",
+            "language": "English"
+          }
+        ],
+        "candidates": 50,
+        "latest_seen": "2026-07-23T08:00:00+00:00"
+      },
+      "findings": [],
+      "reliability": 0.6,
+      "notes": "50 adverse-media CANDIDATES gathered (12m) \u2014 reported/alleged, held for AI adjudication + human review; never scored"
+    },
+    {
+      "source": "trust",
+      "vendor_ref": "snowflake",
+      "status": "ok",
+      "fetched_at": "2026-07-23T08:53:55.935282Z",
+      "source_version": "live",
+      "raw": {
+        "domain": "snowflake.com",
+        "pages_found": [
+          "security"
+        ],
+        "certifications_claimed": [],
+        "role_contacts": []
+      },
+      "findings": [
+        {
+          "source": "trust",
+          "signal": "cert_posture",
+          "subcategory": "certifications_attestations",
+          "category": "compliance_regulatory",
+          "observed": "none claimed",
+          "value": {
+            "band": "none_claimed",
+            "certs": []
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/[security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "SELF-REPORTED claim \u2014 corroborate against cert registry where possible"
+        },
+        {
+          "source": "trust",
+          "signal": "program_disclosure",
+          "subcategory": "security_program_disclosure",
+          "category": "vendor_transparency_gov",
+          "observed": "detailed_policies",
+          "value": {
+            "pages": [
+              "security"
+            ],
+            "chars": 200000
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported program disclosure"
+        },
+        {
+          "source": "trust",
+          "signal": "contactability",
+          "subcategory": "contactability_responsiveness",
+          "category": "vendor_transparency_gov",
+          "observed": "none published",
+          "value": {
+            "role_contacts": [],
+            "band": "none_published"
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": null
+        },
+        {
+          "source": "trust",
+          "signal": "reporting_posture",
+          "subcategory": "disclosure_reporting",
+          "category": "compliance_regulatory",
+          "observed": "substantive",
+          "value": {
+            "band": "substantive",
+            "chars": 200000
+          },
+          "event_date": null,
+          "locator": "https://snowflake.com/[security]",
+          "remediation_evidenced": false,
+          "severity_base": null,
+          "notes": "self-reported \u2014 published policies/reports inferred from trust-page substance"
+        }
+      ],
+      "reliability": 0.5,
+      "notes": null
+    }
+  ]
+}

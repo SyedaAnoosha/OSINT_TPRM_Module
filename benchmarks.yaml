@@ -1,0 +1,526 @@
+# benchmarks.yaml — peer comparison, in a file a non-engineer can read and argue with
+# =============================================================================
+# v1.0.0 — WHO MAY BE COMPARED WITH WHOM, and what "normal" looks like for them.
+#
+# THIS FILE CHANGES NO ARITHMETIC. The posture in scoring.yaml is computed the same way for
+# every vendor on earth; a bank and a bakery with the same findings get the same number. What
+# lives here is the READING of that number — 78 is below par for a regulated financial vendor
+# and comfortably above it for a small agricultural supplier, and 78 is the honest figure in
+# both cases. Keeping interpretation out of the scoring file is why the frozen regression
+# corpus still holds after this feature landed.
+#
+# THE RULE THAT GOVERNS EVERY NUMBER BELOW:
+#   * A cohort statistic is COMPUTED from vendors we have actually scored. It is never typed in.
+#   * An `expected_posture` is only publishable with a `basis:` naming a real source. The loader
+#     refuses a number without one — the same discipline scoring.yaml applies to `reasons`.
+#   * Below `min_cohort_n` we publish "insufficient peers", not a percentile. A median over three
+#     vendors is noise wearing the costume of precision, and false precision is the specific
+#     thing Finding A punishes.
+#
+# WHY THERE ARE NO SECTOR TARGETS SHIPPED BELOW. methodology.md §5.6 deleted category weights
+# because no authority publishes them and any set of them was a standing liability. "Financial
+# services should score 95" has exactly the same defect: nobody publishes it, and asserting it
+# would re-import the problem the penalty model was rebased to escape. So `expected_posture` is
+# left empty by design. It fills in from observed cohort medians once enough vendors are scored,
+# or from a regulator's own published sector evidence — never from an opinion with a number on it.
+# =============================================================================
+
+version: 1.0.0
+
+# -----------------------------------------------------------------------------
+# COHORT — the population a vendor may lawfully be compared against.
+# -----------------------------------------------------------------------------
+cohort:
+  # Minimum peers before ANY percentile or median is published.
+  #
+  # THIS FILE SHIPPED `1` FOR MONTHS and it was E11's real defect: a demo setting that survived
+  # into production, which is indistinguishable from a decision nobody made. At 1 this module
+  # published a "median" and a "percentile" over a SINGLE company — not a weak comparison, a coin
+  # flip presented as a statistic.
+  #
+  # The value below is now the FLOOR AND THE DEFAULT, and it is additionally floored in code
+  # (`benchmark.py::_ABSOLUTE_MIN_COHORT_N`), mirroring what `benchmarking/config.py` does for its
+  # own two thresholds. Raising it here works; lowering it does not, and that asymmetry is the
+  # point — a YAML floor alone is what let `1` ship.
+  min_cohort_n: 8
+
+  # FOUR FACTORS: industry · revenue · headcount · region.
+  #
+  # Revenue and headcount are SEPARATE dimensions, not one blended "size". They disagree often and
+  # the disagreement is informative — a 40-person firm turning over $400M is a different risk
+  # proposition from a 4,000-person firm at the same revenue: one is a high-leverage money mover,
+  # the other a large employer with a large attack surface. Blending them threw that away.
+  #
+  # THE ARITHMETIC PROBLEM THIS CREATES, STATED PLAINLY. 12 sectors x 5 revenue x 5 headcount x
+  # 5 regions = 1,500 possible cohorts. At 8 peers each that is ~12,000 scored vendors before the
+  # feature reliably says anything, and a real 114-vendor run produced exactly TWO populated
+  # cohorts, the largest holding four. An exact four-factor match alone would almost never publish.
+  #
+  # THE WIDENING LADDER IS THE ANSWER. Try the most specific rung; if it is too thin, step out and
+  # SAY SO on the card. Order below is a risk-appetite judgement and is yours to change:
+  #   * region goes first — posture within an industry and size is broadly comparable across
+  #     regions, and region governs what is REQUIRED more than what is observed;
+  #   * revenue goes next — it is the sparsest field in free sources, so requiring it costs the
+  #     most density for the least coverage;
+  #   * headcount is given up last of the size dimensions, being the best-covered size proxy.
+  #
+  # EVERY RUNG MUST CONTAIN `sector`. The loader rejects one that does not. A peer group spanning
+  # industries is not a peer group — that is the meaningless comparison this feature refuses, and
+  # there is deliberately no rung below "same industry".
+  widening:
+    - [sector, revenue_band, employee_band, region]   # exact — all four
+    - [sector, revenue_band, employee_band]           # drop region
+    - [sector, employee_band, region]                 # drop revenue (sparsest)
+    - [sector, employee_band]                         # industry + headcount
+    - [sector, region]                                # industry + region, any size
+    - [sector]                                        # floor — never wider than this
+
+  # PEER QUALITY. Both filters are disclosed on the card, never applied silently: a comparison
+  # against year-old scores, or against a population of Ghosts, is a different claim from one
+  # against current, well-evidenced peers, and the reader decides whether that matters.
+  #
+  # Freshness window for a peer's latest score. Generous by default — too tight and a young
+  # deployment empties its own cohorts faster than it can fill them.
+  max_peer_age_days: 365
+  # Minimum evidence coverage for a peer to enter a median. 0.4 matches scoring.yaml's
+  # `confidence.refuse_below`: a vendor too thinly evidenced to publish is too thinly evidenced
+  # to define what "normal" looks like for everyone else.
+  min_peer_confidence: 0.4
+
+  # Peers that must have been CHECKED for a control before its prevalence is published
+  # ("79% of your peers publish a DMARC record"). Lower than min_cohort_n because a pass rate is a
+  # simpler statistic than a median, but not by much — a rate over three vendors is a rumour with
+  # a percent sign on it. A peer never checked for a signal is NOT counted as failing it.
+  min_signal_peers: 5
+
+# -----------------------------------------------------------------------------
+# SIZE BANDS — revenue and headcount are banded INDEPENDENTLY and stay separate.
+#
+# An earlier version collapsed the two into one "size", taking the larger band where they
+# disagreed. That was wrong in an interesting way: the disagreement is the signal. A 40-person
+# firm at $400M revenue and a 4,000-person firm at $400M revenue are different risk propositions,
+# and a cohort that files them together cannot tell a reader which one they are looking at. Both
+# bands are now carried on the profile and both appear in the cohort key.
+#
+# Either may be unknown. Public sources publish headcount far more often than private-company
+# revenue, so a cohort requiring both would rarely form — the widening ladder above simply skips
+# any rung needing a dimension this vendor does not have.
+# -----------------------------------------------------------------------------
+size_bands:
+  # Upper bounds, exclusive. Anything above the last named bound is `mega`.
+  # Roughly ABS-aligned (micro <20, small <200), extended upward for enterprise TPRM.
+  employees:
+    micro: 20
+    small: 200
+    medium: 1000
+    large: 10000
+  # Revenue in AUD. Used when headcount is unknown, and as the cross-check above.
+  revenue_aud:
+    micro: 2000000
+    small: 20000000
+    medium: 100000000
+    large: 1000000000
+
+# Rates used ONLY to put revenue into a size BAND — never to report a converted figure to a user.
+# Band edges are order-of-magnitude boundaries, so a stale rate cannot move a vendor across one
+# except at the very margin. A reported revenue always keeps its own currency.
+fx_to_aud:
+  AUD: 1.0
+  USD: 1.55
+  EUR: 1.65
+  GBP: 1.95
+  NZD: 0.93
+  CAD: 1.12
+  SGD: 1.15
+  JPY: 0.010
+  INR: 0.018
+  PKR: 0.005
+
+# -----------------------------------------------------------------------------
+# EXPECTED POSTURE — a cited sector expectation, or nothing at all.
+#
+# Every entry MUST carry a `basis:` naming the source. The loader rejects a bare number, because
+# a threshold nobody published is an opinion with a decimal point, and this file exists to keep
+# those out of the product.
+#
+# Two ways an entry legitimately arrives:
+#   1. OBSERVED — computed from cohort medians once min_cohort_n is met. Preferred: empirical,
+#      self-updating, and it is our own data rather than someone's assertion.
+#   2. CITED — a regulator's published sector evidence. The OAIC Notifiable Data Breaches
+#      sector breakdown is the obvious Australian candidate: it is a regulator's own answer to
+#      "which sectors actually get breached", which is exactly the question an expected band is
+#      trying to answer.
+#
+# Shipped empty. That is the honest state, not an oversight.
+# -----------------------------------------------------------------------------
+expected_posture: {}
+  # Example of the ONLY acceptable shape — uncomment and fill when a basis genuinely exists:
+  #
+  # financial_services:
+  #   value: 88
+  #   basis: "Observed median of 14 scored AU financial-services vendors, 2026-07-24"
+  #
+  # healthcare:
+  #   value: 84
+  #   basis: "OAIC Notifiable Data Breaches CY2025 — health providers 19% of all notifications"
+
+# -----------------------------------------------------------------------------
+# TARGET MATURITY — the BASELINE a vendor is measured against, not the AVERAGE of whoever we
+# happen to have scored.
+#
+# WHY THIS EXISTS ALONGSIDE THE COHORT. A percentile answers "am I typical?". In security the
+# typical vendor is frequently mediocre, so a vendor can sit at the 60th percentile of its peer
+# group and still be missing controls that a published instrument requires. Worse, the cohort is a
+# CONVENIENCE SAMPLE of this deployment (see self_selection_caveat) — a portfolio skewed toward
+# weak vendors produces a flattering median, and every comparison against it inherits that skew.
+# A target model has no such feedback loop: it is fixed, external, and works at n=0 peers.
+#
+# THE RULE THAT GOVERNS EVERY CONTROL BELOW — the same one `expected_posture` obeys, and the
+# loader enforces it identically: **a control with no `basis:` naming a real instrument does not
+# ship.** It is very easy to write a plausible-looking baseline out of professional intuition and
+# attach an official-sounding citation to it; that produces a number a client cannot trace, which
+# is the exact failure this file was built to refuse. Every `basis` below names a specific,
+# checkable instrument, and where an instrument does NOT require something, it is not listed here
+# at all — a control we could not source is absent rather than asserted.
+#
+# ON SCOPE, STATED HONESTLY. Most instruments below bind US federal civilian agencies, not private
+# vendors. They are used here as a PUBLISHED, DATED, CHECKABLE baseline — the strongest available
+# public statement of "what a competent operator does" — and not as a claim that any given vendor
+# is legally bound by them. That distinction belongs in the UI text, and it is why each `basis`
+# names the instrument and its population rather than saying "industry standard".
+#
+# ATTAINABILITY IS NOT LENIENCY. `attainable_after_years` exists for controls that are
+# ARITHMETICALLY IMPOSSIBLE for a young entity — a SOC 2 Type II attests to controls operating
+# across an observation window, so a company younger than that window cannot hold one, and
+# counting its absence as a gap would measure the calendar rather than the vendor. It is NOT a
+# grace period for controls a startup could implement on day one: DMARC, TLS and a valid
+# certificate cost engineering hours rather than years, the empirical record shows small firms
+# under-adopt them badly (Inc. 5000 at 15.2% p=reject vs Fortune 500 at 62.7%), and every one of
+# them therefore sits at `attainable_after_years: 0` for every vendor regardless of age.
+# -----------------------------------------------------------------------------
+target_maturity:
+  # Below this many APPLICABLE, OBSERVED controls we publish no maturity reading. A "2 of 3"
+  # baseline built from whichever signals happened to return is the same false precision a median
+  # over three vendors would be.
+  min_controls: 3
+
+  profiles:
+    - id: baseline
+      description: "Controls any internet-facing vendor can operate regardless of age, size or sector"
+      applies_to: {}            # every vendor; sector-specific profiles ADD to this, never replace it
+      controls:
+        - signal: dmarc
+          meets: [p_reject]
+          partial: [p_quarantine]
+          attainable_after_years: 0
+          basis: >-
+            CISA BOD 18-01 (Oct 2017) required US federal agencies to publish DMARC with p=none
+            within 90 days and to reach p=reject on all second-level domains within one year.
+        - signal: spf
+          meets: [hardfail_all]
+          partial: [softfail_all]
+          attainable_after_years: 0
+          basis: "CISA BOD 18-01 (Oct 2017) — valid SPF records on all second-level agency domains within 90 days."
+        - signal: tls_version
+          meets: [tls_13, only_tls_12]
+          attainable_after_years: 0
+          basis: >-
+            NIST SP 800-52 Rev. 2 (Aug 2019) requires TLS 1.2 on all government TLS servers and
+            TLS 1.3 support from 1 Jan 2024; PCI DSS v4.0 req. 4.2.1 requires TLS 1.2+ for
+            cardholder data and forbids SSL and early TLS.
+        - signal: cert_validity
+          meets: [valid]
+          attainable_after_years: 0
+          basis: >-
+            NIST SP 800-52 Rev. 2 (Aug 2019) — a served certificate must be valid and unexpired for
+            the TLS guidance to hold at all.
+        - signal: hsts
+          meets: [present]
+          attainable_after_years: 0
+          basis: >-
+            CISA BOD 18-01 (Oct 2017) required HSTS on federal web services, so browsers always use
+            HTTPS and users cannot click through certificate warnings.
+        - signal: kev_listed_cve
+          meets: [no_kev_match]
+          attainable_after_years: 0
+          basis: >-
+            CISA BOD 26-04 (10 Jun 2026), which revoked and replaced BOD 22-01 and BOD 19-02,
+            requires US federal agencies to remediate known-exploited vulnerabilities on
+            risk-graduated timelines from three days upward.
+
+    - id: program_maturity
+      description: "Assurance artefacts that require elapsed operating time before they can exist"
+      applies_to: {}
+      controls:
+        - signal: vd_program
+          meets: [bug_bounty]
+          partial: [security_txt_only]
+          # A policy needs somebody to run it. One year is the point at which "we have not got to
+          # it yet" stops being the more likely explanation than "we do not do this".
+          attainable_after_years: 1
+          basis: >-
+            CISA BOD 20-01 (Sep 2020) required all US federal civilian agencies to publish a
+            vulnerability disclosure policy by March 2021.
+        - signal: security_txt
+          meets: [present]
+          attainable_after_years: 1
+          basis: >-
+            RFC 9116 (Apr 2022, Proposed Standard) defines /.well-known/security.txt as the
+            machine-readable route to an entity's disclosure process. NOTE: publishing the file is
+            NOT mandated by BOD 20-01 — the directive requires the POLICY, and RFC 9116 is the
+            mechanism CISA describes as helping researchers find it.
+        - signal: cert_posture
+          meets: [registry_corroborated]
+          partial: [claimed_unverified]
+          # SOC 2 Type II attests to controls operating ACROSS a window (commonly 3-12 months), and
+          # ISO 27001 certification follows a two-stage audit of a running ISMS. A two-year-old
+          # entity may genuinely not have had time; counting that as a gap measures the calendar.
+          attainable_after_years: 2
+          basis: >-
+            ISO/IEC 27001 certification requires a Stage 1 + Stage 2 audit of an operating ISMS;
+            AICPA SOC 2 Type II reports on control operating effectiveness across an observation
+            period, so neither is attainable by an entity younger than that period.
+
+# -----------------------------------------------------------------------------
+# DISCLOSURE — what the scorecard must say whenever a benchmark is shown.
+# These are UI requirements, not footnotes: a comparison whose population is hidden is a bought
+# black-box score with extra steps, which is the practice this whole project exists to refuse.
+# -----------------------------------------------------------------------------
+disclosure:
+  always_show_absolute_grade: true    # the percentile is an overlay, never a replacement
+  always_show_cohort_and_n: true      # "Technology · 1k-10k staff · ANZ (n=11)"
+  ceiling_and_gates_never_relax: true # "bad for a bakery" is still bad
+  always_show_widening: true          # a silently-widened cohort looks precise and is not
+
+  # THE LIMITATION THAT NEVER GOES AWAY, and therefore must never be omitted. Every cohort here is
+  # made of vendors this deployment happened to score — a convenience sample, not a random sample
+  # of the industry. If a portfolio skews toward large listed vendors, its medians describe large
+  # listed vendors. Stating this is not a disclaimer for its own sake: a reader who mistakes a
+  # convenience median for an industry norm will misread every variance computed against it.
+  self_selection_caveat: >-
+    Peers are vendors scored in this deployment, not a random sample of the industry.
+
+# =============================================================================
+# BENCHMARKING v2 — the enterprise peer-comparison layer.
+#
+# Read docs/benchmarking-design.md before changing anything here; the five decisions recorded
+# there are what these numbers implement, and changing a number without changing that document
+# leaves the runbook and the product disagreeing about what was decided.
+#
+# THE ONE-SENTENCE CONTRACT, same as the block above: nothing here can move a published posture.
+# This layer reads posture, confidence and domain scores that already exist and CONTEXTUALISES
+# them. `test_benchmarking.py::test_benchmarking_never_alters_input_scores` asserts it.
+#
+# WHY A SECOND COHORT BLOCK RATHER THAN AN EDIT TO THE FIRST. The `cohort:` block above keys on
+# FOUR firmographic dimensions (sector x revenue x headcount x region = 1,500 cells) and ships
+# `min_cohort_n: 1` for demo use. Both were deliberate and both are wrong for an enterprise
+# deployment: 1,500 cells cannot reach n>=30 from hundreds of suppliers, and a threshold of 1
+# publishes a "median" over a single company. This block replaces the mechanism; the old one stays
+# for one release so stored snapshots keep deserialising.
+# =============================================================================
+benchmarking:
+  version: 2.0.0
+
+  # ---------------------------------------------------------------------------
+  # COHORT DIMENSIONS — supplier properties only.
+  #
+  # `data_access_scope` is DELIBERATELY ABSENT. It is a property of the RELATIONSHIP (what this
+  # buyer exposed to this supplier), not of the supplier, so keying cohorts on it would put the
+  # same supplier in different cohorts for different buyers — fragmenting the pool ~4x exactly
+  # where n>=30 is needed, and re-opening the cross-tenant pooling question the plan has parked.
+  # It routes to INTERPRETATION instead: it picks the procurement action template. Decision 1.
+  # ---------------------------------------------------------------------------
+  cohort:
+    dimensions: [sector, size_band, delivery_model]
+
+    # THE LADDER. Most specific first. Assign the first rung reaching `min_quartile_n`; below the
+    # floor keep widening; below the last rung publish no placement at all.
+    #
+    #   deepen  ->  D2 sector+size+delivery      (refine only when density allows)
+    #               D1 sector+size               <- FLOOR
+    #   widen   ->  W1 sector
+    #               W2 sector_group              (published rollup)
+    #   refuse  ->  "Insufficient peer data (n=<actual>)"
+    #
+    # EVERY RUNG MUST CONTAIN `sector` OR `sector_group`. The loader rejects one that does not, and
+    # there is deliberately no rung meaning "every supplier ever assessed" — that is the
+    # meaningless comparison this whole feature exists to refuse.
+    ladder:
+      - [sector, size_band, delivery_model]
+      - [sector, size_band]
+      - [sector]
+      - [sector_group]
+
+    # The floor rung: cohorts at or below this are reported as widened, so a reader is never shown
+    # a loose comparison that looks like a precise one.
+    floor: [sector, size_band]
+
+    # ---- THE HARD THRESHOLDS. These are the product, not tuning knobs. ----
+    # Below this: "Insufficient peer data", with the actual n. No quartile, no percentile.
+    min_quartile_n: 8
+    # Below this: quartile + rank-of-n only. A percentile at n=12 asserts a resolution of 8 points
+    # while implying single-point precision.
+    min_percentile_n: 30
+    # Peers that must have COVERED a domain before that domain gets its own placement. A domain n
+    # is not the cohort n: a cohort of 40 may hold 12 suppliers with an email_auth score.
+    min_domain_n: 8
+
+  # ---------------------------------------------------------------------------
+  # SIZE BAND — derived, versioned, and disputable.
+  #
+  # The `cohort:` block above keeps revenue and headcount as SEPARATE dimensions, and its comment
+  # is right that the disagreement between them is informative. It also costs 5x the cells, which
+  # is unaffordable at n>=30. So they collapse to one band FOR COHORTING ONLY, by the published
+  # rule below, and both raw values stay on the supplier record — the derivation is what a
+  # supplier disputes, and `size_band_basis` names which input decided it.
+  # ---------------------------------------------------------------------------
+  size_band:
+    rule_version: 1
+    # `max` because leverage (revenue) and attack surface (headcount) EACH independently raise what
+    # a competent operator is expected to run. Alternatives: `headcount` | `revenue`.
+    resolve: max
+    order: [micro, small, mid, large, enterprise]
+    # Upper bounds, exclusive. Anything at or above the last named bound is `enterprise`.
+    employees:
+      micro: 20
+      small: 200
+      mid: 1000
+      large: 10000
+    revenue_aud:
+      micro: 2000000
+      small: 20000000
+      mid: 100000000
+      large: 1000000000
+
+  # ---------------------------------------------------------------------------
+  # SECTOR GROUPS — the one legitimate rung below `sector`, and a PUBLISHED rollup rather than an
+  # ad-hoc widening. A supplier compared outside its sector must be able to see exactly which
+  # sectors were pooled and why.
+  # ---------------------------------------------------------------------------
+  sector_groups:
+    regulated_services: [financial_services, insurance, healthcare, government, utilities]
+    technology: [technology, telecommunications, media]
+    physical_operations: [manufacturing, logistics, agriculture, construction, mining]
+    consumer: [retail, hospitality, education, professional_services]
+
+  # ---------------------------------------------------------------------------
+  # DISCRIMINATION — a signal that does not vary across the cohort cannot rank anything.
+  #
+  # Automates by cohort the analysis docs/complete_plan.md ran by hand, which found six signals
+  # penalising 100% of the corpus and twelve constant-pass: 19 of 27 signals contributing nothing
+  # to ordering. Flagged signals are SUPPRESSED from the "behind your peers" list and DISCLOSED in
+  # a labelled section — never silently included, never silently dropped.
+  # ---------------------------------------------------------------------------
+  discrimination:
+    # Below this many observations the test itself is not meaningful; the verdict is `untested`.
+    min_observations: 8
+    # Continuous domain scores. Variance is scale-dependent, so the test is IQR + coefficient of
+    # variation rather than raw variance.
+    zero_iqr_is_flat: true
+    min_coefficient_of_variation: 0.02
+    # Categorical signal bands. Variance is UNDEFINED for strings, so the statistic is modal-band
+    # share. 0.95 catches both failure directions at once: all-fail and all-pass are equally
+    # useless for ranking, and a flat tax is not a comparison.
+    max_modal_share: 0.95
+
+  # ---------------------------------------------------------------------------
+  # RELIABILITY OF THE COMPARISON — itemised, never a single opaque number.
+  #
+  # A reader shown `0.42` learns nothing. One shown "n=9 (thin) x widened to sector-only x peer
+  # median confidence 0.55" knows what to fix. These weights shape the roll-up only; every factor
+  # is published individually alongside it.
+  #
+  # NOTE the deliberate absence of a peer-confidence FILTER. Excluding thinly-evidenced peers
+  # biases the cohort toward the observable — i.e. toward large companies — which is the
+  # observability bias this platform exists to remove. Disclose, do not filter.
+  # ---------------------------------------------------------------------------
+  reliability:
+    # Rung reached -> exactness. A widened cohort is a weaker comparison and says so.
+    rung_exactness:
+      "sector+size_band+delivery_model": 1.0
+      "sector+size_band": 0.9
+      "sector": 0.7
+      "sector_group": 0.5
+    # Peer scores older than this are disclosed as stale (and counted), not silently dropped.
+    stale_peer_days: 365
+    # Full marks for sample adequacy at this many peers.
+    sample_saturation_n: 30
+    # Below this SUPPLIER confidence the placement is FLAGGED and still published. Labelled, never
+    # suppressed — a supplier we cannot see well is a fact about our coverage, not about them.
+    flag_supplier_confidence_below: 0.6
+
+  # ---------------------------------------------------------------------------
+  # NARRATIVE — templated prose, never generated. Same discipline scoring.yaml applies to
+  # `reasons`: a template whose required field is absent REFUSES TO RENDER, so a missing n can
+  # never produce a confident-sounding sentence.
+  #
+  # `{placeholders}` are filled from the placement object. `requires:` is enforced at render time.
+  # ---------------------------------------------------------------------------
+  narrative:
+    version: 2
+    security:
+      placed: >-
+        {domain_label} is {direction} the peer median for {cohort_label} by {delta_abs} points
+        ({subject} vs median {median}, n={n}).
+      requires: [domain_label, direction, cohort_label, delta_abs, subject, median, n]
+      insufficient: >-
+        {domain_label}: insufficient peer data — only {n} comparable suppliers have been assessed
+        for this domain (minimum {minimum}). Read the absolute score.
+      insufficient_requires: [domain_label, n, minimum]
+    procurement:
+      placed: >-
+        {supplier} sits in the {quartile_label} for {cohort_label} (ranked {rank} of {n}).
+        Recommend: {action}
+      requires: [supplier, quartile_label, cohort_label, rank, n, action]
+      insufficient: >-
+        {supplier}: no peer comparison available — only {n} comparable suppliers assessed
+        (minimum {minimum}). Recommend: {action}
+      insufficient_requires: [supplier, n, minimum, action]
+
+    # ACTION TABLE — a deterministic lookup on (placement x data_access_scope), not a model. This
+    # is the ONE place `data_access_scope` enters, and it enters interpretation rather than the
+    # cohort key. Marked as drafting guidance because that is what it is.
+    disclaimer: "Suggested procurement actions, not legal advice."
+    actions:
+      bottom_quartile:
+        critical: "Do not onboard without enhanced due diligence; require a remediation plan with contractual milestones before signature."
+        high: "Enhanced due diligence clause; remediation plan required within 30 days of signature."
+        medium: "Request a remediation plan; schedule a follow-up assessment at 6 months."
+        low: "Note in the register; standard terms."
+      lower_mid:
+        critical: "Enhanced due diligence; right-to-audit clause."
+        high: "Request a remediation plan for the lagging domains."
+        medium: "Standard terms; annual review."
+        low: "Standard terms."
+      upper_mid:
+        critical: "Standard terms with a right-to-audit clause; annual review."
+        high: "Standard terms; annual review."
+        medium: "Standard terms."
+        low: "Standard terms."
+      top_quartile:
+        critical: "Standard terms; annual review. Posture is above peer median — inherent exposure still governs cadence."
+        high: "Standard terms; annual review."
+        medium: "Standard terms."
+        low: "Standard terms."
+      insufficient_peers:
+        critical: "No peer context available. Rely on the absolute assessment and a security questionnaire as a condition precedent."
+        high: "No peer context available. Request a security questionnaire before signature."
+        medium: "No peer context available. Standard terms; re-benchmark once the peer pool fills."
+        low: "No peer context available. Standard terms."
+
+  # ---------------------------------------------------------------------------
+  # DISCLOSURE — UI requirements, not footnotes.
+  # ---------------------------------------------------------------------------
+  disclosure:
+    always_show_n: true                   # a percentile whose population is hidden is a black box
+    always_show_data_sources: true        # n=23 "of which 3 attested" is a different claim from n=23
+    always_show_synthetic_label: true     # decision 3: synthetic forbids any percentile or quartile
+    notate_open_disputes: true            # US Chamber / FCRA: disputed ratings notated until resolved
+    never_publish_member_refs: true       # decision 4: aggregates only leave the building
+
+    reference_line_caveat: >-
+      This is a published population statistic, not a peer median. No comparable supplier in this
+      deployment has been assessed, so there is no peer group to compare against.
+    synthetic_caveat: >-
+      NOT REAL PEERS. These are fixed reference points, not assessed suppliers. No percentile or
+      quartile is published from them, and none should be inferred.

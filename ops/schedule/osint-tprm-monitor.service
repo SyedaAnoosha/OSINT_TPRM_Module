@@ -1,0 +1,35 @@
+[Unit]
+Description=OSINT TPRM continuous monitoring sweep (P5 per-tier cadence)
+Documentation=file:///opt/osint-tprm/ops/schedule/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# ONESHOT, NOT A DAEMON. app/monitor.py's argument stands: the sweep is a unit of work, and the
+# schedule belongs to the operating system. A long-running service here would be a second scheduler
+# competing with the timer below.
+User=osint-tprm
+WorkingDirectory=/opt/osint-tprm/backend
+# Credentials, never in the unit file. DATABASE_URL and collector keys live in a root-owned
+# environment file with mode 0640; .env is gitignored and must stay that way.
+EnvironmentFile=/etc/osint-tprm/monitor.env
+ExecStart=/opt/osint-tprm/ops/schedule/run-monitor.sh
+
+# The sweep queries a dozen free public services sequentially. A full book takes minutes, not hours;
+# an hour of wall clock means something has hung and should be killed rather than left holding a
+# connection.
+TimeoutStartSec=3600
+
+# NO Restart=. A failed sweep must stay failed and be visible in the ledger and the journal. An
+# automatic retry against someone else's free service turns one polite failure into a rate-limit ban.
+Restart=no
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/osint-tprm
+
+[Install]
+WantedBy=multi-user.target
