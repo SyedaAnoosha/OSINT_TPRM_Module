@@ -52,6 +52,7 @@ from .evidence_pack import build_pack as build_evidence_pack
 from .evidence_pack import procurement_view, security_view
 from .disclosures import disclosure_block
 from .continuity import business_stability_coverage, continuity_report
+from .lifecycle import lifecycle_report
 from .procurement_rules import get_procurement_advice
 from .status_page import as_dict as status_page_as_dict
 from .status_page import status_page_report
@@ -982,6 +983,47 @@ async def get_vendor_continuity(ref: str, store: StoreDep) -> dict[str, Any]:
         "business_stability_coverage": {"answered": answered, "tracked": tracked},
     }
 
+@app.get("/api/vendors/{ref}/lifecycle")
+async def get_lifecycle(ref: str, store: StoreDep) -> dict[str, Any]:
+    """Lifecycle context — stage label, key-person flag, obsolescence framing.
+
+    A read layer over the profile and stored findings. Never writes, never scores.
+    """
+    profile = _profile_of(store, ref)
+    if profile is None:
+        raise HTTPException(404, f"no profile for {ref!r} — score the vendor first")
+
+    findings = store.findings_for_vendor(ref)
+    years = operating_years(profile)
+    headcount = int(profile.employees.value) if profile.employees else None
+
+    report = lifecycle_report(
+        vendor_ref=ref,
+        operating_years=years,
+        headcount=headcount,
+        criticality=profile.criticality,
+        findings=findings,
+    )
+    return {
+        "vendor_ref": report.vendor_ref,
+        "lifecycle_stage": report.lifecycle_stage,
+        "stage_label": report.stage_label,
+        "risk_profile_note": report.risk_profile_note,
+        "operating_years": report.operating_years,
+        "key_person_risk": report.key_person_risk,
+        "key_person_basis": report.key_person_basis,
+        "obsolescence_signals": [
+            {
+                "signal": s.signal,
+                "band": s.band,
+                "description": s.description,
+                "evidence_id": s.evidence_id,
+                "finding_id": s.finding_id,
+            }
+            for s in report.obsolescence_signals
+        ],
+        "caveats": report.caveats,
+    }
 
 @app.get("/api/vendors/{ref}/status-page")
 async def get_vendor_status_page(ref: str, store: StoreDep) -> dict[str, Any]:

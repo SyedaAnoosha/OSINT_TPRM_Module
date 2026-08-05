@@ -104,7 +104,7 @@ function GradeTile({ grade }) {
       <div className="mt-0.5 flex items-baseline gap-1.5">
         <span className="text-3xl font-black leading-none" style={{ color: tone }}>{grade}</span>
       </div>
-      <div className="mt-0.5 truncate text-[11px] text-muted-foreground">{GRADE_MEANING[grade]}</div>
+      <div className="mt-0.5 text-[11px] text-muted-foreground">{GRADE_MEANING[grade]}</div>
     </div>
   )
 }

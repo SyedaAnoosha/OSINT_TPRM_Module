@@ -59,8 +59,18 @@ _NEVER_OBSERVABLE: list[dict[str, str]] = [
     {"area": "Encryption at rest and internal segmentation",
      "detail": "We observe the perimeter's transport security. What happens to data after it "
                "arrives is invisible from the outside."},
+    {"area": "Funding runway and financial reserves",
+     "detail": "Cash position, burn rate, and months of operational runway for private companies. "
+               "No lawful free source exists. Its absence is not evidence of health — the signals "
+               "this system CAN reach (EDGAR going-concern language, The Gazette insolvency "
+               "notices, Companies House status) are in Continuity. A private startup's remaining "
+               "runway is not."},
+    {"area": "Key-person and talent-retention risk",
+     "detail": "Whether service delivery depends on a small number of named individuals, what "
+               "the attrition risk is, or whether key engineers have recently departed. Not "
+               "observable from public sources. Headcount from Wikidata is a proxy for scale, "
+               "not for dependency concentration."},
 ]
-
 
 @dataclass
 class CoverageStatement:

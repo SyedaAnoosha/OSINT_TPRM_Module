@@ -79,7 +79,7 @@ export function TopFindings({ vendorRef, score }) {
             <ul className="flex flex-col gap-2">
               {weaknesses.map((f) => (
                 <li key={f.id} className="flex items-baseline justify-between gap-3 text-[12.5px]">
-                  <span className="min-w-0 truncate font-medium">{f.reason || deSnake(f.signal)}</span>
+                  <span className="min-w-0 font-medium">{f.reason || deSnake(f.signal)}</span>
                   <span className="shrink-0 font-mono font-semibold tabular-nums" style={{ color: 'var(--risk-high)' }}>
                     −{Math.round((f.effective_penalty ?? 0) * 10) / 10}
                   </span>

@@ -310,6 +310,8 @@ export const getContinuity = (ref) => getOrNull(`/api/vendors/${encodeURICompone
 /** P7 — the vendor's own status page. Emits no finding and reaches no score. */
 export const getStatusPage = (ref) => getOrNull(`/api/vendors/${encodeURIComponent(ref)}/status-page`)
 
+export const getLifecycle = (ref) => getOrNull(`/api/vendors/${encodeURIComponent(ref)}/lifecycle`)
+
 /** E9a + E9c — the ASSURANCE axis and the compliance gaps, in one response.
  *
  *  A separate axis from posture on purpose: "their TLS is current" and "an auditor has examined

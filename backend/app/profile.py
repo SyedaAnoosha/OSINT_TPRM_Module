@@ -33,7 +33,10 @@ from .models import (
     Vendor,
     VendorProfile,
     utcnow,
+    LifecycleStage,
 )
+
+from .lifecycle import lifecycle_stage_from_years
 
 # Fields counted for `completeness`. Deliberately excludes `criticality` (a client input, not an
 # observation) so completeness measures what WE managed to find out.
@@ -87,6 +90,10 @@ def build_profile(
         profile.sector = ProfileField(value=sector, source="client", locator="client-supplied")
     profile.cohort = _derive_cohort(profile, size_override=size_band)
     profile.completeness = _completeness(profile)
+
+    # Derive lifecycle stage from operating years — context only, see models.LifecycleStage.
+    profile.lifecycle_stage = lifecycle_stage_from_years(operating_years(profile))
+
     return profile
 
 
@@ -410,3 +417,26 @@ def _days_since(value: Any) -> int | None:
     if when.tzinfo is None:
         return None
     return max(0, (utcnow() - when).days)
+
+
+def _lifecycle_stage(operating_years: float | None) -> "LifecycleStage | None":
+    """Map operating years to an Adizes-derived stage label.
+
+    Thresholds are approximate — the model does not publish hard boundaries. These are
+    calibrated to the five bands already in scoring.yaml's `entity_maturity` signal:
+    new_lt_1 / startup_lt_2 / young_2_5 / established_5_10 / mature_gt_10, widened at
+    the top (>10 stays 'prime' until 15, beyond which institutional path-dependency
+    typically dominates). Adjust here; there is no other place.
+    """
+    
+    if operating_years is None:
+        return "unknown"
+    if operating_years < 1.0:
+        return "infancy"
+    if operating_years < 2.0:
+        return "go_go"
+    if operating_years < 5.0:
+        return "adolescence"
+    if operating_years < 15.0:
+        return "prime"
+    return "aging"

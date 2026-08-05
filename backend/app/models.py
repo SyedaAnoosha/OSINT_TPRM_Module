@@ -28,6 +28,13 @@ methodology §5.4 it must reduce *confidence*, never *risk* — so it is persist
 scored as absence-of-evidence, never dropped and never treated as a 0-risk signal.
 """
 
+# Derived from operating years (entity inception or domain age). Context only — never scored.
+# Age's two legitimate homes in this system are already taken: confidence (scoring.yaml
+# assurance_multiplier) and attainability (benchmarks.yaml attainable_after_years).
+# This label is a third home: the UI display layer, so a reader understands WHAT they are
+# looking at when benchmarking a 2-year-old vendor against a 40-year-old one.
+LifecycleStage = Literal["infancy", "go_go", "adolescence", "prime", "aging", "unknown"]
+
 
 def utcnow() -> datetime:
     """Timezone-aware UTC now. All timestamps in this system are tz-aware UTC."""
@@ -372,6 +379,17 @@ class VendorProfile(BaseModel):
     parent: ProfileField | None = Field(default=None, description="Corporate parent — never a person")
     domain_age_days: ProfileField | None = None
 
+    # Derived from `operating_years()` in profile.py — never scored, never reaches the engine.
+    # Present so the API and UI have a named, typed field rather than re-deriving the same
+    # threshold logic in three places. None until `build_profile` runs and `inception` or
+    # `domain_age_days` is populated.
+    lifecycle_stage: LifecycleStage | None = Field(
+        default=None,
+        description=(
+            "Organisational lifecycle stage — context only. infancy (<1yr) | go_go (1–2yr) | "
+            "adolescence (2–5yr) | prime (5–15yr) | aging (>15yr) | unknown. Never scored."
+        ),
+    )
     # Client-supplied, never inferred: how badly this vendor's failure hurts THIS buyer is not
     # observable from outside, and guessing it would be the least defensible number on the card.
     criticality: Criticality | None = None

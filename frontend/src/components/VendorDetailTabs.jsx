@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
-  Boxes, FileSearch2, Layers, Network, Scale, ShieldCheck, Sparkles,
+  Boxes, FileSearch2, Layers, Network, Scale, ShieldCheck, Sparkles, Clock
 } from 'lucide-react'
 import { EvidenceRecord, ExportButton } from '../Scorecard.jsx'
 import { cn } from '../lib/utils.js'
@@ -11,6 +11,9 @@ import { GapAnalysisPanel } from './GapAnalysis.jsx'
 import { PeerBenchmarkPanel } from './PeerBenchmark.jsx'
 import { ActionCard, Caveats, CoverageStatement, ProvisionalChip, RiskBand } from './primitives.jsx'
 import { VendorProfilePanel } from './VendorProfile.jsx'
+import { LifecycleCard } from './LifecycleCard.jsx'
+import { getLifecycle } from '../api.js'
+
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
 // TIER 3 — DRILL-DOWN, ON DEMAND. docs/tprm_feedback_redesign.md §3.2/§3.3/§3.4:
@@ -34,6 +37,13 @@ export function VendorDetailTabs({
   ref_, score, plan, residual, provisional, coverage, continuity, statusPage,
 }) {
   const [tab, setTab] = useState('category')
+  const [lifecycle, setLifecycle] = useState(null)
+
+  useEffect(() => {
+    let live = true
+    getLifecycle(ref_).then((d) => { if (live) setLifecycle(d) }).catch(() => {})
+    return () => { live = false }
+  }, [ref_])
 
   const TABS = [
     { id: 'category', label: 'Category detail', icon: FileSearch2 },
@@ -42,6 +52,7 @@ export function VendorDetailTabs({
     { id: 'deps', label: 'Dependencies', icon: Network },
     { id: 'assurance', label: 'Assurance detail', icon: ShieldCheck },
     { id: 'stability', label: 'Business Stability', icon: Scale },
+    { id: 'lifecycle', label: 'Lifecycle', icon: Clock },
   ]
 
   return (
@@ -88,6 +99,7 @@ export function VendorDetailTabs({
             ? <BusinessStabilityCard summary={continuity} coverage={continuity.business_stability_coverage} statusPage={statusPage} />
             : <p className="text-[12.5px] italic text-muted-foreground">No Business Stability data for this vendor yet.</p>
         )}
+        {tab === 'lifecycle' && <LifecycleCard lifecycle={lifecycle} />}
       </div>
     </div>
   )
