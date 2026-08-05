@@ -17,6 +17,7 @@ import InventoryPage from './pages/InventoryPage.jsx'
 import ProgramPage from './pages/ProgramPage.jsx'
 import MethodologyPage from './pages/MethodologyPage.jsx'
 import PerfectMethodologyPage from './pages/PerfectMethodologyPage.jsx'
+import UseCasesPage from './pages/UseCasesPage.jsx'
 
 // The book is the landing page, not the search box. A single-vendor scorecard answers "is this one
 // safe?"; a programme with 146 vendors, a blocked queue and a monitoring schedule needs to open on
@@ -34,6 +35,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/queue" element={<QueuePage />} />
           <Route path="/inventory" element={<InventoryPage />} />
           <Route path="/program" element={<ProgramPage />} />
+          <Route path="/use-cases" element={<UseCasesPage />} />
           <Route path="/methodology" element={<MethodologyPage />} />
           <Route path="/perfect-methodology" element={<PerfectMethodologyPage />} />
         </Route>

@@ -38,7 +38,7 @@ Certificate Transparency logs, sanctions lists and statutory registers exist spe
 | 13 | AU Modern Slavery Register | Statutory statements | **No licence stated — query required** | **Ask first** |
 | 14 | **ABN Lookup (AU)** | AU entity status (Active / Cancelled), entity type, trading names | Web Services Agreement permits third-party extracts, **no commercial bar, no bulk-harvest bar**; free registration GUID; must not imply Commonwealth endorsement | **Use** (built; `empty` without a GUID) |
 | 15 | **Wikidata firmographics (P452/P1128/P2139/P414/P17/P571/P749)** | Industry, employees, revenue, listing, country, inception, corporate parent — **profile context only, emits no findings** | **CC0 / public domain**; contact-bearing UA required | **Use** (never scored) |
-| — | SEC EDGAR | Filings, financial distress, ownership | US-listed only (poor recall) + UA-gated | **REMOVED** (→ GLEIF) |
+| 18 | **SEC EDGAR (US)** | 8-K Item 1.03 (bankruptcy), 10-K `goingConcern` | US public only. Free, no key | **Use** (built, narrow scope) |
 | — | VirusTotal | Reputation | *"must not be used in commercial products"* | **EXCLUDED** |
 | — | Qualys SSL Labs | TLS grade | Commercial + permission + publication bars | **EXCLUDED** |
 | — | **Google Safe Browsing API** | Domain/URL reputation — malware & phishing flags | **Commercial use prohibited**; revenue-generating use is directed to the paid Web Risk API (verified 24 Jul 2026) | **EXCLUDED** — the VirusTotal pattern |
@@ -51,6 +51,10 @@ Certificate Transparency logs, sanctions lists and statutory registers exist spe
 | — | ~~Companies House~~ | *promoted to #17 — BUILT* | — | **Built** |
 | — | ABN Lookup — **ANZSIC industry code** | Industry classification per ABN | **Non-public ABR data: released to eligible government agencies only** — absent from the public JSON services (verified 24 Jul 2026) | **Unavailable to us** — sector falls back to Wikidata |
 | — | Google News (scraped) | Adverse media | Against ToS; no free API | **EXCLUDED** — use GDELT |
+| 19 | **The Gazette (UK)** | Winding-up petitions, liquidator/administrator appointments | Free, Crown copyright/OGL, no ToS trap | **Use** (built) |
+| 20 | **CourtListener (RECAP)** | US federal bankruptcy case dockets | Free, documented API | **Use** (built, narrow scope) |
+| — | **OpenCorporates** | Dissolution/liquidation status codes across jurisdictions | Free tier; bulk data is paid | **Held pending ToS** |
+| — | **Financial Modeling Prep**| Delisting notices, sustained price decline | Free tier usable; terms need confirmation | **Held pending ToS** |
 
 ---
 

@@ -631,6 +631,56 @@ export function RiskBand({ tier, label, large }) {
   )
 }
 
+/**
+ * INHERENT → RESIDUAL, AS ONE PAIR, NEVER TWO DISCONNECTED NUMBERS.
+ *
+ * docs/tprm_feedback_redesign.md §3.2: "shown as a pair … so the delta — what controls/mitigations
+ * actually bought — is visible at a glance." Inherent is drawn muted (it is a client-supplied fact
+ * about exposure, not a finding); only the residual side takes the risk colour, because E10b's
+ * whole point is that a strong posture against a high inherent exposure is not automatically a low
+ * residual number — the arrow is the only place that delta gets to exist as one shape.
+ *
+ * Undeclared renders as a plain dash pair, never a colour — the same "undeclared is not low" rule
+ * `DeclareInherentPrompt` exists to enforce, restated here in one line instead of the full form.
+ */
+export function InherentResidualPair({ residual, provisional, size = 'sm' }) {
+  const big = size === 'lg'
+  if (!residual?.published) {
+    return (
+      <div>
+        <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          Inherent → Residual
+        </div>
+        <div className={cn('font-bold text-muted-foreground', big ? 'text-lg' : 'text-sm')}>
+          Not declared
+        </div>
+      </div>
+    )
+  }
+  const tone = RESIDUAL_TONE[residual.residual] || 'var(--ghost)'
+  return (
+    <div>
+      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        Inherent → Residual
+      </div>
+      <div className="mt-0.5 flex items-center gap-1.5">
+        <span className={cn('font-semibold capitalize text-muted-foreground', big ? 'text-base' : 'text-[13px]')}>
+          {residual.inherent?.label || '—'}
+        </span>
+        <ArrowRight className={cn('shrink-0 text-muted-foreground', big ? 'h-4 w-4' : 'h-3.5 w-3.5')} />
+        <span className={cn('font-bold capitalize', big ? 'text-base' : 'text-[13px]')} style={{ color: tone }}>
+          {residual.residual_label || residual.residual}
+        </span>
+        {provisional && <ProvisionalChip />}
+        {residual.escalated_for_sole_source && (
+          <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'var(--risk-high)' }}
+            title="Escalated one band — sole source">↑ sole source</span>
+        )}
+      </div>
+    </div>
+  )
+}
+
 /** A caveat list rendered verbatim. The backend's caveats are argued text, not filler. */
 /**
  * A one-line disclosure. The default answer to "this detail matters but does not belong on the

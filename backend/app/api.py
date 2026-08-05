@@ -51,7 +51,8 @@ from .evidence_pack import as_dict as evidence_pack_as_dict
 from .evidence_pack import build_pack as build_evidence_pack
 from .evidence_pack import procurement_view, security_view
 from .disclosures import disclosure_block
-from .continuity import continuity_report
+from .continuity import business_stability_coverage, continuity_report
+from .procurement_rules import get_procurement_advice
 from .status_page import as_dict as status_page_as_dict
 from .status_page import status_page_report
 from .exit_readiness import as_dict as exit_readiness_as_dict
@@ -951,6 +952,11 @@ async def get_vendor_continuity(ref: str, store: StoreDep) -> dict[str, Any]:
     if not findings:
         raise HTTPException(404, f"no findings for {ref!r} — POST /api/vendors/score first")
     report = continuity_report(ref, findings)
+    answered, tracked = business_stability_coverage(findings)
+    # `procurement_rules.py` (docs/tprm_feedback_redesign.md §1.3): a deterministic advisory
+    # keyed on standing, never a number — surfaced here so the frontend's Business Stability
+    # card can show it beside the registry facts, not as a second endpoint round-trip.
+    advice = get_procurement_advice(report.standing)
     return {
         "vendor_ref": report.vendor_ref,
         "standing": report.standing,
@@ -962,7 +968,18 @@ async def get_vendor_continuity(ref: str, store: StoreDep) -> dict[str, Any]:
             for f in report.flags
         ],
         "age_context": report.age_context,
+        # Alias of `age_context` under the name the Business Stability card reads — same content,
+        # not a second computation. Kept as `age_context` too for any other existing consumer.
+        "registry_facts": report.age_context,
+        "procurement_action": advice.detail,
+        "procurement_headline": advice.headline,
+        "procurement_blocking": advice.blocking,
         "caveats": report.caveats,
+        # docs/tprm_feedback_redesign.md §1.3 — a SEPARATE coverage figure from Posture's
+        # confidence axis (ScoringConfig.business_stability_signals excludes these signals from
+        # that one entirely). "0 of 3" is not "clean"; it is "not evidenced for this vendor's
+        # jurisdiction" — the UI must not read an empty numerator as good news.
+        "business_stability_coverage": {"answered": answered, "tracked": tracked},
     }
 
 

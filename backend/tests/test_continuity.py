@@ -159,3 +159,83 @@ def test_continuity_is_not_a_score():
     assert isinstance(report.standing, str)
     assert not hasattr(report, "score")
     assert any("not a score" in c.lower() for c in report.caveats)
+
+
+# --------------------------------------------------------------------- Business Stability (§1.3)
+
+CLASS_D = ("sec_filing", "insolvency_notice", "bankruptcy_petition")
+
+
+def test_business_stability_signals_never_carry_a_posture_penalty():
+    """Same invariant as CLASS_C (E4), extended to the three new financial sources — Gazette,
+    EDGAR, CourtListener. A bankruptcy filing is real and must be visible, but it is not a
+    security-posture fact."""
+    cfg = get_scoring_config()
+    charging = [
+        f"{sig}.{band}"
+        for sig in CLASS_D
+        for band, sev in _bands(cfg, sig).items()
+        if cfg.penalty_for(sev) > 0
+    ]
+    assert charging == [], f"Business Stability signals still penalising posture: {charging}"
+
+
+def test_business_stability_signals_excluded_from_planned_signal_count():
+    """The whole reason this axis exists as a SEPARATE denominator (docs/tprm_feedback_redesign.md
+    §1.3): these three signals are reachable and do score (at `informational`), but must never
+    move Posture's confidence-ceiling / Ghost-detection math. Replaying the frozen regression
+    corpus's pre-existing evidence against a grown denominator silently dropped every real
+    vendor's confidence band — this is the regression guard for that defect."""
+    cfg = get_scoring_config()
+    assert cfg.business_stability_signals() == set(CLASS_D)
+    assert cfg.planned_signal_count() == 27  # unchanged — CLASS_D is not counted here
+
+
+def test_business_stability_signal_sets_match():
+    """continuity.py duplicates this set rather than importing scoring_config (module
+    independence, by design — see continuity.py's module docstring). The two must never drift."""
+    from app.continuity import BUSINESS_STABILITY_SIGNALS
+    cfg = get_scoring_config()
+    assert BUSINESS_STABILITY_SIGNALS == cfg.business_stability_signals()
+
+
+def test_business_stability_coverage_counts_only_class_d_signals():
+    from app.continuity import business_stability_coverage
+    findings = [
+        _finding("sec_filing", "no_adverse_filings", source="sec_edgar"),
+        _finding("insolvency_notice", "entity_inactive", source="the_gazette"),
+        _finding("entity_status", "active_good_standing"),  # a Continuity signal, not Class D
+    ]
+    answered, tracked = business_stability_coverage(findings)
+    assert (answered, tracked) == (2, 3)
+
+
+def test_business_stability_coverage_is_zero_of_three_when_nothing_collected():
+    """No coverage for this vendor's jurisdiction reads as (0, 3), never as clean — the same
+    'absence is not health' principle as `continuity_report`'s own `unknown` standing."""
+    from app.continuity import business_stability_coverage
+    answered, tracked = business_stability_coverage([_finding("entity_status", "entity_inactive")])
+    assert (answered, tracked) == (0, 3)
+
+
+def test_bankruptcy_filing_flags_ceased_and_reorganisation_flags_watch():
+    report = continuity_report("acme", [_finding("bankruptcy_petition", "entity_inactive",
+                                                  source="courtlistener_bankruptcy")])
+    assert report.standing == "ceased"
+
+    report = continuity_report("acme", [_finding("sec_filing", "registration_lapsed",
+                                                  source="sec_edgar")])
+    assert report.standing == "watch"
+
+
+def test_business_stability_clean_receipt_is_not_asserted_as_sound():
+    """`no_adverse_filings` is deliberately unmapped in `_FLAGS` — a name-search finding nothing
+    is weaker evidence than a registry's explicit good-standing confirmation, so it must not
+    produce a 'sound' flag the way `entity_status.active_good_standing` does."""
+    report = continuity_report("acme", [
+        _finding("sec_filing", "no_adverse_filings", source="sec_edgar"),
+        _finding("insolvency_notice", "no_adverse_filings", source="the_gazette"),
+        _finding("bankruptcy_petition", "no_adverse_filings", source="courtlistener_bankruptcy"),
+    ])
+    assert report.standing == "unknown"
+    assert report.flags == []

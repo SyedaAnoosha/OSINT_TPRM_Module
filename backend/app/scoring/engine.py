@@ -261,8 +261,14 @@ class ScoringEngine:
             cat_penalty[cat] = total
 
         # --- coverage (confidence axis): planned vs covered signals ---
+        # Business Stability signals are excluded on both sides of this ratio, not just the
+        # denominator (scoring_config.business_stability_signals) — they DO reach `scored` (they
+        # score, at `informational`), so leaving them in the numerator alone would let a fully
+        # historically-covered vendor exceed 100% coverage the moment all three answer.
         covered_by_cat: dict[str, set[str]] = defaultdict(set)
         for n in scored:
+            if n.signal in self.cfg.business_stability_signals():
+                continue
             covered_by_cat[n.category].add(n.signal)
         total_covered = sum(len(s) for s in covered_by_cat.values())
         total_planned = self.cfg.planned_signal_count()
@@ -439,14 +445,19 @@ class ScoringEngine:
     ) -> list[CategoryScore]:
         out: list[CategoryScore] = []
         unreachable = self.cfg.unreachable_signals()
+        business_stability = self.cfg.business_stability_signals()
         for cat in self.cfg.category_names():
             # PLANNED means "this deployment intends to collect it", not "the model defines it" —
             # the same rule `planned_signal_count` applies to the overall denominator, and it has
             # to be applied here too or the two coverage figures disagree. E12 is the case that
             # forced it: `estate_*` signals are declared in the model but unproducible at
             # `probe_cap: 1`, and counting them dropped every vendor's attack-surface coverage
-            # from 12/12 to 10/12 for a feature nobody had switched on.
-            planned = len([s for s in self.cfg.signals_of(cat) if s not in unreachable])
+            # from 12/12 to 10/12 for a feature nobody had switched on. Business Stability signals
+            # are excluded the same way, for the same reason `covered_by_cat` excludes them above:
+            # they are reachable, but belong to a different axis with its own coverage figure
+            # (`continuity.business_stability_coverage`), never this one.
+            planned = len([s for s in self.cfg.signals_of(cat)
+                          if s not in unreachable and s not in business_stability])
             covered = len(covered_by_cat.get(cat, set()))
             coverage = (covered / planned) if planned else 0.0
             if covered == 0:

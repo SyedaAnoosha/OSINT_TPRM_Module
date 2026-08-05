@@ -446,6 +446,31 @@ def test_a_silent_source_cannot_lower_the_posture_either():
     assert full.posture == silent.posture
 
 
+def _business_stability_clean():
+    """The three Business Stability signals (docs/tprm_feedback_redesign.md §1.3), all answering
+    clean — Gazette/EDGAR/CourtListener all reachable and finding nothing adverse."""
+    return [_f("sec_filing", X, "no_adverse_filings"),
+            _f("insolvency_notice", X, "no_adverse_filings"),
+            _f("bankruptcy_petition", X, "no_adverse_filings")]
+
+
+def test_business_stability_signals_cannot_move_posture_or_confidence():
+    """THE regression guard for the defect found while wiring these signals in: adding them to
+    `scoring.yaml`'s shared denominator moved planned_signal_count 27->30 and silently dropped
+    every real vendor's confidence band when replayed against pre-existing (frozen) evidence that
+    predates these collectors. `ScoringConfig.business_stability_signals()` excludes them from
+    BOTH sides of the coverage ratio for exactly this reason — this test proves posture AND
+    confidence are byte-identical whether or not these three signals are present at all."""
+    bad = {"tls_version": "tls_10_or_11", "dmarc": "absent"}
+    without = ScoringEngine().score(_vendor(), [_result("dns", _hygiene(bad))]).score
+    with_bs = ScoringEngine().score(_vendor(), [
+        _result("dns", _hygiene(bad)), _result("gazette", _business_stability_clean())]).score
+
+    assert without.posture == with_bs.posture
+    assert without.overall_confidence == with_bs.overall_confidence
+    assert without.confidence_band == with_bs.confidence_band
+
+
 def test_overall_is_total_penalty_over_a_fixed_divisor():
     """The published formula: 100 - total_penalty / divisor, divisor fixed by the model."""
     cfg = get_scoring_config()

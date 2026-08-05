@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import {
-  BookOpen, Gauge, LayoutGrid, Menu, Moon, Scale, ShieldCheck, Sun, X,
+  BookOpen, Gauge, LayoutGrid, Menu, Moon, Scale, ShieldCheck, Sun, SplitSquareHorizontal, X,
 } from 'lucide-react'
 import { cn } from '../lib/utils.js'
 import { useTheme } from '../lib/theme.js'
@@ -27,6 +27,7 @@ const NAV = [
   //   { to: '/program', label: 'Maturity & KPIs', icon: TrendingUp },
   // ] },
   { group: null, items: [
+    { to: '/use-cases', label: 'Use cases', icon: SplitSquareHorizontal },
     { to: '/methodology', label: 'Methodology', icon: BookOpen },
   ] },
 ]

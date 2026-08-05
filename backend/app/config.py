@@ -52,6 +52,8 @@ class Settings(BaseSettings):
     # Authoritative UK entity standing, corroborating GLEIF. Unset -> collector returns `empty`.
     companies_house_key: str = ""
 
+    courtlistener_key: str = ""  # CourtListener API key for bankruptcy filings. Optional; unset -> collector returns `empty`.
+
     # Optional secondary maturity signal from RDAP domain-age evidence. Default OFF because
     # legal-entity inception is the primary source for company maturity; RDAP can be enabled as
     # corroboration where desired.

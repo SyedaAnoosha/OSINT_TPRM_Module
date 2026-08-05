@@ -335,6 +335,17 @@ categories:
     entity_existence:    { entity_active_confirmed: pass, entity_dissolved: informational }
     entity_maturity:     { mature_gt_10: pass, established_5_10: pass, young_2_5: informational, startup_lt_2: informational, new_lt_1: informational }
     domain_registration: { domain_established: pass, domain_recent: informational, domain_new: informational, domain_expiring: informational, domain_suspended: informational }
+    # Added for the "Business Stability" feedback item (docs/tprm_feedback_redesign.md §1.2). Three
+    # new sources, one signal each, reusing the entity_status band vocabulary rather than inventing
+    # new bands — `no_adverse_filings` is the clean receipt, `entity_inactive`/`registration_lapsed`
+    # are the same severities the registry sources already use. All `informational`: these can no
+    # more penalise posture than the four signals above them. This moves planned_signal_count()
+    # 27 -> 30 — deliberate and disclosed, not silent drift; see docs/business_stability.md and the
+    # updated assertions in test_scoring_config.py / test_continuity.py / test_estate.py /
+    # test_exposure.py.
+    sec_filing:          { no_adverse_filings: pass, registration_lapsed: informational, entity_inactive: informational }
+    insolvency_notice:   { no_adverse_filings: pass, registration_lapsed: informational, entity_inactive: informational }
+    bankruptcy_petition: { no_adverse_filings: pass, registration_lapsed: informational, entity_inactive: informational }
 
   # --- CONTEXT B. Assurance — feeds Assurity (E9), never Posture -------------------------------
   # Penalising the absence of an audit or a public security page is a tax on audit budget, which

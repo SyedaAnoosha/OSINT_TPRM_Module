@@ -32,15 +32,25 @@ coverage — deleting them would shrink the confidence denominator and lift ever
 confidence for no evidential reason.
 
 WHAT IS NOT HERE. Funding runway, cash burn, down-rounds, Altman Z-score, market share and
-layoffs all stay in `held_roadmap`: no lawful free source. `gleif_collector` already records the
-same finding — *"Financial-distress (going concern), litigation, and ownership-CHANGE remain
-HELD: no free authoritative source."* Roughly four of ten candidate financial markers are
-obtainable today, and this module carries only those four.
+layoffs all stay in `held_roadmap`: no lawful free source — a derived distress INDEX is exactly
+the credit-rating-territory invention item 3 above refuses, regardless of whether the underlying
+numbers could technically be sourced. General litigation and ownership-change also remain held.
+
+UPDATED (docs/tprm_feedback_redesign.md §1.2). Going-concern doubt and formal insolvency/
+bankruptcy filings themselves are no longer fully held: `edgar_collector` reads SEC 8-K Item 1.03
+bankruptcy disclosures and 10-K/10-Q going-concern language for US SEC-registered entities,
+`gazette_collector` reads The Gazette's official UK corporate-insolvency notices (winding-up,
+administration, receivership — filtered to notice-codes 2401-2465 specifically to exclude
+personal bankruptcy, which the Gazette's insolvency search otherwise mixes in), and
+`courtlistener_bankruptcy_collector` reads US federal bankruptcy-petition dockets. Each is a
+CITED FACT from the register or filer itself, not an inference — the same footing as the
+Companies House/GLEIF/RDAP facts above, never a computed score.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from .models import PersistedFinding
 
@@ -49,6 +59,43 @@ from .models import PersistedFinding
 Standing = str  # "ceased" | "impaired" | "watch" | "sound" | "unknown"
 
 _ORDER = {"ceased": 0, "impaired": 1, "watch": 2, "unknown": 3, "sound": 4}
+
+# Formalized 5-state traffic-light summary and procurement actions.
+# Maps Standing -> (action_key, action_label, action_detail)
+_STANDING_ACTIONS: dict[Standing, tuple[str, str, str]] = {
+    "ceased": (
+        "hard_gate",
+        "Hard Gate",
+        "Entity is dissolved, struck off, or liquidated. Cannot contract. "
+        "This is a hard gate — no agreement can be signed with a non-existent legal person."
+    ),
+    "impaired": (
+        "escalation",
+        "Escalation",
+        "Entity is in administration, receivership, or subject to a winding-up petition/CVA. "
+        "Escalate to legal and risk for immediate review of insolvency proceedings before any signature."
+    ),
+    "watch": (
+        "condition",
+        "Condition",
+        "Going-concern doubt, reorganisation (e.g., Chapter 11), or administrative lapse. "
+        "Condition precedent: require recent management accounts, a going-concern confirmation, "
+        "or termination-for-convenience and escrow clauses before signing."
+    ),
+    "sound": (
+        "standard_terms",
+        "Standard Terms",
+        "Entity is active and in good standing. No specific continuity action required; "
+        "standard contractual terms apply."
+    ),
+    "unknown": (
+        "standard_due_diligence",
+        "Standard Due Diligence",
+        "No definitive registry facts found (either no adverse filings, or the entity is outside "
+        "covered jurisdictions). Rely on standard due diligence or request a certificate of good "
+        "standing if the relationship tier warrants it."
+    ),
+}
 
 # (signal, band) -> (standing, plain-English statement).
 #
@@ -98,6 +145,52 @@ _FLAGS: dict[tuple[str, str], tuple[Standing, str]] = {
     ("domain_registration", "domain_established"): (
         "sound", "The domain registration is long-established and current.",
     ),
+
+    # --- financial/business-stability filings (docs/tprm_feedback_redesign.md §1.2) --------
+    # `no_adverse_filings` (the clean receipt for all three signals below) is deliberately NOT
+    # mapped here. Absence of a matching filing is weaker evidence than a registry's explicit
+    # confirmation of good standing — it is a name-search finding nothing, not a positive
+    # attestation — so it contributes to Business Stability COVERAGE without asserting "sound".
+    ("sec_filing", "entity_inactive"): (
+        "ceased",
+        "SEC EDGAR records an 8-K Item 1.03 filing — a bankruptcy event disclosed within the "
+        "SEC's required 4-business-day window.",
+    ),
+    ("sec_filing", "registration_lapsed"): (
+        "watch",
+        "SEC EDGAR records going-concern / substantial-doubt language in this entity's own "
+        "recent 10-K or 10-Q filing — the company's own auditor has flagged doubt about its "
+        "ability to continue as a going concern.",
+    ),
+    ("insolvency_notice", "entity_inactive"): (
+        "ceased",
+        "The Gazette (the UK's official public record) records a winding-up or liquidation "
+        "notice for this entity.",
+    ),
+    ("insolvency_notice", "registration_lapsed"): (
+        "watch",
+        "The Gazette records an administration or receivership notice for this entity — a "
+        "corporate insolvency procedure that may still end in recovery rather than liquidation.",
+    ),
+    ("bankruptcy_petition", "entity_inactive"): (
+        "ceased",
+        "US federal court records (via CourtListener/RECAP) show a Chapter 7 or Chapter 9 "
+        "bankruptcy petition — liquidation proceedings — filed by or against this entity.",
+    ),
+    ("bankruptcy_petition", "registration_lapsed"): (
+        "watch",
+        "US federal court records (via CourtListener/RECAP) show a Chapter 11, 12, or 13 "
+        "bankruptcy petition — reorganisation proceedings — filed by or against this entity.",
+    ),
+    ("gazette_insolvency", "winding_up_petition"): ("impaired", "The Gazette records a winding-up petition against this entity."),
+    ("gazette_insolvency", "administration"): ("impaired", "The Gazette records an administration order."),
+    ("gazette_insolvency", "cva"): ("impaired", "The Gazette records a Company Voluntary Arrangement (CVA)."),
+    ("gazette_insolvency", "dissolved"): ("ceased", "The Gazette records the entity has been struck off or dissolved."),
+    ("sec_bankruptcy", "chapter_11"): ("impaired", "SEC EDGAR 8-K filing indicates bankruptcy or receivership proceedings."),
+    ("sec_going_concern", "audit_qualification"): ("watch", "SEC EDGAR 10-K/10-Q filing contains a going-concern audit qualification."),
+    ("asx_announcement", "voluntary_administration"): ("impaired", "ASX announcement indicates voluntary administration."),
+    ("asx_announcement", "delisting"): ("impaired", "ASX announcement indicates the entity is to be delisted."),
+    ("asic_administration", "external_administration"): ("impaired", "ASIC records the entity is under external administration."),
 }
 
 # Bands recording only how OLD a company is. Reported as context, never as a standing, because a
@@ -117,6 +210,52 @@ _AGE_CONTEXT = {
         "domain_recent": "The domain was registered within the last couple of years.",
     },
 }
+
+
+@dataclass(frozen=True)
+class BusinessStabilitySummary:
+    vendor_ref: str
+    standing: Standing
+    listed_status: str | None
+    registry_facts: list[str]
+    flags: list[ContinuityFlag]
+    procurement_action: str
+    procurement_action_label: str
+    action_detail: str
+    caveats: list[str]
+
+
+def business_stability_summary(vendor_ref: str, continuity: ContinuityReport, profile: Any) -> BusinessStabilitySummary:
+    """A structured summary of registry facts for the UI.
+    Never blended into a score. Provides a procurement-facing label and action."""
+    
+    listed_status = None
+    if profile and getattr(profile, "ownership", None) and profile.ownership.value == "listed":
+        listed_status = "Publicly Listed" 
+        
+    registry_facts = []
+    for f in continuity.flags:
+        if f.signal in ("entity_status", "entity_existence"):
+            registry_facts.append(f"{f.source}: {f.observed}")
+            
+    action_key, action_label, action_detail = _STANDING_ACTIONS.get(
+        continuity.standing, _STANDING_ACTIONS["unknown"]
+    )
+        
+    caveats = [
+        "This is NOT a score. It is a structured summary of registry facts.",
+        "This does not affect the security posture score.",
+        "Insolvency feeds (The Gazette, ASX, SEC) cover listed/registered entities only."
+    ]
+    
+    return BusinessStabilitySummary(
+        vendor_ref=vendor_ref, standing=continuity.standing, listed_status=listed_status,
+        registry_facts=registry_facts, flags=continuity.flags,
+        procurement_action=action_key,
+        procurement_action_label=action_label,
+        action_detail=action_detail,
+        caveats=caveats
+    )
 
 
 @dataclass(frozen=True)
@@ -189,3 +328,24 @@ def continuity_report(vendor_ref: str, findings: list[PersistedFinding]) -> Cont
         vendor_ref=vendor_ref, standing=headline, flags=flags,
         age_context=sorted(set(age)), caveats=list(_CAVEATS),
     )
+
+
+# Must stay in sync with `ScoringConfig.business_stability_signals()` — duplicated here rather
+# than imported so this module keeps its documented independence from the scoring engine (it
+# re-reads persisted findings and never touches engine/config machinery). Both are guarded by
+# `test_business_stability_signal_sets_match` (test_continuity.py).
+BUSINESS_STABILITY_SIGNALS = frozenset({"sec_filing", "insolvency_notice", "bankruptcy_petition"})
+
+
+def business_stability_coverage(findings: list[PersistedFinding]) -> tuple[int, int]:
+    """(checks answered, checks tracked) for the Business Stability axis — never Posture's.
+
+    Deliberately separate from `continuity_report`'s Continuity standing and from engine.py's
+    Posture-confidence coverage (`ScoringConfig.business_stability_signals` excludes these same
+    three signals from that computation for exactly this reason — see its docstring). A vendor
+    outside every source's jurisdiction (not UK, not a US SEC registrant, no US federal
+    bankruptcy record) still gets an `(0, 3)` or partial result here rather than silently
+    inflating or shrinking Posture's own confidence number.
+    """
+    seen = {f.signal for f in findings if f.signal in BUSINESS_STABILITY_SIGNALS}
+    return len(seen), len(BUSINESS_STABILITY_SIGNALS)

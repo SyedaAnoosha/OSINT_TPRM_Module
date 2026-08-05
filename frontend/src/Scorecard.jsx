@@ -11,6 +11,11 @@ import { PostureConfidencePair } from './components/primitives.jsx'
 import { DependenciesPanel } from './components/Dependencies.jsx'
 // `cn` was only used by the commented-out RoleSwitcher.
 import { postureColor, gradeColor, confColor } from './lib/utils.js'
+// Split into their own module (not defined here and re-exported) so this file's fast-refresh
+// boundary stays component-only — Vite's react-refresh plugin breaks hot-reload on a module that
+// exports both components and plain constants. `ExecutiveSummaryHero.jsx`, `TopFindings.jsx` and
+// `EvidenceCoverageBar.jsx` import the same four constants from here too.
+import { PRETTY, deSnake, GRADE_MEANING, CONFIDENCE_MEANING } from './lib/labels.js'
 // Role-based views temporarily disabled — see FULL_VIEW below.
 // import { ROLES, loadRole, saveRole } from './lib/roles.js'
 
@@ -43,23 +48,6 @@ const FULL_VIEW = {
 // (coverage) axis is ALWAYS beside the number, and The Ghost / BLOCKED / Insufficient-evidence
 // are designed states, not a red number.
 
-const GRADE_MEANING = {
-  A: 'Robust posture- few or no external issues found.',
-  B: 'Reasonable controls, with some gaps.',
-  C: 'Poor controls- serious issues to address.',
-  D: 'Severe issues; should not handle sensitive data.',
-  F: 'Little to no basic security investment.',
-}
-
-// The confidence band's plain sentence — the counterpart to GRADE_MEANING, so the second axis
-// explains itself on the card instead of leaving a bare percentage for the reader to interpret.
-// Bands come from scoring.yaml (High >=0.90, Medium >=0.70, else Low).
-const CONFIDENCE_MEANING = {
-  High: 'Most planned checks returned evidence.',
-  Medium: 'Some sources were silent- read with care.',
-  Low: 'Thin evidence- treat the grade as unassessed.',
-}
-
 // const HELD_CATEGORIES = [
 //   ['Supply Chain & Dependency', 'no live free collector yet- re-feed from dns/ct/trust is roadmap'],
 //   ['Data Privacy & Leakage', 'no clean free source (HIBP paste/domain is paid)'],
@@ -67,16 +55,6 @@ const CONFIDENCE_MEANING = {
 //   ['ESG & Ethical', 'no free authoritative feed'],
 //   ['Emerging Tech / AI', 'no observable free signal'],
 // ]
-
-const PRETTY = {
-  cyber_hygiene_technical: 'Cyber Hygiene & Technical',
-  breach_compromise_history: 'Breach & Compromise History',
-  vendor_transparency_gov: 'Vendor Transparency & Governance',
-  digital_footprint_assets: 'Digital Footprint & Assets',
-  business_financial_stability: 'Business & Financial Stability',
-  compliance_regulatory: 'Compliance & Regulatory',
-  adverse_media_reputation: 'Adverse Media & Reputation',
-}
 
 // One record, five projections — never five scores. A role changes what is shown FIRST and how
 // much is expanded; it never changes what is true, and every view renders from the same response.
@@ -618,13 +596,13 @@ function CategoryRow({ cat, findings = [], view = FULL_VIEW, vendorRef }) {
   )
 }
 
-// Human name for a source id, and a fallback that de-snakes any unmapped key.
+// Human name for a source id, and a fallback that de-snakes any unmapped key. `deSnake` itself
+// comes from `lib/labels.js` now (see the import above).
 const SOURCE_LABELS = {
   dns: 'DNS', tls: 'TLS scan', headers: 'HTTP headers', ct: 'Certificate Transparency',
   hibp: 'Have I Been Pwned', kev: 'CISA KEV', nvd: 'NVD', gleif: 'GLEIF', wikidata: 'Wikidata',
   rdap: 'RDAP', regulatory: 'Regulator feeds', trust: 'Trust pages', ita: 'Sanctions list',
 }
-const deSnake = (s) => String(s || '').replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())
 
 // Reasons carry a caveat sentence after the headline one ("...This is a name match, not proof").
 // The summary takes only the FIRST sentence, or three of them run together become a wall of text.

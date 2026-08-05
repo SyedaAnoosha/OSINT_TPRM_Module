@@ -48,11 +48,16 @@ _FEEDS: list[tuple[str, str]] = [
     ("UK-ICO", "https://www.gov.uk/search/news-and-communications.atom"
                "?organisations%5B%5D=information-commissioner-s-office"),         # UK — data protection
     ("CNIL", "https://www.cnil.fr/fr/rss.xml"),                                   # EU/FR — GDPR
+    ("UK-FCA", "https://www.fca.org.uk/news/rss.xml"), # FCA enforcement & warnings
+    ("US-FedReg-FDIC", "https://www.federalregister.gov/api/v1/documents.rss?conditions[]=agencies:FDIC&conditions[]=topics:banking"),
+    ("US-FedReg-OCC", "https://www.federalregister.gov/api/v1/documents.rss?conditions[]=agencies:OCC"),
+    ("US-FedReg-CFPB", "https://www.federalregister.gov/api/v1/documents.rss?conditions[]=agencies:CFPB"),
+
 ]
 
 _ENFORCE = re.compile(
     r"\b(order|settlement|penalt|fine[ds]?|enforcement|banned|charged?|sues?|sued|"
-    r"deceptive|unlawful|violat)\w*", re.I
+    r"deceptive|unlawful|violat|consent\s+order|cease\s+and\s+desist|civil\s+money\s+penalty)\w*", re.I
 )
 _INVESTIGATE = re.compile(r"\b(investigat|inquiry|probe|warning|alleg|complaint)\w*", re.I)
 

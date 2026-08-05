@@ -28,6 +28,9 @@ from .status_page_collector import StatusPageCollector
 from .tls_collector import TlsCollector
 from .trust_collector import TrustCollector
 from .wikidata_collector import WikidataCollector
+from .edgar_collector import EdgarCollector
+from .gazette_collector import GazetteCollector
+from .courtlistener_bankruptcy_collector import CourtListenerBankruptcyCollector
 
 _REGISTRY: dict[str, Collector] = {}
 
@@ -68,6 +71,21 @@ register(FirmographicsCollector())
 register(PdlCollector())          # profile context — OFFLINE firmographics FALLBACK (opt-in index)
 # P7 — emits no findings by design, so it can touch neither posture nor confidence. Routed to
 # Continuity (app/status_page.py) as a disclosed, never-scored operational signal.
+register(EdgarCollector())
+register(GazetteCollector())
+register(CourtListenerBankruptcyCollector())
 register(StatusPageCollector())
+# register(AsxCollector())   # HELD — asx.api.markitdigital.com is undocumented; ASX's own
+#                              "Information Services Policy Guidelines" govern permitted data use
+#                              and a separate LICENSED API (ASXonline/MIA) exists as the sanctioned
+#                              path. Ask-before-collect, same gate as DFAT/Modern Slavery/
+#                              OpenCorporates in docs/roadmap.md §2.4 — not wired until confirmed.
+# register(AsicCollector())  # HELD — publishednotices.asic.gov.au (the Companies-House/Gazette
+#                              analogue for AU insolvency notices) is legally clear (a statutory
+#                              public record, Corporations Act 2001) but its current site structure
+#                              could not be verified live (returns "Page Not Found" on known routes
+#                              as of 2026-08-04 — mid-restructure or bot-gated). Not wired against a
+#                              guessed schema; see the courtlistener_bankruptcy_collector.py
+#                              precedent for why that's refused on principle, not just caution.
 
 __all__ = ["Collector", "CollectorContext", "all_collectors", "get_collector", "register"]

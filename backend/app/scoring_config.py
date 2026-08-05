@@ -158,7 +158,25 @@ class ScoringConfig:
             for category in self.categories
             for signal in self.signals_of(category)
             if signal not in self.unreachable_signals()
+            and signal not in self.business_stability_signals()
         )
+
+    def business_stability_signals(self) -> set[str]:
+        """Signals that feed the Business Stability axis, not Posture confidence.
+
+        `sec_filing`/`insolvency_notice`/`bankruptcy_petition` are declared in
+        `continuity_context` — so they score (at `informational`), persist, and reach
+        `continuity.py` — but they answer a different question than Posture confidence does
+        ("how much do we know about this vendor's SECURITY"). Counting them in the SAME
+        denominator that gates the Posture confidence-ceiling and Ghost detection would let
+        Business Stability coverage move Posture's calibration, which is exactly the E4 defect
+        (change-notice-v5.md §3.4) one layer up — same mistake, different axis.
+        Business Stability gets its OWN coverage instead: `continuity.business_stability_
+        coverage()`. This is a HARD EXCLUSION, not a config-gated one like
+        `unreachable_signals()` — these signals ARE reachable, they simply belong elsewhere.
+        docs/tprm_feedback_redesign.md §1.3.
+        """
+        return {"sec_filing", "insolvency_notice", "bankruptcy_petition"}
 
     def unreachable_signals(self) -> set[str]:
         """Signals no collector can emit under the CURRENT configuration.
