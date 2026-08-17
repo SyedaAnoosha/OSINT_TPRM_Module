@@ -5,7 +5,7 @@ import {
   getAssessmentPlan, getContinuity, getCoverage, getEvidencePack,
   getFlowdowns, getProfile, getResidualRisk, getScore, getStatusPage,
 } from '../api.js'
-import { EvidenceCoverageBar } from '../components/EvidenceCoverageBar.jsx'
+// import { EvidenceCoverageBar } from '../components/EvidenceCoverageBar.jsx'
 import { ExecutiveSummaryHero } from '../components/ExecutiveSummaryHero.jsx'
 import { RecommendationsPanel } from '../components/RecommendationsPanel.jsx'
 import { TopFindings } from '../components/TopFindings.jsx'
@@ -117,15 +117,15 @@ export default function VendorPage() {
           <div className="px-4 py-3.5">
             <RecommendationsPanel
               ref_={ref} pack={pack} flowdowns={flowdowns} plan={plan} declared={declared}
-              score={score} continuity={continuity} onDeclared={reload}
+              score={score} onDeclared={reload}
             />
           </div>
         </Card>
-
+{/* 
         <EvidenceCoverageBar
           coverage={coverage} categories={score?.categories}
           businessStabilityCoverage={continuity?.business_stability_coverage}
-        />
+        /> */}
       </section>
 
       {/* ── TIER 3 — DRILL-DOWN ──────────────────────────────────────────────────────── */}
@@ -134,7 +134,7 @@ export default function VendorPage() {
           Detail, on demand
         </h2>
         <VendorDetailTabs
-          ref_={ref} score={score} plan={plan} residual={residual} provisional={provisional}
+          ref_={ref} score={score} residual={residual} provisional={provisional}
           coverage={coverage} continuity={continuity} statusPage={statusPage}
         />
       </section>

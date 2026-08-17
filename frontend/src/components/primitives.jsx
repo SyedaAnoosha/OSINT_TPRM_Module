@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  AlertTriangle, ArrowRight, CheckCircle2, ChevronDown, FileText, Ghost, Info, Lock, ShieldAlert,
+  AlertTriangle, ArrowRight, CheckCircle2, ChevronDown, FileText, Ghost, Info, Lock, ShieldAlert, Ban,
 } from 'lucide-react'
 import { declareInherent } from '../api.js'
 import { cn } from '../lib/utils.js'
@@ -149,20 +149,114 @@ export function PostureConfidencePair({ posture, confidence, grade, band, refuse
             className={cn('font-bold tabular-nums', big ? 'text-5xl' : 'text-3xl')}
             style={{ color: pct >= 90 ? 'var(--risk-low)' : pct >= 70 ? 'var(--risk-moderate)' : 'var(--ghost)' }}
           >
-            {pct}
-            <span className={big ? 'text-2xl' : 'text-lg'}>%</span>
+            {pct}%
           </span>
-          {band && <span className="text-xs text-muted-foreground">{band}</span>}
+          {band && (
+            <span className={cn('font-semibold', big ? 'text-sm' : 'text-xs')} style={{ color: pct >= 90 ? 'var(--risk-low)' : pct >= 70 ? 'var(--risk-moderate)' : 'var(--ghost)' }}>
+              {band}
+            </span>
+          )}
         </div>
       </div>
+    </div>
+  )
+}
 
-      {thin && (
-        <p className="w-full text-[12px] font-medium" style={{ color: 'var(--ghost)' }}>
-          <Ghost className="mr-1 inline h-3.5 w-3.5" />
-          Thin evidence. This posture is painted grey rather than green on purpose — at {pct}%
-          coverage it describes the perimeter we could see, not the vendor.
-        </p>
-      )}
+/**
+ * BUSINESS STABILITY SCORE — SEPARATE AXIS (Phase 2).
+ *
+ * Financial health is a SEPARATE 0-100 score from cybersecurity posture.
+ * A bankrupt company can have excellent cybersecurity controls, and a secure
+ * startup can run out of cash. These are separate risk dimensions that must
+ * not be conflated.
+ *
+ * This component displays the Business Stability score alongside the
+ * cybersecurity posture, following the same pairing rule with confidence.
+ */
+export function BusinessStabilityPair({ score, baseScore, ageBand, gateTriggered, gateReason, size = 'lg' }) {
+  const big = size === 'lg'
+
+  if (gateTriggered) {
+    return (
+      <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Business Stability
+          </div>
+          <div className="flex items-center gap-2">
+            <Ban className={cn(big ? 'h-12 w-12' : 'h-8 w-8')} style={{ color: 'var(--risk-critical)' }} />
+            <span className={cn('font-bold', big ? 'text-xl' : 'text-lg')} style={{ color: 'var(--risk-critical)' }}>
+              BLOCKED
+            </span>
+          </div>
+          {gateReason && (
+            <div className="text-[11px] text-muted-foreground mt-1 max-w-md">
+              {gateReason}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  if (score == null) {
+    return (
+      <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Business Stability
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className={cn('font-bold tabular-nums', big ? 'text-5xl' : 'text-3xl')} style={{ color: 'var(--ghost)' }}>
+              —
+            </span>
+          </div>
+          <div className="text-[11px] text-muted-foreground mt-1">
+            Not yet assessed
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const colour = ramp(score)
+
+  return (
+    <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
+      <div>
+        <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          Business Stability
+        </div>
+        <div className="flex items-baseline gap-2">
+          <span
+            className={cn('font-bold tabular-nums', big ? 'text-5xl' : 'text-3xl')}
+            style={{ color: colour }}
+          >
+            {score}
+          </span>
+        </div>
+        {ageBand && (
+          <div className="text-[11px] text-muted-foreground mt-1">
+            {ageBand.replace('_', ' ')}
+          </div>
+        )}
+      </div>
+
+      <div className="h-10 w-px self-center bg-border" aria-hidden />
+
+      <div>
+        <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          Base Score
+        </div>
+        <div className="flex items-baseline gap-2">
+          <span
+            className={cn('font-bold tabular-nums', big ? 'text-5xl' : 'text-3xl')}
+            style={{ color: 'var(--ghost)' }}
+          >
+            {baseScore}
+          </span>
+        </div>
+      </div>
     </div>
   )
 }

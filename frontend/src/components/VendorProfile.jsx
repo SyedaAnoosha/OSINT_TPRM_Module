@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Building2, Users, Globe, Landmark, CalendarClock, Layers, Info, CloudOff, RotateCw, Ruler, Timer, BarChart3, Target, CheckCircle2, XCircle, CircleDashed, ChevronDown } from 'lucide-react'
+import { Building2, Users, Globe, Landmark, CalendarClock, Layers, Info, CloudOff, RotateCw, Ruler, Timer, BarChart3, Target, CheckCircle2, XCircle, CircleDashed, ChevronDown, ChevronUp } from 'lucide-react'
 import { getProfile, getBenchmark, setVendorSize } from '../api.js'
-import { Card, Badge, Button, Meter } from './ui.jsx'
+import { Card, Badge, Button } from './ui.jsx'
 import { cn, postureColor } from '../lib/utils.js'
 import { CategoryRadar} from './BenchmarkCharts.jsx'
 
@@ -187,19 +187,14 @@ export function VendorProfilePanel({ vendorRef, posture, showBenchmark = true,
     <div className="flex flex-col gap-5">
       <Card className="overflow-hidden shadow-sm">
         <div className="p-6">
-          {/* Header Vendor Identity */}
+          {/* Header - no vendor name to avoid duplication with ExecutiveSummaryHero */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-5">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/15 ring-1 ring-accent/30 text-accent font-bold text-lg shadow-xs">
-                {(profile.legal_name?.value || vendorRef).charAt(0).toUpperCase()}
+            <div>
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Vendor Firmographics
               </div>
-              <div>
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Vendor Firmographics
-                </div>
-                <div className="text-xl font-extrabold tracking-tight text-foreground">
-                  {profile.legal_name?.value || vendorRef}
-                </div>
+              <div className="text-sm text-muted-foreground">
+                Context, not score input — posture is unaffected
               </div>
             </div>
             {sector && (
@@ -734,12 +729,13 @@ function MaturityGapPanel({ gap, depth = 'full' }) {
 
   if (!gap.available) {
     return (
-      <Card className="p-5">
-        <p className="text-[13px] text-muted-foreground">
+      <Card className="flex items-center gap-3 rounded-xl bg-secondary/30 px-5 py-4 text-sm text-muted-foreground">
+        <Target className="h-5 w-5 shrink-0 text-muted-foreground" />
+        <div>
           <b className="text-foreground">No baseline reading.</b> {gap.reason
             || 'too few baseline controls could be observed'}. Stating a maturity position from a
           couple of checks would be the same false precision as a median over three vendors.
-        </p>
+        </div>
       </Card>
     )
   }
@@ -767,100 +763,96 @@ function MaturityGapPanel({ gap, depth = 'full' }) {
 
   return (
     <Card className="overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-secondary/30 px-6 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-gradient-to-r from-secondary/30 to-secondary/10 px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-accent/12 ring-1 ring-accent/25">
-            <Target className="h-[18px] w-[18px] text-accent" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/15 ring-1 ring-accent/30 text-accent">
+            <Target className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-sm font-bold">Baseline maturity</div>
+            <div className="text-sm font-bold text-foreground">Baseline Maturity</div>
             <div className="text-[11px] text-muted-foreground">
               Measured against published requirements — no peers involved
             </div>
           </div>
         </div>
-        <span className="text-2xl font-black tabular-nums" style={{ color: tone }}>
-          {gap.met}<span className="text-base text-muted-foreground">/{gap.applicable}</span>
-        </span>
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <div className="text-3xl font-black tabular-nums" style={{ color: tone }}>
+              {gap.met}<span className="text-base text-muted-foreground">/{gap.applicable}</span>
+            </div>
+            <div className="text-xs text-muted-foreground">{pct}% attainment</div>
+          </div>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-5 p-6">
-        <div>
-          <Meter value={pct} color={tone} />
-          <p className="mt-2 text-[12px] text-muted-foreground">{gap.summary}</p>
+      <div className="p-6">
+        {/* Progress bar */}
+        <div className="mb-5">
+          <div className="mb-2 flex items-center justify-between text-xs">
+            <span className="font-semibold uppercase tracking-wider text-muted-foreground">Overall attainment</span>
+            <span className="font-bold" style={{ color: tone }}>{pct}%</span>
+          </div>
+          <div className="h-2.5 overflow-hidden rounded-full bg-secondary">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${pct}%`, background: tone }}
+            />
+          </div>
         </div>
 
+        {/* Control status breakdown */}
         {misses.length > 0 && (
-          <div>
-            <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-              What is missing, and who requires it
+          <div className="mb-4">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Gaps and partials ({misses.length})
+              </span>
+              <button
+                onClick={() => setOpen((v) => !v)}
+                className="flex items-center gap-1 text-xs font-medium text-accent hover:underline"
+              >
+                {open ? 'Hide' : 'Show'} details
+                {open ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+              </button>
             </div>
-            <ul className="divide-y divide-border rounded-2xl border border-border/70">
-              {misses.map((c) => (
-                <ControlRow key={c.signal} control={c} showBasis />
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {misses.length === 0 && (
-          <p className="text-[13px]" style={{ color: 'var(--risk-low)' }}>
-            Every observed baseline control is in place.
-          </p>
-        )}
-
-        {/* Excluded controls are DISCLOSED, never silently dropped — a reader told "4 of 6" is
-            entitled to see where the other controls went. */}
-        {excluded.length > 0 && (
-          <div>
-            <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open}
-              className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground transition hover:text-foreground">
-              <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', open && 'rotate-180')} />
-              {excluded.length} control{excluded.length > 1 ? 's' : ''} not counted
-            </button>
             {open && (
-              <ul className="mt-2 divide-y divide-border rounded-2xl border border-border/70">
-                {excluded.map((c) => (
-                  <ControlRow key={c.signal} control={c} showBasis={depth === 'full'} />
-                ))}
-              </ul>
+              <div className="flex flex-col gap-2">
+                {misses.map((c) => {
+                  const meta = STATUS_META[c.status] || {}
+                  const Icon = meta.icon
+                  return (
+                    <div key={c.signal} className="flex items-center gap-3 rounded-lg bg-secondary/30 px-4 py-3 text-sm">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ background: `color-mix(in srgb, ${meta.tone} 15%, transparent)`, color: meta.tone }}>
+                        {Icon && <Icon className="h-4 w-4" />}
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-foreground">{controlLabel(c.signal)}</div>
+                        <div className="text-xs text-muted-foreground">{meta.word}</div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
             )}
           </div>
         )}
 
-        {depth === 'full' && (
-          <p className="border-t border-border pt-2.5 text-[11px] leading-relaxed text-muted-foreground">
-            Most instruments cited here bind US federal civilian agencies rather than private
-            vendors. They are used as a published, dated, checkable statement of what a competent
-            operator does — not as a claim that this vendor is legally bound by them. A control we
-            could not check is excluded rather than counted as a failure, and one that could not yet
-            exist at this vendor&apos;s operating age is excluded and named above.
-          </p>
+        {excluded.length > 0 && (
+          <div className="rounded-lg bg-secondary/20 px-4 py-3 text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">Not applicable:</span>{' '}
+            {excluded.map((c) => controlLabel(c.signal)).join(' · ')}
+          </div>
         )}
+
+        {gap.basis && (
+          <div className="mt-4 text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">Basis:</span> {gap.basis}
+          </div>
+        )}
+
+        <Caveats items={gap.caveats} />
       </div>
     </Card>
-  )
-}
-
-function ControlRow({ control, showBasis }) {
-  const meta = STATUS_META[control.status] ?? STATUS_META.unchecked
-  const Icon = meta.icon
-  return (
-    <li className="flex items-start gap-3 px-4 py-3">
-      <Icon className="mt-0.5 h-4 w-4 shrink-0" style={{ color: meta.tone }} />
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-baseline gap-x-2">
-          <span className="text-[13px] font-semibold">{controlLabel(control.signal)}</span>
-          <span className="text-[11px] font-medium" style={{ color: meta.tone }}>{meta.word}</span>
-          {control.observed && (
-            <span className="font-mono text-[11px] text-muted-foreground">{control.observed}</span>
-          )}
-        </div>
-        {showBasis && (
-          <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">{control.basis}</p>
-        )}
-      </div>
-    </li>
   )
 }
 

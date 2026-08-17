@@ -9,10 +9,9 @@ import { BusinessStabilityCard } from './BusinessStabilityCard.jsx'
 import { DependenciesPanel } from './Dependencies.jsx'
 import { GapAnalysisPanel } from './GapAnalysis.jsx'
 import { PeerBenchmarkPanel } from './PeerBenchmark.jsx'
-import { ActionCard, Caveats, CoverageStatement, ProvisionalChip, RiskBand } from './primitives.jsx'
-import { VendorProfilePanel } from './VendorProfile.jsx'
-import { LifecycleCard } from './LifecycleCard.jsx'
-import { getLifecycle } from '../api.js'
+import { ActionCard, Caveats, ProvisionalChip, RiskBand } from './primitives.jsx'
+// import { LifecycleCard } from './LifecycleCard.jsx'
+import { getStability, getFinancial } from '../api.js'
 
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
@@ -34,16 +33,31 @@ import { getLifecycle } from '../api.js'
 // ═══════════════════════════════════════════════════════════════════════════════════════════
 
 export function VendorDetailTabs({
-  ref_, score, plan, residual, provisional, coverage, continuity, statusPage,
+  ref_, score, residual, provisional, continuity, statusPage,
 }) {
   const [tab, setTab] = useState('category')
-  const [lifecycle, setLifecycle] = useState(null)
+  // const [lifecycle, setLifecycle] = useState(null)
+  const [stabilityScore, setStabilityScore] = useState(null)
+  const [financialProfile, setFinancialProfile] = useState(null)
+
+  // useEffect(() => {
+  //   // let live = true
+  //   // getLifecycle(ref_).then((d) => { if (live) setLifecycle(d) }).catch(() => {})
+  //   return () => { live = false }
+  // }, [ref_])
 
   useEffect(() => {
     let live = true
-    getLifecycle(ref_).then((d) => { if (live) setLifecycle(d) }).catch(() => {})
+    if (tab === 'stability') {
+      Promise.all([getStability(ref_), getFinancial(ref_)]).then(([s, f]) => {
+        if (live) {
+          setStabilityScore(s)
+          setFinancialProfile(f)
+        }
+      }).catch(() => {})
+    }
     return () => { live = false }
-  }, [ref_])
+  }, [ref_, tab])
 
   const TABS = [
     { id: 'category', label: 'Category detail', icon: FileSearch2 },
@@ -80,15 +94,13 @@ export function VendorDetailTabs({
           <div className="flex flex-col gap-4">
             <div className="flex justify-end"><ExportButton vendorRef={ref_} /></div>
             <EvidenceRecord vendorRef={ref_} score={score} />
-            {coverage && <CoverageStatement coverage={coverage} />}
+            {/* {coverage && <CoverageStatement coverage={coverage} />} */}
             <ResidualDetail residual={residual} provisional={provisional} />
           </div>
         )}
         {tab === 'peers' && (
           <div className="flex flex-col gap-4">
             <PeerBenchmarkPanel vendorRef={ref_} />
-            <VendorProfilePanel vendorRef={ref_} posture={score?.posture} showBenchmark={false}
-              showMaturityGap benchmarkDepth={plan?.depth === 'screening' ? 'summary' : 'full'} />
           </div>
         )}
         {tab === 'gaps' && <GapAnalysisPanel vendorRef={ref_} />}
@@ -96,10 +108,10 @@ export function VendorDetailTabs({
         {tab === 'assurance' && <AssurancePanel vendorRef={ref_} />}
         {tab === 'stability' && (
           continuity
-            ? <BusinessStabilityCard summary={continuity} coverage={continuity.business_stability_coverage} statusPage={statusPage} />
+            ? <BusinessStabilityCard summary={continuity} coverage={continuity.business_stability_coverage} statusPage={statusPage} stabilityScore={stabilityScore} financialProfile={financialProfile} />
             : <p className="text-[12.5px] italic text-muted-foreground">No Business Stability data for this vendor yet.</p>
         )}
-        {tab === 'lifecycle' && <LifecycleCard lifecycle={lifecycle} />}
+        {/* {tab === 'lifecycle' && <LifecycleCard lifecycle={lifecycle} />} */}
       </div>
     </div>
   )

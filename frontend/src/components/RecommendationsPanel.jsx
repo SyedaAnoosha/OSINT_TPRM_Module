@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { AlertTriangle, Ban } from 'lucide-react'
+import { AlertTriangle, } from 'lucide-react'
 import { ActionCard, ActionRow, DeclareInherentPrompt } from './primitives.jsx'
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
@@ -19,7 +19,7 @@ import { ActionCard, ActionRow, DeclareInherentPrompt } from './primitives.jsx'
 // notice cannot read as just another bullet among routine asks.
 // ═══════════════════════════════════════════════════════════════════════════════════════════
 
-export function RecommendationsPanel({ ref_, pack, flowdowns, plan, declared, score, continuity, onDeclared }) {
+export function RecommendationsPanel({ ref_, pack, flowdowns, plan, declared, score, onDeclared }) {
   if (score?.blocked) {
     return (
       <ActionCard title="This record is blocked" icon={AlertTriangle} tone="var(--blocked)">
@@ -42,11 +42,11 @@ export function RecommendationsPanel({ ref_, pack, flowdowns, plan, declared, sc
   const asks = pack?.question_count ?? 0
   const clauses = flowdowns?.count ?? 0
   const next = plan?.next_action
-  const blocking = continuity?.procurement_blocking
+  // const blocking = continuity?.procurement_blocking
 
   return (
     <div className="flex flex-col gap-3">
-      {blocking && (
+      {/* {blocking && (
         <div
           className="flex items-start gap-3 rounded-xl border-2 px-4 py-3.5"
           style={{ borderColor: 'var(--risk-critical)', background: 'color-mix(in srgb, var(--risk-critical) 8%, transparent)' }}
@@ -59,15 +59,15 @@ export function RecommendationsPanel({ ref_, pack, flowdowns, plan, declared, sc
             <p className="mt-1 max-w-7xl text-[12.5px] leading-relaxed">{continuity.procurement_action}</p>
           </div>
         </div>
-      )}
+      )} */}
 
       {!declared && <DeclareInherentPrompt vendorRef={ref_} onDeclared={onDeclared} compact />}
 
-      {!blocking && continuity?.procurement_action && (
+      {/* {!blocking && continuity?.procurement_action && (
         <ActionRow
           title="Business Stability" detail={continuity.procurement_action} owner="Procurement"
         />
-      )}
+      )} */}
 
       <ActionRow
         n={1} title="Ask the vendor" count={asks}

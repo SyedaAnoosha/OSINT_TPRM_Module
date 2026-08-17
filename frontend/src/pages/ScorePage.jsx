@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import {
   ArrowRight, Globe, Loader2, Search, TriangleAlert,
 } from 'lucide-react'
-import { getCoverage, getResidualRisk, scoreVendor } from '../api.js'
+import { getCoverage, getResidualRisk, scoreVendor, rescoreVendor } from '../api.js'
 import {
-  CoverageStatement, DeclareInherentPrompt, GhostState, PostureConfidencePair, RiskBand,
+ DeclareInherentPrompt, GhostState, PostureConfidencePair, RiskBand,
 } from '../components/primitives.jsx'
 import { Card } from '../components/ui.jsx'
 // import { cn } from '../lib/utils.js'
@@ -57,14 +57,45 @@ export default function ScorePage() {
     }
   }
 
-  function run(e) {
+  async function run(e) {
     e.preventDefault()
     const q = query.trim()
     if (!q || phase === 'running') return
     // A dotted, space-free token is a domain; anything else is a name — and a name goes to the API
     // to be resolved rather than guessed at here. Guessing the domain is how "archerirm.com"
     // becomes the Indian subsidiary instead of the US parent.
-    score(/\s/.test(q) || !q.includes('.') ? { name: q } : { domain: q })
+    const isDomain = !/\s/.test(q) && q.includes('.')
+    const payload = isDomain ? { domain: q } : { name: q }
+
+    // Check if vendor already exists by trying to get its score
+    if (isDomain) {
+      try {
+        // Try to get the portfolio to find if this domain already exists
+        const portfolio = await fetch('/api/portfolio').then(r => r.json())
+        const vendors = portfolio?.vendors || portfolio?.rows || []
+        const existing = vendors.find(v => v.domain === q || v.vendor_ref === q)
+        if (existing) {
+          // Vendor exists, rescore it
+          setPhase('running'); setResult(null); setError(null); setNeedsDomain(null)
+          setProgress({ total: 0, sources: [], events: [] })
+          try {
+            const res = await rescoreVendor(existing.vendor_ref, {
+              onProgress: (name, data) => setProgress((p) => reduceProgress(p, name, data)),
+            })
+            setResult(res); setPhase('done')
+            remember(res.vendorRef, res.domain, setRecent)
+          } catch (err) {
+            setError(err.message || String(err)); setPhase('error')
+          }
+          return
+        }
+      } catch {
+        // If portfolio check fails, proceed with normal scoring
+      }
+    }
+
+    // New vendor or name-based query, proceed with normal scoring
+    score(payload)
   }
 
   return (
@@ -222,13 +253,13 @@ function ScanProgress({ progress }) {
 function ScanResult({ result, onOpen }) {
   const { vendorRef, score, domain } = result
   const [residual, setResidual] = useState(null)
-  const [coverage, setCoverage] = useState(null)
+  // const [coverage, setCoverage] = useState(null)
   const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
     let alive = true
     Promise.all([getResidualRisk(vendorRef), getCoverage(vendorRef)])
-      .then(([r, c]) => { if (alive) { setResidual(r); setCoverage(c) } })
+      .then(([r]) => { if (alive) { setResidual(r); } })
     return () => { alive = false }
   }, [vendorRef, reloadKey])
 
@@ -266,11 +297,11 @@ function ScanResult({ result, onOpen }) {
           )}
         </div>
 
-        {coverage && !score.blocked && (
+        {/* {coverage && !score.blocked && (
           <div className="border-t border-border/60 px-5 py-4">
             <CoverageStatement coverage={coverage} />
           </div>
-        )}
+        )} */}
       </Card>
 
       {/* THE QUESTION, ASKED AT THE ONLY MOMENT IT IS CHEAP. The user just looked this vendor up
