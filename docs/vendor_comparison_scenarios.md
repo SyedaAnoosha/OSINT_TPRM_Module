@@ -1,6 +1,6 @@
 # Vendor Comparison Scenarios
 
-**Status:** Implemented · **Phase:** 2 of [`tprm_feedback_redesign.md`](tprm_feedback_redesign.md)
+**Status:** Implemented — phase 2 of the stakeholder feedback response (financial data integration, scoring-model test coverage, scorecard UX)
 **Executable as:** [`backend/tests/test_vendor_comparison_scenarios.py`](../backend/tests/test_vendor_comparison_scenarios.py) — 9 numbered scenarios, 11 test functions, all passing against the real `scoring.yaml`
 
 This is the plain-English version of the acceptance criteria the test file encodes. Each scenario compares two synthetic vendors that differ in exactly one respect, states what the platform must show, and explains why. Read this to review *what the model should do*; read the test file to see *that it does*.

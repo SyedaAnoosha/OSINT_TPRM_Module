@@ -1,6 +1,6 @@
 # scoring.yaml — the model, in a file a non-engineer can read and defend
 # =============================================================================
-# v4.2.0 — PENALTY-BASED POSTURE MODEL. Inspired by UpGuard's subtractive method, but our
+# v5.4.0 — PENALTY-BASED POSTURE MODEL. Inspired by UpGuard's subtractive method, but our
 # own: our scale, our categories, our differentiators. NOT a copy.
 #
 # THE MODEL IN ONE LINE. Every vendor starts at 100 (a clean posture). For each issue found
@@ -46,11 +46,124 @@
 # on a failure rate instead of a raw count. A 5.0 and a 5.1 posture are the same measurement, and
 # a vendor whose score moved between them moved because the model stopped charging for the size of
 # their estate. That is comparable in a way a 4.x → 5.x movement is not.
-version: 5.2.0
-supersedes: 5.1.0
+version: 5.4.0
+supersedes: 5.3.0
 model: penalty_subtractive
 direction: "100 = strongest posture, 0 = weakest — a penalty is SUBTRACTED per issue found"
 max_score: 100
+
+# =============================================================================
+# BUSINESS STABILITY SCORE — SEPARATE AXIS (Phase 2)
+# =============================================================================
+# Business Stability is a SEPARATE 0-100 score measuring financial health and
+# viability. It is NOT part of cybersecurity posture and must never influence it.
+#
+# KEY PRINCIPLE: Financial distress ≠ poor security. A bankrupt company can have
+# excellent cybersecurity controls, and a secure startup can run out of cash.
+# These are separate risk dimensions that must not be conflated.
+#
+# The Business Stability score follows the same penalty-based approach:
+# - Vendors start at a base score determined by age (70-100)
+# - Financial distress signals subtract penalties
+# - Survivorship bonuses add points back
+# - Active insolvency proceedings BLOCK (gate, not a score)
+#
+# This score is computed separately and displayed alongside cybersecurity posture.
+# =============================================================================
+# Business Stability configuration moved to separate axis (computed by business_stability.py)
+# These signals are NOT part of Posture confidence denominator to prevent regression
+business_stability:
+  # Base score by age band (longevity-based starting point)
+  # Startups face significantly higher failure rates and financial uncertainty
+  # Similar to confidence scoring, young companies naturally have lower scores
+  age_base_scores:
+    startup:      70   # < 2 years (very high risk - 50% fail within 2 years)
+    young:        75   # 2-5 years (high risk - still establishing market position)
+    established:  80   # 5-10 years (moderate risk - proven business model)
+    mature:       85   # 10-20 years (lower risk - demonstrated staying power)
+    veteran:      100  # 20+ years (lowest risk - survivorship credit, long-term stability)
+    unknown:      60   # Age not determinable (assume elevated risk)
+
+  # Confidence adjustment by age band (amplifies financial risk for young vendors)
+  # Young vendors get amplified financial penalties due to limited buffer and higher baseline risk
+  confidence_adjustments:
+    startup:      -0.15  # 15% reduction (high uncertainty)
+    young:        -0.10  # 10% reduction (moderate uncertainty)
+    established:   0.00  # No adjustment
+    mature:        0.00  # No adjustment
+    veteran:       0.00  # No adjustment
+    unknown:      -0.05  # 5% reduction for uncertainty
+
+  # Survivorship bonuses (demonstrated staying power)
+  survivorship_bonuses:
+    mature_10_plus:   5   # 10+ years in business
+    veteran_20_plus:  10  # 20+ years in business
+    survived_downturn: 5  # Survived economic downturns (2008, 2020)
+
+  # Financial penalties (subtracted from base score)
+  financial_penalties:
+    # Insolvency-related penalties
+    historical_insolvency_recent: 20  # Insolvency resolved < 3 years ago
+    historical_insolvency_old:     5   # Insolvency resolved > 3 years ago
+    voluntary_arrangement:          15  # CVA/IVA in place
+
+    # Financial health penalties
+    revenue_decline_3_quarters:    15  # 3+ consecutive quarters declining
+    high_debt_to_equity_gt_3:      10  # Debt-to-equity > 3
+    elevated_debt_to_equity_gt_2:   5   # Debt-to-equity > 2
+    negative_cash_flow_2_years:    15  # Negative cash flow 2+ years
+    declining_profitability:        10  # Declining profit margins
+
+    # Startup-specific penalties
+    high_customer_concentration:    10  # >30% revenue from single customer (startups only)
+    no_recent_funding_18_months:    5   # No funding round in 18+ months (startups only)
+
+  # Gate configuration (BLOCK scoring, don't just penalize)
+  gates:
+    insolvency:
+      trigger_on_active: true  # Active insolvency proceedings BLOCK assessment
+      trigger_statuses:
+        - "active"
+        - "liquidation"
+        - "administration"
+        - "receivership"
+        - "insolvency_proceedings"
+      block_reason: "Active insolvency proceedings — vendor cannot be assessed"
+
+  # Categories for Business Stability scoring (separate from cybersecurity)
+  categories:
+    financial_health:
+      revenue_stability:
+        growing:       pass
+        stable:        pass
+        declining:     high
+        unknown:       informational
+
+      debt_position:
+        healthy:       pass
+        moderate:      low
+        elevated:      medium
+        high:          high
+
+      cash_flow:
+        positive:      pass
+        negative:      high
+        unknown:       informational
+
+    insolvency_status:
+      current_status:
+        none:          pass
+        historical:    medium
+        voluntary_arrangement: high
+        active:         critical  # Triggers gate
+
+    longevity:
+      operating_years:
+        veteran_20_plus:  pass  # +10 bonus
+        mature_10_plus:   pass  # +5 bonus
+        established_5_10: pass
+        young_2_5:        pass  # Base 94
+        startup_lt_2:     pass  # Base 92
 
 # -----------------------------------------------------------------------------
 # SEVERITY PENALTIES — the only points table. Every signal is a PASS (no penalty) or a fail at
@@ -168,15 +281,15 @@ confidence:
   assurance_multiplier:
     signal: entity_maturity
     curve:
-      floor:   0.96      # no operating history at all
+      floor:   0.40      # no operating history at all (severe penalty)
       ceiling: 1.04      # saturated (>=25 years, well-evidenced)
     # Fallback for a maturity finding that carries a band but no year count.
     by_band:
       mature_gt_10: 1.02
-      established_5_10: 1.01
-      young_2_5: 0.99
-      startup_lt_2: 0.98
-      new_lt_1: 0.96
+      established_5_10: 1.00
+      young_2_5: 0.80
+      startup_lt_2: 0.60
+      new_lt_1: 0.50
 
 # -----------------------------------------------------------------------------
 # CATEGORIES + SIGNALS — this IS the model. Each signal maps an OBSERVATION to a severity
@@ -344,6 +457,7 @@ categories:
     # updated assertions in test_scoring_config.py / test_continuity.py / test_estate.py /
     # test_exposure.py.
     sec_filing:          { no_adverse_filings: pass, registration_lapsed: informational, entity_inactive: informational }
+    sec_going_concern:    { no_adverse_filings: pass, audit_qualification: informational }
     insolvency_notice:   { no_adverse_filings: pass, registration_lapsed: informational, entity_inactive: informational }
     bankruptcy_petition: { no_adverse_filings: pass, registration_lapsed: informational, entity_inactive: informational }
 
@@ -450,6 +564,12 @@ reasons:
   regulator_action:
     formal_investigation: "A regulator has formally opened an investigation naming this company. An investigation is not a finding of wrongdoing."
     enforcement_action:   "A regulator has taken formal enforcement action against this company — a concluded decision, not an allegation."
+
+  # NO ENTRY FOR `sec_going_concern`. The band is `informational` (see the category block above):
+  # E4 moved going-concern facts out of Posture and into Continuity, where they are DISCLOSED and
+  # never scored. `reasons` and `actions` describe DEDUCTIONS, so a sentence here would promise a
+  # penalty the model does not charge — and the loader rejects it as an orphan for exactly that
+  # reason. The going-concern narrative belongs in `app/continuity.py`, not here.
 
 # -----------------------------------------------------------------------------
 # ACTIONS — what to DO about each deduction, and when to look again.
@@ -694,6 +814,9 @@ actions:
       accepts_as_refute: "A published disclosure route"
 
   # --- 5. Business & financial stability --------------------------------------------------
+
+  # NO ENTRY FOR `sec_going_concern` — see the matching note under `reasons` above. The band is
+  # informational, so there is no deduction to act on; Continuity carries the disclosure.
 
   # --- 6. Compliance & regulatory ---------------------------------------------------------
   cert_posture:

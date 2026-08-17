@@ -45,7 +45,7 @@
         "posture": 98
       }
     },
-    "confidence": 0.963,
+    "confidence": 1.0,
     "confidence_band": "High",
     "critical_ceiling_applied": false,
     "ghost": false,
@@ -99,7 +99,7 @@
         "posture": 94
       }
     },
-    "confidence": 0.926,
+    "confidence": 0.907,
     "confidence_band": "High",
     "critical_ceiling_applied": false,
     "ghost": false,
@@ -153,7 +153,7 @@
         "posture": 94
       }
     },
-    "confidence": 0.963,
+    "confidence": 1.0,
     "confidence_band": "High",
     "critical_ceiling_applied": false,
     "ghost": false,
@@ -207,7 +207,7 @@
         "posture": 98
       }
     },
-    "confidence": 0.926,
+    "confidence": 0.954,
     "confidence_band": "High",
     "critical_ceiling_applied": false,
     "ghost": false,
@@ -261,7 +261,7 @@
         "posture": 98
       }
     },
-    "confidence": 0.926,
+    "confidence": 0.907,
     "confidence_band": "High",
     "critical_ceiling_applied": false,
     "ghost": false,
@@ -380,7 +380,7 @@
         "posture": null
       }
     },
-    "confidence": 0.185,
+    "confidence": 0.306,
     "confidence_band": "Low",
     "critical_ceiling_applied": false,
     "ghost": true,
@@ -434,7 +434,7 @@
         "posture": 94
       }
     },
-    "confidence": 0.98,
+    "confidence": 1.0,
     "confidence_band": "High",
     "critical_ceiling_applied": false,
     "ghost": false,

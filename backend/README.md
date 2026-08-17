@@ -2,16 +2,16 @@
 
 Proof-of-concept backend for **OSINT for Third-Party Risk**. Vendor in → evidence-linked
 risk record out. The methodology is the product; this code demonstrates it. See
-`../docs/methodology.md` (the model) and `../docs/project_plan.md` (the build plan).
+`../docs/methodology.md` (the model) and `../docs/system_retrospective.md` (current, verified status).
 
 ## Status
 
-**Phases 0–3 built and verified end-to-end** against the 5 test vendors (`empty`/`error`/`timeout`
-paths all exercised; every evidence row verifies byte-identical). Foundations + **13 collectors** +
-normalizer + scoring engine + **FastAPI API with SSE** + an **optional read-layer LLM evidence
-summariser** (off by default; provider-agnostic OpenAI-compatible). **109 tests, ruff clean.**
-Scoring model is `scoring.yaml` **v3.4.0**. Phase 4 (React streaming scorecard) core is built in
-`../frontend`.
+FastAPI service — collectors, scoring engine, benchmarking, business-stability/financial-risk
+assessment, and an append-only evidence store, all sitting behind an SSE-streamed scoring job.
+For the current collector count, test count and scoring-model version, see
+[`../docs/system_retrospective.md`](../docs/system_retrospective.md) — the numbers here rot; that
+document is re-verified against the running tree each time it's updated. The React streaming
+scorecard is in `../frontend`.
 
 > **How to run the whole app (backend + frontend):** see the root [`../README.md`](../README.md).
 
@@ -19,12 +19,15 @@ The evidence store and the shared contracts exist before any collector, on purpo
 the store is the legal artefact that discharges the "reasonable grounds" representation
 (methodology Finding A), so it is built first.
 
-### Collectors (Phase 1)
+### Collectors
 
-`dns` · `tls` · `headers` · `ct` · `hibp` · `kev` · `nvd` · `ita` · `gleif` · `wikidata` · `regulatory` · `gdelt` · `trust`
-
-(EDGAR was removed in v3.2 — US-listed only; replaced by **GLEIF** for entity standing, with
-**Wikidata** as a second, domain-verified register that corroborates it, §5.4.3.)
+Source collectors live in `app/collectors/` — DNS/TLS/headers, certificate transparency, breach
+history (HIBP), vulnerability feeds (KEV/NVD), sanctions (ITA), entity registers (GLEIF, Wikidata,
+OpenCorporates, regional company registries), regulatory/insolvency filings (SEC EDGAR/XBRL, EU/UK/
+Canada/Germany insolvency registers), and adverse media (GDELT). Each returns the same
+`CollectorResult` envelope; see [`../docs/methodology.md`](../docs/methodology.md) §4 and
+[`../docs/source_assessment.md`](../docs/source_assessment.md) for the per-source legality and
+reliability register.
 
 Every collector returns the same `CollectorResult` envelope and is **failure-isolated**
 (a raise → `error`, a hang → `timeout`, nothing-found → `empty`), so one dead source
@@ -53,7 +56,7 @@ External services are flaky by nature: crt.sh (`ct`) frequently 502s/times out a
 | Piece | File | What it guarantees |
 |---|---|---|
 | Shared contracts | `app/models.py` | One schema for evidence store + API; provenance is explicit |
-| Evidence store | `app/evidence_store.py` | **Append-only, immutable** (DB triggers reject UPDATE/DELETE), **byte-identical** read-back (canonical JSON + sha256) |
+| Evidence store | `app/pg_store.py` (`PostgresStore`) | **Append-only, immutable** (DB triggers reject UPDATE/DELETE), **byte-identical** read-back (canonical JSON + sha256) |
 | Settings | `app/config.py` | Contact-bearing `User-Agent` + optional free API keys (NVD/ITA/CertSpotter); **required** `DATABASE_URL` (Postgres only) |
 | Scoring config | `app/scoring_config.py` | Loads the root `scoring.yaml`; enforces invariants (weights=100, sanctions=gate, direction not inverted) |
 | Rate limiting | `app/ratelimit.py` | Per-host token buckets — `asyncio.gather` does not throttle a source for you |

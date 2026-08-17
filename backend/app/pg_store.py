@@ -195,6 +195,8 @@ ALTER TABLE findings ADD COLUMN IF NOT EXISTS run_id TEXT;
 -- 'nullified' | 'mitigated' when an accepted refute changed this deduction (Phase 4). Recorded on
 -- the finding so a discounted penalty says WHY it was discounted.
 ALTER TABLE findings ADD COLUMN IF NOT EXISTS dispute TEXT;
+-- Structured data snapshot (e.g., years from entity_maturity) for age-based calculations
+ALTER TABLE findings ADD COLUMN IF NOT EXISTS value_snapshot JSONB;
 CREATE INDEX IF NOT EXISTS idx_findings_vendor ON findings(vendor_ref);
 
 -- Disputes: the vendor-refute path (Phase 4). Append-only EVENTS — a dispute moves from
@@ -1189,23 +1191,25 @@ class PostgresStore:
 
     def put_findings(self, vendor_ref: str, findings: list[NormalizedFinding],
                      run_id: str | None = None) -> list[str]:
+        import json
         run_id = run_id or str(uuid.uuid4())
         ids: list[str] = []
         with self._conn.cursor() as cur:
             for nf in findings:
                 canonical = _canonical_json(_finding_payload(nf))
                 fid = str(uuid.uuid4())
+                value_snapshot_json = json.dumps(nf.value_snapshot) if nf.value_snapshot is not None else None
                 cur.execute(
                     """INSERT INTO findings
                        (id, vendor_ref, evidence_id, source, category, signal, band_key, severity,
                         penalty, effective_penalty, occurrences, run_id, observed, event_date,
-                        is_critical, is_sanctions, note, dispute, content_hash, stored_at)
-                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                        is_critical, is_sanctions, note, dispute, content_hash, stored_at, value_snapshot)
+                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                     (fid, vendor_ref, nf.evidence_id, nf.source, nf.category, nf.signal,
                      nf.band_key, nf.severity, nf.penalty, nf.effective_penalty, nf.occurrences,
                      run_id, nf.observed, nf.event_date,
                      nf.is_critical, nf.is_sanctions, nf.note, nf.dispute,
-                     _sha256(canonical), utcnow()),
+                     _sha256(canonical), utcnow(), value_snapshot_json),
                 )
                 ids.append(fid)
         return ids
@@ -1233,6 +1237,13 @@ class PostgresStore:
 
     @staticmethod
     def _row_to_finding(row: dict[str, Any]) -> PersistedFinding:
+        import json
+        value_snapshot = None
+        if row.get("value_snapshot") is not None:
+            try:
+                value_snapshot = json.loads(row["value_snapshot"])
+            except (json.JSONDecodeError, TypeError):
+                value_snapshot = row.get("value_snapshot")
         return PersistedFinding(
             id=row["id"], vendor_ref=row["vendor_ref"], evidence_id=row["evidence_id"],
             source=row["source"], category=row["category"], signal=row["signal"],
@@ -1242,6 +1253,7 @@ class PostgresStore:
             is_critical=bool(row["is_critical"]), is_sanctions=bool(row["is_sanctions"]),
             note=row["note"], dispute=row.get("dispute"),
             content_hash=row["content_hash"], stored_at=row["stored_at"],
+            value_snapshot=value_snapshot,
         )
 
     # --- disputes (append-only event log; the vendor-refute path, Phase 4) ---

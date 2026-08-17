@@ -284,6 +284,7 @@ def assemble_context(
         "score": assurity.score,
         "observed_signals": assurity.observed_signals,
         "gap_count": assurity.gap_count,
+        "confidence": getattr(assurity, "confidence", 1.0),
         "inputs": [i.cited() for i in assurity.inputs],
     }
 

@@ -144,3 +144,51 @@ def multiplier_from(index: float | None, floor: float, ceiling: float) -> float:
         return 1.0
     lo, hi = (floor, ceiling) if floor <= ceiling else (ceiling, floor)
     return round(lo + (hi - lo) * max(0.0, min(1.0, index)), 4)
+
+
+def age_adjusted_assurance(
+    years: float | None,
+    source: str | None = None,
+    age_band: str | None = None,
+) -> float | None:
+    """Age-adjusted assurance index that considers data richness by vendor age.
+
+    Mature vendors (10+ years) with rich OSINT corpus get higher confidence weighting.
+    Young vendors (<5 years) with sparse data have individual findings carry higher relative weight.
+
+    Args:
+        years: Operating years since incorporation
+        source: Data source for age claim (for evidence strength)
+        age_band: Vendor age band (startup, young, established, mature, veteran, unknown)
+
+    Returns:
+        Adjusted assurance index (0-1) or None if years is None
+
+    Rationale:
+    - 20-year vendor: Multi-year trends can be weighed; rich corpus supports higher confidence
+    - 2-year vendor: Sparse data means single red flags are more significant; absence of history
+      is itself elevated risk, not neutral
+    """
+    base_assurance = assurance_index(years, source)
+    if base_assurance is None:
+        return None
+
+    # No age band provided - return base assurance
+    if age_band is None:
+        return base_assurance
+
+    # Age-specific adjustments
+    # Young vendors: discount assurance further due to sparse data
+    if age_band in ("startup", "young"):
+        # Sparse data means we have less confidence in our assessment
+        # Apply additional discount beyond evidence strength
+        age_discount = 0.85 if age_band == "startup" else 0.90
+        return round(base_assurance * age_discount, 4)
+
+    # Mature vendors: can weight multi-year patterns more heavily
+    # No additional discount - the base assurance already reflects their long history
+    if age_band in ("mature", "veteran"):
+        return base_assurance
+
+    # Established and unknown: no age-specific adjustment
+    return base_assurance

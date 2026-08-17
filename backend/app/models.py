@@ -75,6 +75,10 @@ class Vendor(BaseModel):
             "the shortcut this system refuses (see app.entity_resolution)."
         ),
     )
+    operating_years: float | None = Field(
+        default=None,
+        description="Years since incorporation (computed from incorporation_date or fallback sources)"
+    )
 
     @field_validator("domain")
     @classmethod
@@ -275,6 +279,7 @@ class PersistedFinding(BaseModel):
     note: str | None = None
     content_hash: str = Field(..., description="sha256 of the canonical stored finding")
     stored_at: datetime = Field(default_factory=utcnow)
+    value_snapshot: Any = Field(default=None, description="structured data snapshot (e.g., years from entity_maturity)")
 
 
 SizeBand = Literal["micro", "small", "medium", "large", "mega"]
@@ -978,4 +983,262 @@ class Score(BaseModel):
         default=None,
         description="Filled at SERVE time from the rule table; never stored, never generated.",
     )
+    computed_at: datetime = Field(default_factory=utcnow)
+
+
+# =============================================================================
+# FINANCIAL & BUSINESS STABILITY MODELS (Phase 1.1)
+# =============================================================================
+# These models support the Business Stability axis — a separate score from
+# cybersecurity posture, measuring financial health and longevity. Financial
+# distress ≠ poor security, so these models are kept distinct from the security
+# scoring models above.
+# =============================================================================
+
+InsolvencyStatus = Literal[
+    "active",           # Insolvency proceedings currently active
+    "resolved",         # Proceedings completed (e.g. discharged, dissolved)
+    "historical",       # Past insolvency, now closed
+    "none",             # No insolvency record found
+    "unknown",          # Unable to determine
+]
+
+CompanyStatus = Literal[
+    "active",
+    "dissolved",
+    "liquidation",
+    "receivership",
+    "administration",
+    "voluntary_arrangement",
+    "insolvency_proceedings",
+    "converted_closed",
+    "registered",
+    "removed",
+    "closed",
+    "unknown",
+]
+
+
+class InsolvencyRecord(BaseModel):
+    """One insolvency proceeding against a vendor.
+
+    Insolvency is a GATE signal: active proceedings BLOCK scoring (the vendor
+    cannot be assessed while in administration/liquidation). Historical records
+    are scored as financial distress signals but do not block.
+    """
+
+    proceeding_type: str = Field(
+        ...,
+        description="Type of proceeding: liquidation, administration, receivership, etc."
+    )
+    status: InsolvencyStatus = Field(
+        ...,
+        description="Current status of the proceeding"
+    )
+    date: datetime | None = Field(
+        default=None,
+        description="Date the proceeding was opened or filed"
+    )
+    jurisdiction: str | None = Field(
+        default=None,
+        description="Country/court jurisdiction where proceeding was filed"
+    )
+    case_number: str | None = Field(
+        default=None,
+        description="Official case/reference number from the court or registry"
+    )
+    court: str | None = Field(
+        default=None,
+        description="Court or tribunal handling the proceeding"
+    )
+    practitioner: str | None = Field(
+        default=None,
+        description="Name of insolvency practitioner or administrator"
+    )
+    notes: str | None = Field(
+        default=None,
+        description="Additional context from the source"
+    )
+    source: str = Field(
+        ...,
+        description="Collector id that produced this record"
+    )
+    locator: str | None = Field(
+        default=None,
+        description="URL or record id in the source system"
+    )
+    fetched_at: datetime = Field(
+        default_factory=utcnow,
+        description="When we retrieved this record"
+    )
+
+
+class FinancialMetrics(BaseModel):
+    """Time-series financial metrics for a vendor.
+
+    These are structured financial data points (revenue, debt, etc.) that can
+    be trended over time. Each metric carries a reporting period and currency
+    where applicable.
+    """
+
+    period_end: datetime = Field(
+        ...,
+        description="End date of the reporting period (fiscal quarter/year)"
+    )
+    period_type: Literal["quarterly", "annual", "trailing_twelve_months"] = Field(
+        ...,
+        description="Type of reporting period"
+    )
+    revenue: float | None = Field(
+        default=None,
+        description="Total revenue in native currency"
+    )
+    revenue_currency: str | None = Field(
+        default=None,
+        description="ISO-4217 currency code (USD, GBP, EUR, etc.)"
+    )
+    net_income: float | None = Field(
+        default=None,
+        description="Net income/profit in native currency"
+    )
+    total_assets: float | None = Field(
+        default=None,
+        description="Total assets in native currency"
+    )
+    total_liabilities: float | None = Field(
+        default=None,
+        description="Total liabilities in native currency"
+    )
+    long_term_debt: float | None = Field(
+        default=None,
+        description="Long-term debt in native currency"
+    )
+    cash_and_equivalents: float | None = Field(
+        default=None,
+        description="Cash and cash equivalents in native currency"
+    )
+    equity: float | None = Field(
+        default=None,
+        description="Shareholders' equity in native currency"
+    )
+    source: str = Field(
+        ...,
+        description="Collector id that produced this metric"
+    )
+    source_version: str | None = Field(
+        default=None,
+        description="Version/date of the source data (e.g. SEC filing accession number)"
+    )
+    locator: str | None = Field(
+        default=None,
+        description="URL or filing reference"
+    )
+    fetched_at: datetime = Field(
+        default_factory=utcnow,
+        description="When we retrieved this metric"
+    )
+
+
+class FinancialProfile(BaseModel):
+    """The financial and business stability profile of a vendor.
+
+    This is CONTEXT for the Business Stability score, similar to how
+    VendorProfile provides context for cybersecurity benchmarking. It
+    contains the raw financial observations; the scoring logic in
+    business_stability.py converts these to a 0-100 score.
+
+    THE RULE THIS TYPE EXISTS TO HOLD: financial data must never directly
+    affect the cybersecurity posture score. Business stability is a separate
+    axis for a reason — a bankrupt company can have excellent security, and
+    a secure startup can run out of cash.
+    """
+
+    vendor_ref: str
+    # Basic company information from registries
+    incorporation_date: ProfileField | None = Field(
+        default=None,
+        description="Date the company was legally incorporated"
+    )
+    company_status: ProfileField | None = Field(
+        default=None,
+        description="Current legal status from the registry (active, dissolved, etc.)"
+    )
+    registry_number: ProfileField | None = Field(
+        default=None,
+        description="Company registration number from the official registry"
+    )
+    registry_jurisdiction: ProfileField | None = Field(
+        default=None,
+        description="Jurisdiction of incorporation (country/state/province)"
+    )
+
+    # Insolvency information
+    insolvency_status: ProfileField | None = Field(
+        default=None,
+        description="Current insolvency status (none, active, historical)"
+    )
+    insolvency_records: list[InsolvencyRecord] = Field(
+        default_factory=list,
+        description="All insolvency proceedings found for this vendor"
+    )
+
+    # Financial metrics ( time-series from filings)
+    financial_metrics: list[FinancialMetrics] = Field(
+        default_factory=list,
+        description="Financial metrics over time (most recent first)"
+    )
+
+    # Derived fields (computed from the above, not stored)
+    operating_years: float | None = Field(
+        default=None,
+        description="Years since incorporation (computed from incorporation_date or fallback sources)"
+    )
+    # Fallback age sources when entity registers are unavailable (free alternatives)
+    wikidata_years: float | None = Field(
+        default=None,
+        description="Years since legal inception from Wikidata (P571) - free fallback source"
+    )
+    rdap_years: float | None = Field(
+        default=None,
+        description="Years since domain registration from RDAP - free fallback source (discounted)"
+    )
+    age_band: Literal["startup", "young", "established", "mature", "veteran", "unknown"] | None = Field(
+        default=None,
+        description="Age band for scoring: startup (<2yr), young (2-5yr), established (5-10yr), mature (10-20yr), veteran (20+yr)"
+    )
+
+    # Computed financial ratios (for scoring logic)
+    debt_to_equity: float | None = Field(
+        default=None,
+        description="Most recent debt-to-equity ratio (computed from financial_metrics)"
+    )
+    revenue_trend: Literal["growing", "stable", "declining", "unknown"] | None = Field(
+        default=None,
+        description="Revenue trend over available periods (computed from financial_metrics)"
+    )
+    cash_flow_trend: Literal["positive", "negative", "unknown"] | None = Field(
+        default=None,
+        description="Cash flow trend (computed from financial_metrics)"
+    )
+
+    # Gate status (whether this vendor should be BLOCKED from scoring)
+    insolvency_gate: bool = Field(
+        default=False,
+        description="True if active insolvency proceedings should BLOCK assessment"
+    )
+    insolvency_gate_reason: str | None = Field(
+        default=None,
+        description="Why the gate was triggered (e.g. 'active administration proceeding')"
+    )
+    
+    # Going-concern flag (critical financial distress signal)
+    going_concern_flagged: bool = Field(
+        default=False,
+        description="True if SEC EDGAR going-concern language detected in company's own filings"
+    )
+    going_concern_detected: bool = Field(
+        default=False,
+        description="True if going-concern penalty was applied in Business Stability scoring"
+    )
+
     computed_at: datetime = Field(default_factory=utcnow)

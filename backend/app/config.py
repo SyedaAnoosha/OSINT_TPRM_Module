@@ -54,6 +54,11 @@ class Settings(BaseSettings):
 
     courtlistener_key: str = ""  # CourtListener API key for bankruptcy filings. Optional; unset -> collector returns `empty`.
 
+    # Financial & Business Stability collector API keys (Phase 2)
+    opend_corporates_key: str = ""  # OpenCorporates API key. Free tier: 5,000 calls/month. Optional; unset -> collector returns `empty`.
+    registry_lookup_key: str = ""  # Registry Lookup API key. Free tier: 5,000 calls/month. Optional; unset -> collector returns `empty`.
+    canada_bankruptcy_key: str = ""  # Canada OSB API key. Paid access ($8/search). Optional; unset -> collector returns `empty`.
+
     # Optional secondary maturity signal from RDAP domain-age evidence. Default OFF because
     # legal-entity inception is the primary source for company maturity; RDAP can be enabled as
     # corroboration where desired.

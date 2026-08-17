@@ -9,7 +9,7 @@ machine-readable model in [`scoring.yaml`](scoring.yaml). This is the guide to *
 ```
 ┌──────────┐   POST /score    ┌─────────────────────────┐   SSE progress   ┌──────────┐
 │ frontend │ ───────────────► │ backend (FastAPI)       │ ───────────────► │ scorecard│
-│  :5173   │ ◄─────────────── │ 18 collectors, scoring, │ ◄─────────────── │  renders │
+│  :5173   │ ◄─────────────── │ collectors, scoring,    │ ◄─────────────── │  renders │
 └──────────┘   /api proxy     │ append-only evidence db │   full record    └──────────┘
                               └─────────────────────────┘
 ```
@@ -222,7 +222,16 @@ a sector with no size cannot form a cohort).
 ```
 scoring.yaml        the model (the deliverable) — bands, penalties, gates, confidence
 benchmarks.yaml     peer cohorts, size bands, the minimum-peers gate — interpretation, no arithmetic
-backend/            FastAPI API, 18 collectors, scoring engine, append-only evidence store
+backend/            FastAPI API, collectors, scoring engine, append-only evidence store
 frontend/           React + Vite single-screen streaming scorecard
-docs/               methodology, scoring framework/model, project plan, source assessment
+docs/               methodology, scoring model, metrics, source assessment, running guide
+ops/                scheduled monitoring (cron / systemd / Windows Task Scheduler)
 ```
+
+See [`docs/`](docs/) for the full documentation set — start with
+[`docs/methodology.md`](docs/methodology.md) (the research and rationale) and
+[`docs/system_retrospective.md`](docs/system_retrospective.md) (current, verified status).
+
+## License
+
+[MIT](LICENSE)

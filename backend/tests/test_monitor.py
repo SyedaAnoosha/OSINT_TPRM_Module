@@ -47,9 +47,16 @@ class _FakeStore:
         # pydantic defaults it to False, so even a row written before the field existed
         # deserialises with it. A fake that omitted it would be testing a shape the store cannot
         # actually return.
+        # `inception` and `domain_age_days` are here for the same reason as
+        # `inherent_provisional`: a real `VendorProfile` always carries them, and the sweep now
+        # derives operating years from them (`profile.operating_years`) to stamp on the re-scored
+        # Vendor. Both default to None — "no age known", the honest state for a fake with no
+        # registry behind it — which is what the sweep must tolerate without falling over.
         return SimpleNamespace(
             criticality=crit,
             inherent_provisional=self.vendors[ref].get("provisional", False),
+            inception=self.vendors[ref].get("inception"),
+            domain_age_days=self.vendors[ref].get("domain_age_days"),
         ) if crit else None
 
     def latest_supplier_attributes(self, ref):

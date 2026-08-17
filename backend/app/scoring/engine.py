@@ -26,11 +26,12 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
 
+from ..confidence_calculator import calculate_age_based_confidence
 from ..logging_config import get_logger
 from ..models import CategoryScore, CollectorResult, Score, Vendor
 from ..scoring_config import ScoringConfig, get_scoring_config
-from .log_odds import NO_PEERS, PeerContext, shrink
 from . import modifiers
+from .log_odds import NO_PEERS, PeerContext, shrink
 from .normalize import NormalizedFinding, normalize_one
 
 log = get_logger("scoring.engine")
@@ -274,10 +275,42 @@ class ScoringEngine:
         total_planned = self.cfg.planned_signal_count()
         base_coverage = (total_covered / total_planned) if total_planned else 0.0
 
-        # Assurance adjustment (bounded): entity maturity can nudge confidence without touching
-        # posture arithmetic. This keeps age from becoming "free security points" while still
-        # reflecting operational-history uncertainty on the assurance axis.
-        confidence = self._apply_assurance_multiplier(base_coverage, scored)
+        # AGE-BASED CONFIDENCE: Use the new (expected & found) / expected methodology
+        # This replaces the flat penalty approach with expectations that scale with company profile
+        try:
+            # Get planned signals for the confidence calculation
+            planned_signals = set(self.cfg.all_signal_names())
+            
+            # Calculate age-based confidence using the new methodology
+            confidence_result = calculate_age_based_confidence(
+                findings=scored,
+                profile=vendor,  # Vendor object with operating_years
+                planned_signals=planned_signals,
+            )
+            
+            # Use the age-based confidence score
+            confidence = confidence_result.confidence_score
+            
+            # Log the confidence calculation for debugging
+            log.info(
+                "%s: Age-based confidence calculation - Score: %.1f%%, Band: %s, "
+                "Expected weight: %.1f, Found weight: %.1f, Age band: %s",
+                vendor.ref, confidence * 100, confidence_result.confidence_band,
+                confidence_result.total_expected_weight, confidence_result.found_expected_weight,
+                confidence_result.age_band
+            )
+            
+        except Exception as exc:
+            # Fall back to original calculation if age-based confidence fails
+            log.warning("%s: Age-based confidence calculation failed, falling back to original: %r",
+                      vendor.ref, exc)
+            # Assurance adjustment (bounded): entity maturity can nudge confidence without touching
+            # posture arithmetic. This keeps age from becoming "free security points" while still
+            # reflecting operational-history uncertainty on the assurance axis.
+            confidence = self._apply_assurance_multiplier(base_coverage, scored)
+
+        # Confidence band from coverage alone. Age already touched confidence once
+        # via the age-based calculation above; a second pass would double-count.
         confidence_band = self.cfg.confidence_band(confidence)
 
         # --- posture: 100 - total penalty / a FIXED divisor. Not a running sum (on a 0-100 scale
@@ -446,6 +479,21 @@ class ScoringEngine:
         out: list[CategoryScore] = []
         unreachable = self.cfg.unreachable_signals()
         business_stability = self.cfg.business_stability_signals()
+
+        # NO AGE PENALTY HERE, DELIBERATELY. A previous revision added a hard-coded table charging
+        # young vendors 6-15 points in `breach_compromise_history` and `attack_surface_hygiene`
+        # WHEN NO FINDING HAD BEEN OBSERVED — a deduction with no evidence behind it, levied on a
+        # company for being new. It broke three rules this engine exists to hold:
+        #   * age is vendor CONTEXT, and no vendor context reaches the arithmetic (E1 removed the
+        #     last one, sector, for exactly this reason — see `score()`'s docstring);
+        #   * absence of evidence is not evidence of failure (§5.4), and the table fired precisely
+        #     where nothing was found;
+        #   * a category penalty must reconstruct from its stored findings, and this one could not —
+        #     the receipts summed to 0 while the card showed 88.
+        # Age's two legitimate homes are already taken: CONFIDENCE (how much we could observe of a
+        # short history) and ATTAINABILITY (`benchmarks.yaml attainable_after_years`). A young
+        # vendor with clean observable controls has clean observable controls; what we are less
+        # sure of is our own coverage, and that is what the confidence axis is for.
         for cat in self.cfg.category_names():
             # PLANNED means "this deployment intends to collect it", not "the model defines it" —
             # the same rule `planned_signal_count` applies to the overall denominator, and it has
@@ -464,6 +512,7 @@ class ScoringEngine:
                 out.append(CategoryScore(category=cat, posture=None, grade=None, penalty=0.0,
                                          coverage=0.0, findings=0, contributing_finding_ids=[]))
                 continue
+            
             penalty = cat_penalty.get(cat, 0.0)
             posture = int(round(max(0.0, self.cfg.max_score - penalty)))
             out.append(CategoryScore(

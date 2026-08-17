@@ -55,6 +55,9 @@ _ENGINE_READS = {
     "assurity",            # app/assurity.py — E9a's third axis. Read OUTSIDE the posture engine
                            # by design: it must never be able to move a posture score.
     "compliance_frameworks",  # app/compliance_gap.py — E9c, where E1's sector expectation landed
+    "business_stability",  # app/business_stability.py — Phase 2 financial risk axis. Read OUTSIDE
+                           # the posture engine by design: financial health is a separate axis from
+                           # cybersecurity posture. A bankrupt company can have excellent security.
     "estate",              # E12 — probe_cap and the published sampling rule. Read by the
                            # COLLECTORS rather than the engine, but it belongs here: the rule is
                            # part of the published model (it IS the denominator), and an orphaned
@@ -175,8 +178,29 @@ class ScoringConfig:
         coverage()`. This is a HARD EXCLUSION, not a config-gated one like
         `unreachable_signals()` — these signals ARE reachable, they simply belong elsewhere.
         docs/tprm_feedback_redesign.md §1.3.
+
+        ONLY SIGNALS THE MODEL ACTUALLY DECLARES BELONG HERE. A previous revision added
+        `revenue_stability`, `debt_position`, `cash_flow`, `current_status` and `operating_years`
+        on the grounds that they had been "removed from Posture categories to prevent denominator
+        regression" — but they are declared in no category, emitted by no registered collector, and
+        banded nowhere in `scoring.yaml`. They are names, not signals.
+
+        Excluding a name that cannot occur is a no-op here, so it looked harmless. It was not:
+        `continuity.BUSINESS_STABILITY_SIGNALS` must equal this set (the two are duplicated
+        deliberately, and `test_business_stability_signal_sets_match` enforces it), and that set is
+        the DENOMINATOR of the Business Stability coverage figure. Carrying the five phantoms
+        across would have published "2 of 9 checks answered" for an axis that only ever runs four —
+        inventing five permanent gaps a reader could never close.
+
+        If those financial signals are later given real bands in `scoring.yaml`, add them back in
+        BOTH places. Two tests already guard the pair: `test_business_stability_signal_sets_match`
+        catches the two sets drifting apart, and
+        `test_business_stability_signals_never_carry_a_posture_penalty` walks every member and
+        fails on one with no home in the model — which is how the five phantoms were found.
         """
-        return {"sec_filing", "insolvency_notice", "bankruptcy_petition"}
+        return {
+            "sec_filing", "sec_going_concern", "insolvency_notice", "bankruptcy_petition",
+        }
 
     def unreachable_signals(self) -> set[str]:
         """Signals no collector can emit under the CURRENT configuration.
@@ -193,6 +217,14 @@ class ScoringConfig:
 
     def _all_signal_names(self) -> set[str]:
         return {s for c in self.categories for s in self.signals_of(c)}
+    
+    def all_signal_names(self) -> set[str]:
+        """Public method to get all signal names in the model.
+        
+        This is used by the age-based confidence calculator to determine
+        which signals were planned for collection.
+        """
+        return self._all_signal_names()
 
     def penalty_divisor(self) -> float:
         """Divisor for the OVERALL posture: `100 - total_penalty / divisor`.
@@ -225,10 +257,25 @@ class ScoringConfig:
     def _bands(self) -> dict[str, Any]:
         return self.data.get("confidence", {}).get("bands", {})
 
-    def confidence_band(self, coverage: float) -> str:
-        if coverage >= float(self._bands().get("high", 0.9)):
+    def confidence_band(self, coverage: float, operating_years: float | None = None) -> str:
+        """Confidence band for coverage.
+
+        Age does NOT move these thresholds. The assurance_multiplier (scoring.yaml
+        confidence.assurance_multiplier) is the ONE place operating history touches
+        confidence, and it acts on the coverage NUMBER before banding, not on the
+        band thresholds themselves. Shifting thresholds by age would make the same
+        coverage read differently for different vendors, which is the comparability
+        violation E1 was built to prevent.
+
+        The `operating_years` parameter is accepted but ignored for backward
+        compatibility with callers that already pass it.
+        """
+        high_threshold = float(self._bands().get("high", 0.9))
+        medium_threshold = float(self._bands().get("medium", 0.7))
+
+        if coverage >= high_threshold:
             return "High"
-        if coverage >= float(self._bands().get("medium", 0.7)):
+        if coverage >= medium_threshold:
             return "Medium"
         return "Low"
 

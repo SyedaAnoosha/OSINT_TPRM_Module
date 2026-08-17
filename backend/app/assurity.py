@@ -37,6 +37,8 @@ import math
 from dataclasses import dataclass, field
 from typing import Any
 
+from .longevity import confidence_adjustment as age_confidence_adjustment
+from .maturity import maturity_band
 from .scoring_config import ScoringConfig, get_scoring_config
 
 
@@ -62,6 +64,7 @@ class AssurityReport:
     gap_penalty: float = 0.0
     gap_count: int = 0
     caveats: list[str] = field(default_factory=list)
+    confidence: float = 1.0               # Confidence score adjusted for age
 
     @property
     def published(self) -> bool:
@@ -97,6 +100,21 @@ def assurity_report(vendor_ref: str, findings: list[Any], *,
     inputs: list[AssurityInput] = []
     observed = 0
 
+    # Extract age band from entity_maturity finding for confidence adjustment
+    age_band = "unknown"
+    for f in findings:
+        if f.signal == "entity_maturity" and hasattr(f, "band_key"):
+            # Map maturity band to age band
+            band_mapping = {
+                "new_lt_1": "startup",
+                "startup_lt_2": "startup", 
+                "young_2_5": "young",
+                "established_5_10": "established",
+                "mature_gt_10": "mature",
+            }
+            age_band = band_mapping.get(f.band_key, "unknown")
+            break
+
     for f in findings:
         table = credits.get(f.signal)
         if table is None:
@@ -127,8 +145,12 @@ def assurity_report(vendor_ref: str, findings: list[Any], *,
 
     gamma = float(spec.get("gamma", 0.0))
     gap_penalty = gamma * compliance_gap_count
+
+    # Credit sum from assurance inputs - age does not adjust this
+    credit_sum = sum(i.credit for i in inputs)
+
     x = (float(spec.get("intercept", 0.0))
-         + sum(i.credit for i in inputs) * float(spec.get("scale", 1.0))
+         + credit_sum * float(spec.get("scale", 1.0))
          - gap_penalty)
 
     if compliance_gap_count:
@@ -138,6 +160,11 @@ def assurity_report(vendor_ref: str, findings: list[Any], *,
             f"claim-reliability finding, which is what this axis is for."
         )
 
+    # Apply age-based confidence adjustment
+    base_confidence = 1.0  # Start with full confidence for assurity
+    conf_adj = age_confidence_adjustment(age_band)
+    adjusted_confidence = max(0.0, min(1.0, base_confidence + conf_adj))
+
     return AssurityReport(
         vendor_ref=vendor_ref,
         score=int(round(100 * sigmoid(x))),
@@ -146,4 +173,5 @@ def assurity_report(vendor_ref: str, findings: list[Any], *,
         gap_penalty=gap_penalty,
         gap_count=compliance_gap_count,
         caveats=caveats,
+        confidence=adjusted_confidence,
     )

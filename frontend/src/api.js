@@ -35,6 +35,22 @@ export async function scoreVendor({ name, domain, criticality, sizeBand }, { onP
   return { vendorRef: data.vendor_ref, jobId: data.job_id, score, domain: data.domain }
 }
 
+/** Re-score an existing vendor. Opens the SSE stream, relays progress, resolves with the final Score record.
+ *  Always triggers a fresh scoring run for a vendor that has already been scored. */
+export async function rescoreVendor(ref, { onProgress } = {}) {
+  const res = await fetch(`/api/vendors/${encodeURIComponent(ref)}/rescore`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  if (!res.ok) throw new Error(`rescore request failed (${res.status})`)
+  const data = await res.json()
+
+  await streamJob(data.stream, onProgress)
+  // The job is done; fetch the durable record (full categories + evidence refs).
+  const score = await getScore(data.vendor_ref)
+  return { vendorRef: data.vendor_ref, jobId: data.job_id, score, domain: data.domain }
+}
+
 /** Consume the SSE stream to completion. Resolves on the terminal `done`/`error` event. */
 function streamJob(streamUrl, onProgress) {
   return new Promise((resolve, reject) => {
@@ -149,6 +165,24 @@ export async function getDependencies(ref) {
   return res.json()
 }
 
+/** Business Stability score — financial health as a separate axis from cybersecurity posture.
+ *  Returns the stability score, age band, financial metrics, and gate status. null when not assessed. */
+export async function getStability(ref) {
+  const res = await fetch(`/api/vendors/${encodeURIComponent(ref)}/stability`)
+  if (res.status === 404) return null
+  if (!res.ok) return null
+  return res.json()
+}
+
+/** Financial profile — raw financial data including incorporation date, company status,
+ *  insolvency records, and financial metrics. null when not available. */
+export async function getFinancial(ref) {
+  const res = await fetch(`/api/vendors/${encodeURIComponent(ref)}/financial`)
+  if (res.status === 404) return null
+  if (!res.ok) return null
+  return res.json()
+}
+
 /** The whole record as one self-contained document — what goes in the procurement file.
  *  Its `reconstruction` block re-derives the published score from the findings, so a reader can
  *  check the arithmetic rather than take it on trust. */
@@ -231,6 +265,15 @@ export async function getCapabilities() {
     if (!res.ok) return { summary_enabled: false }
     return res.json()
   } catch { return { summary_enabled: false } }
+}
+
+/** Compliance gaps — discrepancies between vendor's claimed certifications and registry-corroborated records.
+ *  Returns an array of compliance gap objects. [] when not available. */
+export async function getComplianceGaps(ref) {
+  const res = await fetch(`/api/vendors/${encodeURIComponent(ref)}/compliance-gaps`)
+  if (res.status === 404) return []
+  if (!res.ok) throw new Error(`no compliance gaps for ${ref} (${res.status})`)
+  return res.json()
 }
 
 function safeParse(s) {

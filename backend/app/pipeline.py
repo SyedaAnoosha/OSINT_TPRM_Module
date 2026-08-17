@@ -87,7 +87,7 @@ def resolve_vendor(
         raise ValueError("need a name or a domain to resolve a vendor")
     slug = ref or (domain.split(".")[0] if domain else (name or "unknown")).lower()
     return Vendor(ref=slug, name=name, domain=domain,
-                  resolved=True, resolution_confidence=entity_confidence)
+                  resolved=True, resolution_confidence=entity_confidence, operating_years=None)
 
 
 def _resolve_estate(vendor: Vendor, results: list[CollectorResult]) -> Any:
@@ -310,11 +310,44 @@ async def run_pipeline(
                 log.info("%s: replaying stored search name %r for a domain-only run",
                          vendor.ref, prior.search_name)
 
-        await _emit(progress, "collecting", {"total": len(collectors),
-                                             "sources": [c.source for c in collectors]})
+        # AGE-BASED RELIABILITY MODIFIERS: Run RDAP first to extract domain age, then pass it to
+        # the context so HIBP and regulatory collectors can adjust clean receipt reliability based on
+        # company age. A clean result from a young company is weaker evidence than the same result
+        # from a mature company (fewer years to accumulate breaches or attract enforcement).
+        rdap_collector = next((c for c in collectors if c.source == "rdap"), None)
+        rdap_result = None
         results: list[CollectorResult] = []
         evidence_ids: dict[str, str] = {}
-        tasks = [asyncio.create_task(c.collect(vendor, ctx)) for c in collectors]
+        if rdap_collector and vendor.domain:
+            rdap_result = await rdap_collector.collect(vendor, ctx)
+            evidence = store.put(rdap_result)
+            evidence_ids[rdap_result.source] = evidence.id
+            results.append(rdap_result)
+            await _emit(progress, "collector_done", {
+                "source": rdap_result.source, "status": rdap_result.status,
+                "findings": len(rdap_result.findings), "evidence_id": evidence.id,
+            })
+            # Extract domain age from RDAP result
+            if rdap_result.status == "ok" and rdap_result.raw:
+                created_str = rdap_result.raw.get("created")
+                if created_str:
+                    try:
+                        from datetime import UTC, datetime
+                        created = datetime.fromisoformat(created_str.replace("Z", "+00:00"))
+                        if created.tzinfo is None:
+                            created = created.replace(tzinfo=UTC)
+                        age_days = (datetime.now(UTC) - created).days
+                        ctx.domain_age_days = age_days
+                        log.info("%s: domain age extracted from RDAP: %d days", vendor.ref, age_days)
+                    except Exception as exc:
+                        log.warning("%s: failed to parse RDAP creation date: %r", vendor.ref, exc)
+
+        # Filter out RDAP from the remaining collectors since we already ran it
+        remaining_collectors = [c for c in collectors if c.source != "rdap"]
+
+        await _emit(progress, "collecting", {"total": len(remaining_collectors) + (1 if rdap_result else 0),
+                                             "sources": [c.source for c in collectors]})
+        tasks = [asyncio.create_task(c.collect(vendor, ctx)) for c in remaining_collectors]
         for fut in asyncio.as_completed(tasks):
             result = await fut
             evidence = store.put(result)          # EVIDENCE STORE FIRST — before any scoring
@@ -377,6 +410,10 @@ async def run_pipeline(
             log.warning("%s: profile build failed: %r", vendor.ref, exc)
 
         vendor_sector = profile.sector.value if (profile and profile.sector) else None
+
+        # Extract operating years from profile for age-based posture penalties
+        if profile and hasattr(profile, 'operating_years') and profile.operating_years is not None:
+            vendor.operating_years = profile.operating_years
 
         # ACCEPTED refutes are honoured on every score, not just the one that accepted them: a
         # dispute is durable until the observation it targets changes (see models.Dispute). Loading

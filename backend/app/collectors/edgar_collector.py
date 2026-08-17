@@ -131,8 +131,9 @@ class EdgarCollector(Collector):
         findings = []
         for filing in filings:
             band = self._band(filing["filing_type"])
+            signal_name = self._signal_name(filing["filing_type"])
             findings.append(Finding(
-                source=self.source, signal="sec_filing", subcategory=_SUB, category=_CAT,
+                source=self.source, signal=signal_name, subcategory=_SUB, category=_CAT,
                 observed=f"{filing['filing_type']} — {filing['filing_date']}",
                 value={"band": band, "filing_type": filing["filing_type"],
                        "filing_date": filing["filing_date"],
@@ -189,6 +190,14 @@ class EdgarCollector(Collector):
         if "bankruptcy" in ft or "item 1.03" in ft:
             return "entity_inactive"  # ceased
         return "registration_lapsed"  # going-concern doubt — watch, not yet ceased
+
+    @staticmethod
+    def _signal_name(filing_type: str) -> str:
+        """Map SEC filing type to appropriate signal name to avoid duplication."""
+        ft = filing_type.lower()
+        if "going concern" in ft:
+            return "sec_going_concern"  # Separate signal for going-concern
+        return "sec_filing"  # Default signal for bankruptcy
 
 
 def _filing_index_url(src: dict[str, Any]) -> str:

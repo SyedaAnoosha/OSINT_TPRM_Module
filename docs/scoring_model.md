@@ -1,4 +1,4 @@
-# Scoring Model — v1 (`scoring.yaml` v5.2.0, penalty-based posture)
+# Scoring Model — v2 (`scoring.yaml` v5.3.0, penalty-based posture + Business Stability axis)
 
 **OSINT TPRM vendor scoring — the model in brief.**
 
@@ -29,6 +29,7 @@ figure.**
 | | What it answers | Range | Who owns it |
 |:--|:--|:--|:--|
 | **Posture** (§1–6) | How strong does this vendor look from outside? | 0–100 · A–F | Ours to measure |
+| **Business Stability** (§6.1) | Is this vendor financially viable? | 0–100 · Age-based | Ours to measure |
 | **Confidence** (§7) | How much of the vendor could we actually see? | 0–1 · High/Med/Low | Ours to measure |
 | **Assurity** (§8) | Has anyone independent checked? | 0–100 | Ours to measure |
 | Compliance gap (§8.1) | Are the vendor's own claims reliable? | a list, with citations | Observed |
@@ -37,7 +38,7 @@ figure.**
 | Expectation gap (§10.1) | Am I what my peer group predicts? | posture − E[posture ∣ cohort] | Computed from the book |
 | Target maturity (§7.2) | Am I adequate? | met / applicable controls | Published standards |
 
-Everything below the three axes **interprets** the posture. None of it can move it.
+Everything below the axes **interprets** the scores. None of it can move them.
 
 ---
 
@@ -348,8 +349,8 @@ one small age-related deduction, and from five years upward age costs nothing. T
 deliberately unchanged. The claim worth making is the narrow one — *the continuous measure is confined to
 confidence* — not the broad one that age never touches posture at all.
 
-This is not squeamishness. [`context-aware-vendor-risk-scoring-study.md`](context-aware-vendor-risk-scoring-study.md)
-§1.4 records the finding plainly — *"Company **age** predicts security posture: **No published evidence found**"* —
+This is not squeamishness. The underlying research (context-aware vendor risk scoring, §1.4)
+records the finding plainly — *"Company **age** predicts security posture: **No published evidence found**"* —
 and §1.6 places maturity in Confidence and Benchmarking only. A firmographic multiplier on posture would make the
 score non-comparable across vendors, unvalidatable against outcomes, and purchasable.
 

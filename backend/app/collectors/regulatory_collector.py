@@ -66,6 +66,9 @@ class RegulatoryCollector(Collector):
     source = "regulatory"
     reliability = 0.9   # a named regulator action is a hard fact (source_assessment.md §13)
     clean_reliability = 0.4  # recent-window + US-weighted -> weak evidence of absence
+    # Enable age-based reliability adjustment: a clean result from a young company is weaker
+    # evidence than the same result from a mature company (fewer years to attract enforcement).
+    age_adjusted_clean_reliability = True
     timeout_s = 40.0
 
     async def _run(self, vendor: Vendor, ctx: CollectorContext) -> CollectorResult:
@@ -105,7 +108,7 @@ class RegulatoryCollector(Collector):
                 notes="clean receipt — recent-window, US-weighted; absence is weak (§5.4.2)",
             )
             return self.result(vendor, "ok", raw=raw, findings=[finding],
-                               reliability=self._clean_reliability(),
+                               reliability=self._clean_reliability(ctx),
                                notes="no regulator match — clean receipt (§5.4.2)")
 
         findings: list[Finding] = []

@@ -33,7 +33,7 @@ a property **of the relationship** — it is what *this buyer* exposed to them, 
 Putting it in the cohort key would mean the same supplier belongs to different cohorts for different
 buyers. Three consequences, all bad: it breaks "exactly one cohort per supplier"; it fragments the
 peer pool per tenant precisely where n≥30 is needed; and it silently re-introduces cross-tenant
-pooling, which [complete_plan.md](complete_plan.md) records as *"a contractual question before an
+pooling, which prior design review recorded as *"a contractual question before an
 engineering one."*
 
 So scope routes to **interpretation**: it selects the procurement action template and it filters the
@@ -217,14 +217,14 @@ building a parallel system.
 - **Effect of upheld:** the attribute changes → rebuild → new snapshot → new placement. **Historical
   placements are never rewritten** — that is the whole point of storing the snapshot.
 - **While a dispute is open, the placement is notated `disputed`.** This is not optional politeness:
-  [report.md](report.md) records the US Chamber / FCRA principle that *"disputed ratings must be
+  the governing research recorded the US Chamber / FCRA principle that *"disputed ratings must be
   notated as such until resolved."* Silence during review is the exposure.
 
 ---
 
 ## The discrimination test
 
-Automates, per cohort, the analysis [complete_plan.md](complete_plan.md) ran by hand — which found
+Automates, per cohort, the analysis prior design review ran by hand — which found
 six signals penalising **100%** of the corpus and twelve constant-pass, i.e. *"19 of 27 signals
 contribute nothing to ordering."*
 

@@ -64,6 +64,20 @@ class TargetControlSpec:
             return "partial"
         return "gap"
 
+    def is_transition(self, observed: str | None, age_years: float | None) -> bool:
+        """Check if a control has passed the attainable_after_years threshold but is still missing.
+
+        This marks the moment absence becomes a finding rather than an expected gap.
+        """
+        if not self._attainable(age_years):
+            return False
+        if observed is None:
+            # Control is attainable but not observed — this is a transition state
+            return True
+        if observed in self.meets or observed in self.partial:
+            return False
+        return True
+
     def _attainable(self, age_years: float | None) -> bool:
         if self.attainable_after_years <= 0:
             return True

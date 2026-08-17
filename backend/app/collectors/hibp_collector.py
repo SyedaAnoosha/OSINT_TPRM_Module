@@ -37,9 +37,12 @@ class HibpCollector(Collector):
     # A clean HIBP result rules out PUBLICLY-KNOWN breaches only — undisclosed breaches
     # exist, so a clean receipt is materially weaker than a positive hit (source_assessment §4).
     clean_reliability = 0.55
+    # Enable age-based reliability adjustment: a clean result from a young company is weaker
+    # evidence than the same result from a mature company (fewer years to accumulate breaches).
+    age_adjusted_clean_reliability = True
     timeout_s = 20.0
 
-    def _clean(self, vendor: Vendor, domain: str | None) -> CollectorResult:
+    def _clean(self, vendor: Vendor, domain: str | None, ctx: CollectorContext) -> CollectorResult:
         """Clean receipt: reached HIBP, no known breach. Benign finding, reduced reliability."""
         finding = Finding(
             source=self.source, signal="breach_by_data_class", subcategory=_SUB, category=_CAT,
@@ -49,7 +52,7 @@ class HibpCollector(Collector):
             notes="clean receipt — no PUBLICLY known breach; absence is not proof of security",
         )
         return self.result(vendor, "ok", raw={"domain": domain, "breaches": []},
-                           findings=[finding], reliability=self._clean_reliability(),
+                           findings=[finding], reliability=self._clean_reliability(ctx),
                            notes="no breach record — recorded as clean receipt (§5.4.2)")
 
     async def _run(self, vendor: Vendor, ctx: CollectorContext) -> CollectorResult:
@@ -68,13 +71,13 @@ class HibpCollector(Collector):
             return self.result(vendor, "error", notes=f"HIBP fetch failed: {exc}")
 
         if resp.status_code == 404:
-            return self._clean(vendor, domain)
+            return self._clean(vendor, domain, ctx)
         if resp.status_code != 200:
             return self.result(vendor, "error", notes=f"HIBP returned {resp.status_code}")
 
         breaches = resp.json()
         if not breaches:
-            return self._clean(vendor, domain)
+            return self._clean(vendor, domain, ctx)
 
         raw: dict[str, Any] = {"domain": domain, "breach_count": len(breaches), "breaches": breaches}
         findings: list[Finding] = []

@@ -36,12 +36,53 @@ from .models import LifecycleStage, PersistedFinding
 # ---------------------------------------------------------------------------
 # Tech signals that, when present, indicate path-dependency / aged infrastructure.
 # These are ALREADY scored by the engine; this module only re-frames them as context.
+# Descriptions are age-aware: the same finding means something different for young vs mature vendors.
 # ---------------------------------------------------------------------------
-_OBSOLESCENCE_SIGNALS: dict[tuple[str, str], str] = {
-    ("tls_version", "tls_10_or_11"): "TLS 1.0/1.1 still offered — deprecated since RFC 8996 (2021).",
-    ("kev_listed_cve", "listed"): "CISA Known Exploited Vulnerability match — "
-                                   "typically indicates unpatched legacy components.",
-}
+def _obsolescence_description(signal: str, band: str, operating_years: float | None) -> str:
+    """Return age-aware description for obsolescence signals.
+
+    A TLS 1.0 finding on a 2-year-old vendor is a config decision (unusual, fixable).
+    A TLS 1.0 finding on a 20-year-old vendor is path-dependency (legacy debt, harder to fix).
+    """
+    if signal == "tls_version" and band == "tls_10_or_11":
+        if operating_years is None:
+            return "TLS 1.0/1.1 still offered — deprecated since RFC 8996 (2021)."
+        if operating_years < 3:
+            return (
+                "TLS 1.0/1.1 still offered — unusual for a young vendor, indicates a specific "
+                "configuration decision rather than legacy debt. Remediation is a config change."
+            )
+        elif operating_years < 10:
+            return (
+                "TLS 1.0/1.1 still offered — atypical for this age. May indicate legacy "
+                "infrastructure or delayed modernization. Remediation may require system upgrades."
+            )
+        else:
+            return (
+                "TLS 1.0/1.1 still offered — likely path-dependency from legacy infrastructure. "
+                "Mature vendors accumulate technical debt; this finding may indicate old services "
+                "never modernized. Remediation may require system replacement, not just config."
+            )
+    elif signal == "kev_listed_cve" and band == "listed":
+        if operating_years is None:
+            return "CISA Known Exploited Vulnerability match — typically indicates unpatched legacy components."
+        if operating_years < 3:
+            return (
+                "CISA Known Exploited Vulnerability match — uncommon for a young vendor with modern "
+                "stack. Indicates either inherited vulnerable components or delayed patching."
+            )
+        elif operating_years < 10:
+            return (
+                "CISA Known Exploited Vulnerability match — suggests patch cadence gaps or use of "
+                "vulnerable third-party components. Review patch management practices."
+            )
+        else:
+            return (
+                "CISA Known Exploited Vulnerability match — likely path-dependency from legacy "
+                "components. Mature vendors often have accumulated technical debt; this may indicate "
+                "end-of-life systems or constrained modernization budgets."
+            )
+    return f"{signal} / {band} — obsolescence indicator"
 
 # Key-person threshold. A vendor with ≤ this headcount in a high-criticality relationship
 # warrants the flag. Not a score; a flag with a stated basis.
@@ -101,51 +142,52 @@ class LifecycleReport:
             "infancy": (
                 "Structural risks: financial fragility (no revenue history), compliance "
                 "immaturity (no time for SOC 2 observation window), key-person dependency. "
-                "Note attainable_after_years in target maturity — some controls cannot yet exist."
+                "Note attainable_after_years in target maturity — some controls cannot yet exist. "
+                "DMARC/TLS gaps are greenfield misses: security hygiene not embedded in founding habits."
             ),
             "go_go": (
                 "Rapid growth phase: processes are forming. Financial model may still be "
-                "unproven. Compliance infrastructure typically incomplete."
+                "unproven. Compliance infrastructure typically incomplete. DMARC/TLS gaps "
+                "indicate security not prioritized during growth. SOC 2 Type 2 unlikely (insufficient "
+                "observation window)."
             ),
             "adolescence": (
                 "Structure is emerging but not yet stable. Governance improvements expected. "
                 "Cohort benchmarking against similarly-aged peers is more meaningful than "
-                "comparison with mature incumbents."
+                "comparison with mature incumbents. DMARC/TLS gaps at this stage suggest "
+                "deliberate inaction rather than resource constraints."
             ),
             "prime": (
                 "Peak operational balance. Established processes and governance. Monitor for "
-                "emerging path-dependency as legacy decisions accumulate."
+                "emerging path-dependency as legacy decisions accumulate. DMARC/TLS gaps here "
+                "are concerning — the vendor has had years to implement these basics. SOC 2 "
+                "absence is a deliberate choice or programme failure."
             ),
             "aging": (
-                "Institutional knowledge and process depth are strengths. Path-dependency risk: "
-                "technology lock-in, legacy infrastructure, and structural inertia can slow "
-                "incident response and adaptation. See obsolescence signals below."
+                "Established but accumulating path-dependency. Legacy systems and processes "
+                "may constrain modernization. Technical debt management is a key concern. "
+                "DMARC/TLS gaps suggest either deliberate obsolescence acceptance or "
+                "insufficient investment in modernization."
             ),
             "unknown": (
-                "No reliable operating history available. Treat as emerging for assessment "
-                "purposes; attainable_after_years exemptions do not apply."
+                "Age not determinable from public sources. Cannot assess lifecycle-specific "
+                "risks or path-dependency. Consider requesting incorporation evidence directly "
+                "from the vendor."
             ),
-        }.get(self.lifecycle_stage, "")
+        }.get(self.lifecycle_stage, "Unknown lifecycle stage.")
 
 
 def lifecycle_stage_from_years(operating_years: float | None) -> LifecycleStage:
-    """Map operating years to an Adizes-derived stage label.
-
-    Thresholds are approximate — the model does not publish hard boundaries. These are
-    calibrated to the five bands already in scoring.yaml's `entity_maturity` signal:
-    new_lt_1 / startup_lt_2 / young_2_5 / established_5_10 / mature_gt_10, widened at
-    the top (>10 stays 'prime' until 15, beyond which institutional path-dependency
-    typically dominates). Adjust here; there is no other place.
-    """
+    """Map operating years to lifecycle stage (Infancy, Go-Go, Adolescence, Prime, Aging)."""
     if operating_years is None:
         return "unknown"
-    if operating_years < 1.0:
+    if operating_years < 1:
         return "infancy"
-    if operating_years < 2.0:
+    if operating_years < 2:
         return "go_go"
-    if operating_years < 5.0:
+    if operating_years < 5:
         return "adolescence"
-    if operating_years < 15.0:
+    if operating_years < 15:
         return "prime"
     return "aging"
 
@@ -180,10 +222,21 @@ def lifecycle_report(
         )
 
     # Tech obsolescence: re-frame existing scored findings as path-dependency context
+    # DEDUPLICATION: A signal observed on multiple hosts (E12 fan-out) or across multiple
+    # runs produces multiple PersistedFinding rows with the same (signal, band_key).
+    # We only want to show the re-framed context ONCE per unique observation type,
+    # otherwise the UI will repeat the exact same sentence multiple times.
     obs_signals: list[ObsolescenceSignal] = []
+    seen_obs: set[tuple[str, str]] = set()
+    
     for f in findings:
-        desc = _OBSOLESCENCE_SIGNALS.get((f.signal, f.band_key))
-        if desc:
+        key = (f.signal, f.band_key)
+        if key in seen_obs:
+            continue
+            
+        desc = _obsolescence_description(f.signal, f.band_key, operating_years)
+        # Only include if it's a recognized obsolescence signal (not the fallback)
+        if "obsolescence indicator" not in desc:
             obs_signals.append(ObsolescenceSignal(
                 signal=f.signal,
                 band=f.band_key,
@@ -191,6 +244,7 @@ def lifecycle_report(
                 evidence_id=f.evidence_id,
                 finding_id=f.id,
             ))
+            seen_obs.add(key)
 
     return LifecycleReport(
         vendor_ref=vendor_ref,

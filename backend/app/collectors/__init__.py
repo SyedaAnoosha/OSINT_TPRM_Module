@@ -31,6 +31,12 @@ from .wikidata_collector import WikidataCollector
 from .edgar_collector import EdgarCollector
 from .gazette_collector import GazetteCollector
 from .courtlistener_bankruptcy_collector import CourtListenerBankruptcyCollector
+# Financial & Business Stability collectors (Phase 2)
+from .eu_insolvency_collector import EUInsolvencyCollector
+from .german_insolvency_collector import GermanInsolvencyCollector
+from .canada_bankruptcy_collector import CanadaBankruptcyCollector
+from .asic_insolvency_collector import ASICInsolvencyCollector
+from .sec_xbrl_collector import SecXbrlCollector
 
 _REGISTRY: dict[str, Collector] = {}
 
@@ -75,6 +81,14 @@ register(EdgarCollector())
 register(GazetteCollector())
 register(CourtListenerBankruptcyCollector())
 register(StatusPageCollector())
+# Financial & Business Stability collectors (Phase 2)
+# register(OpenCorporatesCollector())      # Global registry aggregator
+# register(RegistryLookupCollector())      # Backup global registry
+register(EUInsolvencyCollector())        # EU insolvency proceedings
+register(GermanInsolvencyCollector())    # German insolvency register
+register(CanadaBankruptcyCollector())    # Canadian bankruptcy records
+register(ASICInsolvencyCollector())      # Australian insolvency data
+register(SecXbrlCollector())             # SEC XBRL financial data
 # register(AsxCollector())   # HELD — asx.api.markitdigital.com is undocumented; ASX's own
 #                              "Information Services Policy Guidelines" govern permitted data use
 #                              and a separate LICENSED API (ASXonline/MIA) exists as the sanctioned

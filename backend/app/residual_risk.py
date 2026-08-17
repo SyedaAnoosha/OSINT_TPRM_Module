@@ -34,6 +34,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
+from .longevity import AgeBand
 from .models import Criticality
 
 InherentTier = Literal["low", "medium", "high", "critical"]
@@ -58,6 +59,16 @@ _RESIDUAL: dict[PostureBand, dict[InherentTier, ResidualTier]] = {
     "poor":     {"low": "medium_high", "medium": "high",       "high": "critical", "critical": "critical"},
 }
 
+#: Age-adjusted residual risk matrix for young vendors (<5 years). Same posture produces
+#: higher residual risk due to limited track record and elevated baseline risk.
+#: Young vendors have lower residual-risk acceptance bars.
+_RESIDUAL_YOUNG: dict[PostureBand, dict[InherentTier, ResidualTier]] = {
+    "strong":   {"low": "low_medium",  "medium": "medium",     "high": "medium_high", "critical": "high"},
+    "moderate": {"low": "medium",      "medium": "medium_high", "high": "high",       "critical": "high"},
+    "weak":     {"low": "medium_high", "medium": "high",       "high": "critical",   "critical": "critical"},
+    "poor":     {"low": "high",        "medium": "high",       "high": "critical",   "critical": "critical"},
+}
+
 _RESIDUAL_LABELS: dict[ResidualTier, str] = {
     "low": "Low", "low_medium": "Low-Medium", "medium": "Medium",
     "medium_high": "Medium-High", "high": "High", "critical": "Critical",
@@ -72,6 +83,19 @@ _LADDER: tuple[ResidualTier, ...] = (
 _POSTURE_BANDS: tuple[tuple[int, PostureBand], ...] = (
     (80, "strong"), (60, "moderate"), (40, "weak"), (0, "poor"),
 )
+
+#: Age-based adjustments to inherent risk. Young vendors get upward adjustments due to
+#: limited track record and elevated failure risk. Mature vendors get neutral or downward
+#: adjustments based on demonstrated stability.
+#: Format: {age_band: adjustment_in_tiers} - positive values increase risk, negative decrease
+_AGE_ADJUSTMENTS: dict[AgeBand, int] = {
+    "startup": 1,        # <2 years: elevate one tier due to high failure risk
+    "young": 1,          # 2-5 years: elevate one tier due to limited track record
+    "established": 0,     # 5-10 years: no adjustment
+    "mature": -1,        # 10-20 years: reduce one tier for demonstrated stability
+    "veteran": -1,       # 20+ years: reduce one tier for proven staying power
+    "unknown": 0,        # Age unknown: no adjustment
+}
 
 
 def posture_band(posture: int) -> PostureBand:
@@ -140,7 +164,7 @@ class ResidualRisk:
 
 def inherent_tier(criticality: Criticality | None,
                   data_access_scope: str | None,
-                  *, provisional: bool = False) -> InherentRisk:
+                  *, provisional: bool = False, age_band: AgeBand | None = None) -> InherentRisk:
     """The worse of *how much we depend on them* and *what they hold*. Non-compensatory, on purpose.
 
     THE MAXIMUM, NOT AN AVERAGE. A vendor holding production customer data is a critical exposure
@@ -153,6 +177,11 @@ def inherent_tier(criticality: Criticality | None,
     low is the failure in the dangerous direction: every vendor nobody has classified would present
     as low-residual, and the ones nobody has classified are disproportionately the ones nobody has
     looked at.
+
+    AGE-BASED ADJUSTMENT. When age_band is provided, applies an age adjustment to the inherent tier:
+    - Young vendors (<5 years): elevated one tier due to limited track record and higher failure risk
+    - Mature vendors (10+ years): reduced one tier for demonstrated stability and staying power
+    - Unknown age: no adjustment applied
     """
     ranks: list[int] = []
     parts: list[str] = []
@@ -175,13 +204,32 @@ def inherent_tier(criticality: Criticality | None,
                    "— it is the question nobody has answered yet."),
         )
 
-    tier = _TIERS[max(ranks)]
+    base_tier_index = max(ranks)
+    tier = _TIERS[base_tier_index]
+    
+    # Apply age-based adjustment if age_band is provided
+    age_adjustment = 0
+    if age_band and age_band in _AGE_ADJUSTMENTS:
+        age_adjustment = _AGE_ADJUSTMENTS[age_band]
+        if age_adjustment != 0:
+            adjusted_index = max(0, min(len(_TIERS) - 1, base_tier_index + age_adjustment))
+            if adjusted_index != base_tier_index:
+                tier = _TIERS[adjusted_index]
+    
     basis = (f"{' · '.join(parts)} — inherent tier is the HIGHER of the two, because a vendor "
              f"holding sensitive data and a vendor running a critical process are each exposures "
              f"in their own right and neither offsets the other.")
     if len(ranks) == 1:
         basis += (" Only one of the two inputs was declared, so this tier may understate the "
                   "exposure; supply the other to firm it up.")
+    
+    # Document age adjustment if applied
+    if age_adjustment != 0:
+        direction = "elevated" if age_adjustment > 0 else "reduced"
+        basis += (f" Age-based adjustment: inherent tier {direction} by one band due to vendor age "
+                  f"({age_band}) — young vendors have higher baseline risk due to limited track record, "
+                  f"mature vendors benefit from demonstrated stability.")
+    
     if provisional:
         basis += (" PROVISIONAL — declared on the inherent register and not yet confirmed by the "
                   "accountable relationship owner. It is used as the buyer's current statement of "
@@ -199,7 +247,8 @@ def residual_risk(posture: int | None,
                   blocked: bool = False,
                   refused: bool = False,
                   substitutability: str | None = None,
-                  provisional: bool = False) -> ResidualRisk:
+                  provisional: bool = False,
+                  age_band: AgeBand | None = None) -> ResidualRisk:
     """The sixteen-cell lookup, plus P8's one declared escalation. Deterministic and never stored.
 
     P8 — `sole_source` ESCALATES THE PUBLISHED TIER BY ONE BAND, and this is the plan's own rule
@@ -218,7 +267,7 @@ def residual_risk(posture: int | None,
     *less* exposed to a control failure while you are still using them, and a rule that could lower
     a residual tier on a client's own declaration is a rule that will be used to lower it.
     """
-    inherent = inherent_tier(criticality, data_access_scope, provisional=provisional)
+    inherent = inherent_tier(criticality, data_access_scope, provisional=provisional, age_band=age_band)
 
     def refuse(reason: str) -> ResidualRisk:
         return ResidualRisk(residual=None, residual_label=None, posture=posture,
@@ -242,7 +291,12 @@ def residual_risk(posture: int | None,
 
     band = posture_band(posture)
     assert inherent.tier is not None
-    tier = _RESIDUAL[band][inherent.tier]
+    
+    # Use age-adjusted matrix for young vendors (<5 years)
+    if age_band in ("startup", "young"):
+        tier = _RESIDUAL_YOUNG[band][inherent.tier]
+    else:
+        tier = _RESIDUAL[band][inherent.tier]
 
     escalated_from: ResidualTier | None = None
     if substitutability == "sole_source":

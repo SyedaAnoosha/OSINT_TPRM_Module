@@ -64,12 +64,39 @@ class EstateCollector(Collector):
             return self.result(vendor, "empty", notes=sample.rule())
 
         apex = sample.apex
-        cap = get_scoring_config().estate_probe_cap()
+        base_cap = get_scoring_config().estate_probe_cap()
+
+        # Age-based probe cap adjustment: mature vendors have broader CT history and more
+        # potential shadow assets. Young vendors have thin estates, so probing deeper yields
+        # diminishing returns. Use domain age as a proxy for company age.
+        age_adjusted_cap = base_cap
+        if ctx.domain_age_days is not None:
+            years = ctx.domain_age_days / 365.25
+            if years >= 10:
+                # Mature vendor: double the cap to detect shadow assets from long history
+                age_adjusted_cap = base_cap * 2
+            elif years >= 3:
+                # Established vendor: 50% increase
+                age_adjusted_cap = int(base_cap * 1.5)
+            # Under 3 years: use base cap (young vendors have thin estates)
+
+        # Re-sample the estate with the age-adjusted cap
+        from ..collectors.estate import build_estate
+        cfg = get_scoring_config()
+        spec = cfg.estate_spec()
+        adjusted_sample = build_estate(
+            vendor.ref, vendor.domain, sample.probed_names,
+            cap=age_adjusted_cap,
+            wildcard_seen=sample.wildcard_seen,
+            sibling_threshold=int(spec.get("tenant_sibling_threshold", 25)),
+            is_live=None,
+        )
+
         legacy_hosts: list[str] = []
         expired_hosts: list[str] = []
         reached = 0
 
-        for host in sample.probed_names:
+        for host in adjusted_sample.probed_names:
             if host == apex:
                 continue          # the apex has its own findings and its own ceiling semantics
             try:
@@ -85,20 +112,21 @@ class EstateCollector(Collector):
                 expired_hosts.append(host)
 
         raw: dict[str, Any] = {
-            "rule": sample.rule(), "cap": cap, "sampled": sample.denominator, "reached": reached,
-            "eligible": sample.eligible, "discovered": sample.discovered,
-            "tenants_excluded": sample.tenants_excluded,
-            "not_live_excluded": sample.not_live_excluded,
+            "rule": adjusted_sample.rule(), "base_cap": base_cap, "age_adjusted_cap": age_adjusted_cap,
+            "sampled": adjusted_sample.denominator, "reached": reached,
+            "eligible": adjusted_sample.eligible, "discovered": adjusted_sample.discovered,
+            "tenants_excluded": adjusted_sample.tenants_excluded,
+            "not_live_excluded": adjusted_sample.not_live_excluded,
             "legacy_hosts": sorted(legacy_hosts)[:50], "expired_hosts": sorted(expired_hosts)[:50],
         }
         if reached == 0:
             return self.result(vendor, "empty", raw=raw,
-                               notes=f"no sampled host could be reached. {sample.rule()}")
+                               notes=f"no sampled host could be reached. {adjusted_sample.rule()}")
 
         findings = [
-            self._rate("estate_tls_legacy", len(legacy_hosts), reached, sample,
+            self._rate("estate_tls_legacy", len(legacy_hosts), reached, adjusted_sample,
                        f"{len(legacy_hosts)} of {reached} probed hosts still offer TLS 1.0/1.1"),
-            self._rate("estate_cert_expired", len(expired_hosts), reached, sample,
+            self._rate("estate_cert_expired", len(expired_hosts), reached, adjusted_sample,
                        f"{len(expired_hosts)} of {reached} probed hosts serve an expired certificate"),
         ]
         return self.result(vendor, "ok", raw=raw, findings=findings, source_version="live")

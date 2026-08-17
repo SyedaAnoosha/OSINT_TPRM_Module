@@ -162,6 +162,11 @@ _FLAGS: dict[tuple[str, str], tuple[Standing, str]] = {
         "recent 10-K or 10-Q filing — the company's own auditor has flagged doubt about its "
         "ability to continue as a going concern.",
     ),
+    ("sec_going_concern", "audit_qualification"): (
+        "watch",
+        "SEC EDGAR 10-K/10-Q filing contains a going-concern audit qualification — the company's "
+        "own auditor has flagged doubt about its ability to continue as a going concern.",
+    ),
     ("insolvency_notice", "entity_inactive"): (
         "ceased",
         "The Gazette (the UK's official public record) records a winding-up or liquidation "
@@ -225,9 +230,19 @@ class BusinessStabilitySummary:
     caveats: list[str]
 
 
-def business_stability_summary(vendor_ref: str, continuity: ContinuityReport, profile: Any) -> BusinessStabilitySummary:
+def business_stability_summary(vendor_ref: str, continuity: ContinuityReport, profile: Any, stability_score: int | None = None) -> BusinessStabilitySummary:
     """A structured summary of registry facts for the UI.
-    Never blended into a score. Provides a procurement-facing label and action."""
+    Never blended into a score. Provides a procurement-facing label and action.
+    
+    Args:
+        vendor_ref: Vendor reference
+        continuity: Continuity report with registry flags
+        profile: Vendor profile for additional context
+        stability_score: Optional Business Stability score to override standing calculation
+    
+    If stability_score is provided, it will be used to determine the standing instead of
+    just registry flags. This ensures the Business Stability score matches the displayed status.
+    """
     
     listed_status = None
     if profile and getattr(profile, "ownership", None) and profile.ownership.value == "listed":
@@ -236,10 +251,28 @@ def business_stability_summary(vendor_ref: str, continuity: ContinuityReport, pr
     registry_facts = []
     for f in continuity.flags:
         if f.signal in ("entity_status", "entity_existence"):
-            registry_facts.append(f"{f.source}: {f.observed}")
+            # Only include substantive observations, not generic positive confirmations
+            # Filter out "active_good_standing", "entity_active_confirmed", "domain_established"
+            # which are neutral/positive and don't need to be highlighted as warnings
+            if f.band not in ("pass", "active_good_standing", "entity_active_confirmed", "domain_established"):
+                registry_facts.append(f"{f.source}: {f.observed}")
+    
+    # Determine standing based on Business Stability score if provided
+    # This ensures the standing matches the actual financial health score
+    if stability_score is not None:
+        if stability_score >= 80:
+            standing = "sound"
+        elif stability_score >= 60:
+            standing = "watch"
+        elif stability_score >= 40:
+            standing = "impaired"
+        else:
+            standing = "ceased"
+    else:
+        standing = continuity.standing
             
     action_key, action_label, action_detail = _STANDING_ACTIONS.get(
-        continuity.standing, _STANDING_ACTIONS["unknown"]
+        standing, _STANDING_ACTIONS["unknown"]
     )
         
     caveats = [
@@ -249,7 +282,7 @@ def business_stability_summary(vendor_ref: str, continuity: ContinuityReport, pr
     ]
     
     return BusinessStabilitySummary(
-        vendor_ref=vendor_ref, standing=continuity.standing, listed_status=listed_status,
+        vendor_ref=vendor_ref, standing=standing, listed_status=listed_status,
         registry_facts=registry_facts, flags=continuity.flags,
         procurement_action=action_key,
         procurement_action_label=action_label,
@@ -334,7 +367,14 @@ def continuity_report(vendor_ref: str, findings: list[PersistedFinding]) -> Cont
 # than imported so this module keeps its documented independence from the scoring engine (it
 # re-reads persisted findings and never touches engine/config machinery). Both are guarded by
 # `test_business_stability_signal_sets_match` (test_continuity.py).
-BUSINESS_STABILITY_SIGNALS = frozenset({"sec_filing", "insolvency_notice", "bankruptcy_petition"})
+# The original three registry/filing facts plus `sec_going_concern`, added at Phase 2. Phase 2's
+# financial-health names (`revenue_stability`, `debt_position`, `cash_flow`, `current_status`,
+# `operating_years`) are deliberately NOT here: the model declares no bands for them, so they are
+# checks that can never be answered, and putting them in this denominator would publish five
+# permanent gaps a reader could do nothing about. See `ScoringConfig.business_stability_signals`.
+BUSINESS_STABILITY_SIGNALS = frozenset({
+    "sec_filing", "sec_going_concern", "insolvency_notice", "bankruptcy_petition",
+})
 
 
 def business_stability_coverage(findings: list[PersistedFinding]) -> tuple[int, int]:
@@ -342,9 +382,9 @@ def business_stability_coverage(findings: list[PersistedFinding]) -> tuple[int, 
 
     Deliberately separate from `continuity_report`'s Continuity standing and from engine.py's
     Posture-confidence coverage (`ScoringConfig.business_stability_signals` excludes these same
-    three signals from that computation for exactly this reason — see its docstring). A vendor
+    four signals from that computation for exactly this reason — see its docstring). A vendor
     outside every source's jurisdiction (not UK, not a US SEC registrant, no US federal
-    bankruptcy record) still gets an `(0, 3)` or partial result here rather than silently
+    bankruptcy record) still gets an `(0, 4)` or partial result here rather than silently
     inflating or shrinking Posture's own confidence number.
     """
     seen = {f.signal for f in findings if f.signal in BUSINESS_STABILITY_SIGNALS}

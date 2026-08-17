@@ -1,8 +1,8 @@
 # Methodology — OSINT for Third-Party Risk
 
 **Deliverables 1 & 3** (research methodology · v1 scoring model)
-**Status:** v1 · scoring model **`scoring.yaml` v5.2.0 (penalty-based posture)** · **Author:** *(intern)*
-*Companion docs: [`scoring_model.md`](scoring_model.md) (the model in brief) · [`research_doc.md`](research_doc.md) (source methodology) · [`roadmap.md`](roadmap.md).*
+**Status:** v2 · scoring model **`scoring.yaml` v5.3.0 (penalty-based posture + Business Stability axis)** · **Author:** *(intern)*
+*Companion docs: [`scoring_model.md`](scoring_model.md) (the model in brief) · [`research_doc.md`](research_doc.md) (source methodology) · [`roadmap.md`](roadmap.md) · [`financial_integration_design.md`](financial_integration_design.md) (Business Stability design).*
 
 > **This document is the product.** The code demonstrates it. If the PoC were deleted tomorrow, this file should be enough for someone else to rebuild it and get the same scores. Execution sequencing lives in `project_plan.md`; it is deliberately not here.
 
@@ -225,6 +225,57 @@ Categorising by source (`DNS → DNS`) is unexplainable to a client. Categories 
 |---|---|---|---|
 | **Continuity Context** | `continuity_context` | Will this vendor still be trading? | the Continuity axis |
 | **Assurance Context** | `assurance_context` | Has anyone independent checked? | **Assurity** (§5.11) |
+
+### 5.2.1 Business Stability — A Separate Scoring Axis (v5.3.0)
+
+**Financial health is a SEPARATE 0-100 score from cybersecurity posture.** A bankrupt company can have excellent cybersecurity controls, and a secure startup can run out of cash. These are separate risk dimensions that must not be conflated.
+
+The Business Stability axis answers: *Is this vendor financially viable?* It uses the same penalty-based approach but with different mechanics appropriate for financial data:
+
+| Aspect | Cybersecurity Posture | Business Stability |
+|---|---|---|
+| **Starting point** | 100 (perfect security) | Age-based (70-100, by company age) |
+| **Penalties** | Technical security issues | Financial distress signals |
+| **Bonuses** | None | Survivorship bonuses for longevity |
+| **Gate** | Sanctions (political/legal) | Active insolvency (financial) |
+| **Coverage** | Evidence coverage | Registry coverage (jurisdiction-dependent) |
+
+**Age-based base scores** reflect the well-documented failure rate curve:
+- **Startup (<2 years):** Base 70 — highest failure rate (~3× established)
+- **Young (2-5 years):** Base 85 — still establishing
+- **Established (5-10 years):** Base 90 — proven model
+- **Mature (10-20 years):** Base 95 — demonstrated staying power
+- **Veteran (20+ years):** Base 100 — survivorship credit
+
+**Financial penalties** include:
+- Active insolvency proceedings → **BLOCK** (gate, not a score)
+- Historical insolvency → −5 penalty
+- Declining revenue (3+ quarters) → −15 penalty
+- High debt-to-equity (>3x) → −10 penalty
+- Negative cash flow (2+ years) → −10 penalty
+
+**Survivorship bonuses** reward longevity:
+- Mature (10-20 years): +5 bonus
+- Veteran (20+ years): +10 bonus
+
+**Confidence adjustments** by age band:
+- Startup: −0.20 (harder to assess)
+- Young: −0.10
+- Established/Mature/Veteran: 0.00
+- Unknown: −0.05
+
+**Data sources** for Business Stability:
+- OpenCorporates (global entity registry)
+- Registry Lookup (national registries)
+- EU Insolvency Register
+- German Insolvency Register
+- Canada Bankruptcy Database
+- ASIC Insolvency Register (Australia)
+- SEC EDGAR (US public companies, XBRL financials)
+
+**API endpoints** (Phase 4):
+- `GET /api/vendors/{ref}/stability` — Business Stability score
+- `GET /api/vendors/{ref}/financial` — Raw financial profile data
 
 **Why two categories stopped scoring.** Companies House maps liquidation, receivership and insolvency onto `entity_inactive`, which used to cost **20 points of technical security posture** — but a vendor entering administration does not thereby have worse TLS. And penalising the absence of an audit or a public security page is a tax on audit budget: it measures spend rather than risk, and falls hardest on exactly the small suppliers this product exists to assess fairly. Both facts are still collected and still published. Neither charges posture.
 

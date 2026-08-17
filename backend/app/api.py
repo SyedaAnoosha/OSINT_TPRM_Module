@@ -24,7 +24,7 @@ from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from .adjudication_queue import as_dict as adjudication_queue_as_dict
 from .adjudication_queue import build as build_adjudication_queue
@@ -33,6 +33,7 @@ from .assessment_depth import plan_for as assessment_plan_for
 from .assessment_depth import table as assessment_depth_table
 from .assurity import assurity_report
 from .audience_views import procurement_dossier, security_dossier
+from .business_stability import compute_business_stability
 from .benchmark import build_benchmark, get_benchmark_config, peer_lookup
 from .benchmarking.api import router as benchmarking_router
 from .benchmarking.models import DataAccessScope
@@ -52,6 +53,7 @@ from .evidence_pack import build_pack as build_evidence_pack
 from .evidence_pack import procurement_view, security_view
 from .disclosures import disclosure_block
 from .continuity import business_stability_coverage, continuity_report
+from .confidence_calculator import calculate_age_based_confidence
 from .lifecycle import lifecycle_report
 from .procurement_rules import get_procurement_advice
 from .status_page import as_dict as status_page_as_dict
@@ -81,10 +83,12 @@ from .models import (
     Dispute,
     DisputeKind,
     Evidence,
+    FinancialProfile,
     GapAnalysisEventKind,
     GapAnalysisRecommendationEvent,
     GapAnalysisRecord,
     PersistedFinding,
+    ProfileField,
     Score,
     SizeBand,
     Substitutability,
@@ -100,6 +104,7 @@ from .residual_risk import inherent_tier
 from .residual_risk import matrix as residual_matrix
 from .residual_risk import residual_risk
 from .scheduler import monitoring_health, recent_runs
+from .longevity import age_band_from_years
 from .profile import apply_size_override, operating_years, refresh_cohort
 from .scoring.recommend import recommend, soonest_recheck
 from .scoring_config import get_scoring_config
@@ -163,6 +168,23 @@ class ScoreRequest(BaseModel):
     name: str | None = None
     domain: str | None = None
     ref: str | None = Field(default=None, description="canonical slug; derived if omitted")
+    
+    @field_validator('domain', 'ref')
+    @classmethod
+    def validate_url_format(cls, v: str | None) -> str | None:
+        """Reject malformed URLs that could break the system."""
+        if v is None:
+            return v
+        # Check for common malformed URL patterns
+        if v.startswith('https:') and not v.startswith('https://'):
+            raise ValueError(f"Malformed URL: '{v}' - missing '//' after 'https:'")
+        if v.startswith('http:') and not v.startswith('http://'):
+            raise ValueError(f"Malformed URL: '{v}' - missing '//' after 'http:'")
+        # Reject URLs that look like protocol-relative but are malformed
+        if v.startswith('//') and len(v) < 4:
+            raise ValueError(f"Malformed URL: '{v}' - incomplete protocol-relative URL")
+        return v
+    
     criticality: Criticality | None = Field(
         default=None,
         description=(
@@ -263,6 +285,13 @@ async def score_vendor(req: ScoreRequest) -> dict[str, Any]:
     `needs_domain` with a list of candidate domains for the caller to confirm — analysis
     runs only once a domain is supplied. (A domain, with or without a name, scores directly.)
     """
+    # Product detection: block scoring of product domains
+    if req.domain:
+        from .product_detection import should_block_scoring
+        should_block, block_reason = should_block_scoring(req.domain)
+        if should_block:
+            raise HTTPException(400, block_reason)
+    
     if req.domain is None and req.name:
         return {"needs_domain": True, "name": req.name,
                 "candidates": domain_candidates(req.name),
@@ -295,6 +324,55 @@ async def stream_job(job_id: str) -> StreamingResponse:
         events(), media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@app.post("/api/vendors/{ref}/rescore", status_code=202)
+async def rescore_vendor(ref: str, store: StoreDep) -> dict[str, Any]:
+    """Re-score an existing vendor. Returns a job id immediately; stream progress at
+    `/api/jobs/{job_id}/stream`, or poll `/api/jobs/{job_id}`.
+
+    This endpoint triggers a fresh scoring run for a vendor that has already been scored,
+    using the same vendor reference. Useful for updating scores after schema changes or
+    when new data sources become available.
+    """
+    # Check if vendor exists in the database
+    existing_score = store.latest_score(ref)
+    if existing_score is None:
+        raise HTTPException(404, f"no existing score for {ref!r} — vendor must be scored first")
+
+    # Get the vendor's profile to retrieve domain and name
+    profile = _profile_of(store, ref)
+    if profile is None:
+        raise HTTPException(400, f"cannot re-score {ref!r} — vendor profile not found")
+
+    # Use the domain from the score if profile doesn't have it
+    domain = getattr(profile, 'domain', None)
+    if not domain:
+        # Try to get domain from the score's evidence or other sources
+        domain = getattr(existing_score, 'domain', None)
+    if not domain:
+        raise HTTPException(400, f"cannot re-score {ref!r} — domain not found in profile or score")
+
+    # Resolve the vendor using the existing profile data
+    try:
+        vendor = resolve_vendor(name=getattr(profile, 'name', None), domain=domain, ref=ref)
+    except Exception as e:
+        raise HTTPException(500, f"failed to resolve vendor {ref!r}: {str(e)}")
+
+    # Submit a new scoring job
+    try:
+        job = jobs.submit(
+            vendor,
+            criticality=getattr(profile, 'criticality', None),
+            size_band=getattr(profile, 'size_band', None),
+            sector=getattr(profile, 'sector', None),
+            substitutability=getattr(profile, 'substitutability', None),
+        )
+    except Exception as e:
+        raise HTTPException(500, f"failed to submit scoring job for {ref!r}: {str(e)}")
+
+    return {"job_id": job.id, "vendor_ref": vendor.ref, "domain": vendor.domain,
+            "status": job.status, "stream": f"/api/jobs/{job.id}/stream"}
 
 
 # --------------------------------------------------------------------- reads
@@ -752,11 +830,37 @@ async def export_evidence_pack(
         subject_confidence=score.overall_confidence,
         vendor_age_years=operating_years(profile),
     )
+    
+    # Calculate age-based confidence with deduction labels
+    confidence_deductions = []
+    try:
+        confidence_result = calculate_age_based_confidence(
+            findings=findings,
+            profile=profile,
+            planned_signals=set(cfg.all_signal_names()),
+        )
+        confidence_deductions = confidence_result.get_deduction_labels_for_display()
+    except Exception:
+        pass  # If age-based confidence fails, use original approach
 
+    # Calculate age-based confidence with deduction labels
+    confidence_deductions = []
+    try:
+        confidence_result = calculate_age_based_confidence(
+            findings=findings,
+            profile=profile,
+            planned_signals=set(cfg.all_signal_names()),
+        )
+        confidence_deductions = confidence_result.get_deduction_labels_for_display()
+    except Exception:
+        pass  # If age-based confidence fails, use original approach
+    
     if view:
         # P6. EVERY PIECE IS BUILT BY THE MODULE THAT OWNS IT and handed over already finished —
         # `audience_views` arranges, and holds no arithmetic of its own.
         coverage = _coverage_for(store, ref, score)
+        # Add confidence deductions to coverage
+        coverage["confidence_deductions"] = confidence_deductions
         pack = build_evidence_pack(ref, findings, cfg, disputes=disputes)
         plan = _assessment_plan_of(store, ref, soonest)
         if view == "security":
@@ -769,15 +873,22 @@ async def export_evidence_pack(
             )
         firmographics = benchmarking_firmographics_of(store, ref)
         provisional = profile.inherent_provisional if profile else False
+        
+        # Extract age band for age-based residual risk adjustments
+        age_band = None
+        if profile and hasattr(profile, 'operating_years') and profile.operating_years is not None:
+            age_band = age_band_from_years(profile.operating_years)
+        
         inherent = inherent_tier(profile.criticality if profile else None,
                                  firmographics.data_access_scope if firmographics else None,
-                                 provisional=provisional)
+                                 provisional=provisional, age_band=age_band)
         substitutability = profile.substitutability if profile else None
         residual = residual_risk(
             score.posture, profile.criticality if profile else None,
             firmographics.data_access_scope if firmographics else None,
             blocked=score.blocked, refused=score.refused,
             substitutability=substitutability, provisional=provisional,
+            age_band=age_band,
         )
         continuity = continuity_report(ref, findings)
         spof = _spof_providers(store, ref)
@@ -954,13 +1065,40 @@ async def get_vendor_continuity(ref: str, store: StoreDep) -> dict[str, Any]:
         raise HTTPException(404, f"no findings for {ref!r} — POST /api/vendors/score first")
     report = continuity_report(ref, findings)
     answered, tracked = business_stability_coverage(findings)
+    
+    # Try to get Business Stability score to determine standing if available
+    # This ensures the standing matches the actual financial health score
+    stability_score = None
+    try:
+        # Build profile and compute stability without circular dependency
+        profile = _build_financial_profile(ref, findings, store)
+        from .business_stability import compute_business_stability
+        stability_result = compute_business_stability(profile, 0.95)
+        stability_score = stability_result.get("score")
+    except Exception:
+        pass  # If stability score not available, use continuity standing
+    
+    # Use Business Stability score to determine standing if available
+    # This ensures the standing matches the actual financial health score
+    if stability_score is not None:
+        if stability_score >= 80:
+            standing = "sound"
+        elif stability_score >= 60:
+            standing = "watch"
+        elif stability_score >= 40:
+            standing = "impaired"
+        else:
+            standing = "ceased"
+    else:
+        standing = report.standing
+    
     # `procurement_rules.py` (docs/tprm_feedback_redesign.md §1.3): a deterministic advisory
     # keyed on standing, never a number — surfaced here so the frontend's Business Stability
     # card can show it beside the registry facts, not as a second endpoint round-trip.
-    advice = get_procurement_advice(report.standing)
+    advice = get_procurement_advice(standing)
     return {
         "vendor_ref": report.vendor_ref,
-        "standing": report.standing,
+        "standing": standing,  # Use the score-based standing, not just registry flags
         "flags": [
             {"signal": f.signal, "band": f.band, "standing": f.standing,
              "statement": f.statement, "cited": f.cited(), "source": f.source,
@@ -981,7 +1119,222 @@ async def get_vendor_continuity(ref: str, store: StoreDep) -> dict[str, Any]:
         # that one entirely). "0 of 3" is not "clean"; it is "not evidenced for this vendor's
         # jurisdiction" — the UI must not read an empty numerator as good news.
         "business_stability_coverage": {"answered": answered, "tracked": tracked},
+        "stability_score": stability_score,  # Include the actual score for transparency
     }
+
+
+@app.get("/api/vendors/{ref}/stability")
+async def get_vendor_stability(ref: str, store: StoreDep) -> dict[str, Any]:
+    """Business Stability score — financial health and viability (Phase 2).
+
+    This is a SEPARATE 0-100 score from cybersecurity posture. Financial distress ≠ poor security.
+    A bankrupt company can have excellent cybersecurity controls, and a secure startup can run
+    out of cash. These are separate risk dimensions that must not be conflated.
+
+    The score follows the same penalty-based approach:
+    - Vendors start at a base score determined by age (70-100)
+    - Financial distress signals subtract penalties
+    - Survivorship bonuses add points back
+    - Active insolvency proceedings BLOCK (gate, not a score)
+    """
+    findings = store.findings_for_vendor(ref)
+    if not findings:
+        raise HTTPException(404, f"no findings for {ref!r} — POST /api/vendors/score first")
+
+    # Build FinancialProfile from findings
+    # This is a simplified implementation - in production, this would aggregate
+    # findings from financial collectors into a proper FinancialProfile
+    profile = _build_financial_profile(ref, findings, store)
+
+    # Compute Business Stability score
+    base_confidence = 0.95  # Would be computed from evidence coverage
+    result = compute_business_stability(profile, base_confidence)
+
+    return {
+        "vendor_ref": ref,
+        "score": result["score"],
+        "base_score": result["base_score"],
+        "age_band": result["age_band"],
+        "penalties": result["penalties"],
+        "bonuses": result["bonuses"],
+        "gate_triggered": result["gate_triggered"],
+        "gate_reason": result["gate_reason"],
+        "confidence_adjusted": result["confidence_adjusted"],
+        "contingency_plan_required": result.get("contingency_plan_required", False),
+        "going_concern_detected": getattr(profile, 'going_concern_detected', False),
+        "standing": result.get("standing", "unknown"),  # Add standing based on score
+        "computed_at": profile.computed_at.isoformat() if profile.computed_at else None,
+        "age_differentiation": result.get("age_differentiation"),
+    }
+
+
+@app.get("/api/vendors/{ref}/financial")
+async def get_vendor_financial(ref: str, store: StoreDep) -> dict[str, Any]:
+    """Financial profile — incorporation date, company status, insolvency records, financial metrics.
+
+    This provides the raw financial data that feeds into the Business Stability score.
+    """
+    findings = store.findings_for_vendor(ref)
+    if not findings:
+        raise HTTPException(404, f"no findings for {ref!r} — POST /api/vendors/score first")
+
+    profile = _build_financial_profile(ref, findings, store)
+
+    return {
+        "vendor_ref": ref,
+        "incorporation_date": profile.incorporation_date.model_dump() if profile.incorporation_date else None,
+        "company_status": profile.company_status.model_dump() if profile.company_status else None,
+        "registry_number": profile.registry_number.model_dump() if profile.registry_number else None,
+        "registry_jurisdiction": profile.registry_jurisdiction.model_dump() if profile.registry_jurisdiction else None,
+        "insolvency_status": profile.insolvency_status.model_dump() if profile.insolvency_status else None,
+        "insolvency_records": [r.model_dump() for r in profile.insolvency_records],
+        "financial_metrics": [m.model_dump() for m in profile.financial_metrics],
+        "operating_years": profile.operating_years,
+        "age_band": profile.age_band,
+        "debt_to_equity": profile.debt_to_equity,
+        "revenue_trend": profile.revenue_trend,
+        "cash_flow_trend": profile.cash_flow_trend,
+        "insolvency_gate": profile.insolvency_gate,
+        "insolvency_gate_reason": profile.insolvency_gate_reason,
+        "going_concern_flagged": profile.going_concern_flagged,
+        "computed_at": profile.computed_at.isoformat() if profile.computed_at else None,
+    }
+
+
+def _build_financial_profile(ref: str, findings: list[PersistedFinding], store: Store) -> FinancialProfile:
+    """Build a FinancialProfile from stored findings.
+
+    This extracts financial data from findings, with fallback to free sources (Wikidata, RDAP)
+    for age calculation when paid entity registers (OpenCorporates) are unavailable.
+    
+    Also maps continuity flags to insolvency records for Business Stability scoring.
+    """
+    from datetime import UTC, datetime
+    from .continuity import continuity_report, _FLAGS
+
+    profile = FinancialProfile(vendor_ref=ref)
+
+    # Map continuity flags to insolvency records
+    continuity = continuity_report(ref, findings)
+    insolvency_records = []
+    
+    # Map continuity flags with impaired/ceased standing to insolvency records
+    for flag in continuity.flags:
+        if flag.standing in ("ceased", "impaired"):
+            # Determine status based on standing
+            from .models import InsolvencyStatus
+            status = InsolvencyStatus.active if flag.standing == "impaired" else InsolvencyStatus.historical
+            
+            # Create insolvency record from continuity flag
+            from .models import InsolvencyRecord
+            from datetime import UTC, datetime
+            
+            # Parse the observed date if available
+            observed_date = None
+            if flag.observed:
+                try:
+                    observed_date = datetime.fromisoformat(flag.observed) if isinstance(flag.observed, str) else flag.observed
+                    if observed_date.tzinfo is None:
+                        observed_date = observed_date.replace(tzinfo=UTC)
+                except Exception:
+                    pass
+            
+            record = InsolvencyRecord(
+                proceeding_type=flag.signal,  # Use signal as proceeding type
+                status=status,
+                date=observed_date,
+                jurisdiction=None,  # Not available from continuity flags
+                case_number=None,  # Not available from continuity flags
+                court=None,  # Not available from continuity flags
+                practitioner=None,  # Not available from continuity flags
+                notes=flag.statement,  # Statement is available from continuity flag
+                source=flag.source,  # Source is available from continuity flag
+                locator=flag.evidence_id,  # Evidence ID for reference
+            )
+            insolvency_records.append(record)
+    
+    profile.insolvency_records = insolvency_records
+    
+    # Extract going-concern flag from continuity report
+    # This is critical for Business Stability scoring - SEC EDGAR going-concern language
+    # from the company's own auditor is a severe financial distress signal
+    going_concern_flagged = False
+    for flag in continuity.flags:
+        if flag.signal == "sec_going_concern" and flag.band == "audit_qualification":
+            going_concern_flagged = True
+            break
+        elif flag.signal == "sec_filing" and "going-concern" in flag.statement.lower():
+            going_concern_flagged = True
+            break
+        elif flag.signal == "sec_filing" and flag.band == "registration_lapsed":
+            # Check if this is a going-concern filing (not just general registration lapse)
+            if "going-concern" in flag.statement.lower() or "substantial-doubt" in flag.statement.lower():
+                going_concern_flagged = True
+                break
+    
+    profile.going_concern_flagged = going_concern_flagged
+
+    # Extract financial-related findings
+    for finding in findings:
+        # entity_maturity is in business_continuity category, not business_financial_stability
+        if finding.signal == "entity_maturity":
+            # Extract age data from Wikidata or RDAP as fallback
+            # PersistedFinding uses value_snapshot for structured data
+            if hasattr(finding, 'value_snapshot') and finding.value_snapshot and isinstance(finding.value_snapshot, dict):
+                years = finding.value_snapshot.get("years")
+                source = finding.source
+                if years is not None:
+                    if source == "wikidata":
+                        profile.wikidata_years = years
+                    elif source == "rdap":
+                        profile.rdap_years = years
+        elif finding.category == "business_financial_stability":
+            if finding.signal == "incorporation_date":
+                if hasattr(finding, 'value_snapshot') and finding.value_snapshot and isinstance(finding.value_snapshot, dict):
+                    profile.incorporation_date = ProfileField(
+                        value=finding.value_snapshot.get("incorporation_date"),
+                        source=finding.source,
+                        locator=finding.locator,
+                        fetched_at=finding.fetched_at,
+                    )
+            elif finding.signal == "company_status":
+                if hasattr(finding, 'value_snapshot') and finding.value_snapshot and isinstance(finding.value_snapshot, dict):
+                    profile.company_status = ProfileField(
+                        value=finding.value_snapshot.get("company_status"),
+                        source=finding.source,
+                        locator=finding.locator,
+                        fetched_at=finding.fetched_at,
+                    )
+            elif finding.signal == "registry_number":
+                if hasattr(finding, 'value_snapshot') and finding.value_snapshot and isinstance(finding.value_snapshot, dict):
+                    profile.registry_number = ProfileField(
+                        value=finding.value_snapshot.get("company_number"),
+                        source=finding.source,
+                        locator=finding.locator,
+                        fetched_at=finding.fetched_at,
+                    )
+
+    # Compute derived fields
+    if profile.incorporation_date and profile.incorporation_date.value:
+        try:
+            from datetime import UTC, datetime
+            inc_date = datetime.fromisoformat(profile.incorporation_date.value) if isinstance(profile.incorporation_date.value, str) else profile.incorporation_date.value
+            now = datetime.now(UTC)
+            if inc_date.tzinfo is None:
+                inc_date = inc_date.replace(tzinfo=UTC)
+            profile.operating_years = (now - inc_date).days / 365.25
+        except Exception:
+            pass
+
+    # Fallback to entity_maturity findings if no incorporation_date
+    if profile.operating_years is None:
+        # Prefer Wikidata (legal inception) over RDAP (domain age)
+        if profile.wikidata_years is not None:
+            profile.operating_years = profile.wikidata_years
+        elif profile.rdap_years is not None:
+            profile.operating_years = profile.rdap_years
+
+    return profile
 
 @app.get("/api/vendors/{ref}/lifecycle")
 async def get_lifecycle(ref: str, store: StoreDep) -> dict[str, Any]:
@@ -1100,6 +1453,30 @@ async def get_vendor_assessment(ref: str, store: StoreDep) -> dict[str, Any]:
     firmographics = benchmarking_firmographics_of(store, ref)
     cfg = get_scoring_config()
 
+    # Extract age band for age-based residual risk adjustments
+    age_band = None
+    if profile and hasattr(profile, 'operating_years') and profile.operating_years is not None:
+        age_band = age_band_from_years(profile.operating_years)
+
+    # Get assurity report with age-based confidence
+    findings = store.findings_for_vendor(ref)
+    sector = profile.sector.value if profile and profile.sector else None
+    gaps_report = compliance_gaps(ref, findings, sector=sector, cfg=cfg)
+    assurity = assurity_report(ref, findings, compliance_gap_count=gaps_report.distinct_observations, cfg=cfg)
+
+    # The human-readable "why is confidence not higher" list, beside the confidence figure it
+    # explains. Isolated like every other context step on this route: a confidence BREAKDOWN
+    # failing must never cost the reader the assessment, and the number itself is already on
+    # `score` regardless. An empty list means we could not itemise it, never "nothing was missing".
+    confidence_deductions: list[dict[str, Any]] = []
+    try:
+        confidence_deductions = calculate_age_based_confidence(
+            findings=findings, profile=profile,
+            planned_signals=set(cfg.all_signal_names()),
+        ).get_deduction_labels_for_display()
+    except Exception as exc:  # noqa: BLE001 — see above
+        log.warning("%s: confidence deduction labels unavailable: %r", ref, exc)
+
     gap = _expectation_gap_or_none(store, ref, score)
     residual = residual_risk(
         score.posture,
@@ -1109,6 +1486,7 @@ async def get_vendor_assessment(ref: str, store: StoreDep) -> dict[str, Any]:
         # P8 — a declared `sole_source` escalates the published tier one band. Disclosed on the
         # response via `escalated_from`, never absorbed into the cell.
         substitutability=profile.substitutability if profile else None,
+        age_band=age_band,
         provisional=profile.inherent_provisional if profile else False,
     )
 
@@ -1138,6 +1516,7 @@ async def get_vendor_assessment(ref: str, store: StoreDep) -> dict[str, Any]:
             "ghost": score.ghost,
             "critical_ceiling_applied": score.critical_ceiling_applied,
             "confidence_ceiling_applied": score.confidence_ceiling_applied,
+            "confidence_deductions": confidence_deductions,  # Add user-friendly deduction labels
         },
         # LAYER 3 — peer context. Interprets layer 2; never feeds back into it.
         "peer_context": None if gap is None else {
@@ -1161,6 +1540,18 @@ async def get_vendor_assessment(ref: str, store: StoreDep) -> dict[str, Any]:
             "inherent_basis": residual.inherent.basis,
             "reason": residual.reason,
         },
+        # LAYER 4 — independent assurance (assurity) with age-based confidence
+        "assurity": {
+            "score": assurity.score,
+            "published": assurity.published,
+            "confidence": assurity.confidence,
+            "observed_signals": assurity.observed_signals,
+        } if assurity.published else None,
+        # Age information for context
+        "age_context": {
+            "age_band": age_band,
+            "operating_years": profile.operating_years if profile else None,
+        } if age_band else None,
         "recommendation": recommendation.model_dump(),
         "caveats": [
             "THREE SEPARATE MEASUREMENTS, never collapsed. Posture is what we observed of the "
@@ -1206,10 +1597,96 @@ async def get_vendor_coverage(ref: str, store: StoreDep) -> dict[str, Any]:
     `never_observable_from_outside` never closes. A reader who cannot tell them apart will either
     dismiss a real gap as a transient or wait indefinitely for a limit that will not lift.
     """
+    findings = store.findings_for_vendor(ref)
+    if not findings:
+        raise HTTPException(404, f"no findings for {ref!r} — POST /api/vendors/score first")
+
+    cfg = get_scoring_config()
+    covered = {f.signal for f in findings}
+    
+    # Calculate age-based confidence with deduction labels
+    confidence_deductions = []
+    try:
+        profile = _profile_of(store, ref)
+        confidence_result = calculate_age_based_confidence(
+            findings=findings,
+            profile=profile,
+            planned_signals=set(cfg.all_signal_names()),
+        )
+        confidence_deductions = confidence_result.get_deduction_labels_for_display()
+    except Exception:
+        pass  # If age-based confidence fails, use original approach
+    
+    coverage = coverage_as_dict(coverage_statement(
+        ref, store.for_vendor(ref),
+        signals_covered=len(covered & cfg._all_signal_names()),
+        signals_planned=cfg.planned_signal_count(),
+        held=cfg.data.get("held_roadmap") or {},
+    ))
+    
+    # Add confidence deductions to coverage
+    coverage["confidence_deductions"] = confidence_deductions
+    
+    return coverage
+
+
+@app.get("/api/vendors/{ref}/confidence")
+async def get_vendor_confidence(ref: str, store: StoreDep) -> dict[str, Any]:
+    """Age-based confidence breakdown with user-friendly deduction labels.
+    
+    This endpoint provides detailed information about confidence calculation,
+    including which expected signals were missing and why, with clear, human-readable
+    labels that explain each confidence deduction.
+    """
+    findings = store.findings_for_vendor(ref)
+    if not findings:
+        raise HTTPException(404, f"no findings for {ref!r} — POST /api/vendors/score first")
+    
+    profile = _profile_of(store, ref)
     score = store.latest_score(ref)
-    if score is None:
-        raise HTTPException(404, f"no score for {ref!r} — POST /api/vendors/score first")
-    return _coverage_for(store, ref, score)
+    cfg = get_scoring_config()
+    
+    # Calculate age-based confidence with deduction labels
+    confidence_deductions = []
+    confidence_by_category = {}
+    confidence_summary = {}
+    
+    try:
+        confidence_result = calculate_age_based_confidence(
+            findings=findings,
+            profile=profile,
+            planned_signals=set(cfg.all_signal_names()),
+        )
+        confidence_deductions = confidence_result.get_deduction_labels_for_display()
+        confidence_by_category = confidence_result.get_deductions_by_category()
+        confidence_summary = {
+            "confidence_score": confidence_result.confidence_score,
+            "confidence_band": confidence_result.confidence_band,
+            "confidence_percentage": confidence_result.coverage_percentage,
+            "total_expected_weight": confidence_result.total_expected_weight,
+            "found_expected_weight": confidence_result.found_expected_weight,
+            "age_band": confidence_result.age_band,
+            "size_band": confidence_result.size_band,
+            "coverage_gaps": confidence_result.coverage_gaps,
+            "unexpected_bonuses": confidence_result.unexpected_bonuses,
+            "search_failures": confidence_result.search_failures,
+        }
+    except Exception as exc:
+        # Fallback to original confidence if age-based calculation fails
+        confidence_summary = {
+            "confidence_score": score.overall_confidence if score else 0.0,
+            "confidence_band": score.confidence_band if score else "unknown",
+            "error": f"Age-based confidence calculation failed: {str(exc)}",
+        }
+    
+    return {
+        "vendor_ref": ref,
+        "confidence": confidence_summary,
+        "deductions": confidence_deductions,
+        "deductions_by_category": confidence_by_category,
+        "traditional_confidence": score.overall_confidence if score else 0.0,
+        "traditional_band": score.confidence_band if score else "unknown",
+    }
 
 
 @app.get("/api/vendors/{ref}/evidence-request-pack")
@@ -1469,10 +1946,17 @@ async def get_residual_risk(ref: str, store: StoreDep) -> dict[str, Any]:
 
     profile = store.latest_profile(ref)
     firmographics = benchmarking_firmographics_of(store, ref)
+    
+    # Extract age band for age-based residual risk adjustments
+    age_band = None
+    if profile and hasattr(profile, 'operating_years') and profile.operating_years is not None:
+        age_band = age_band_from_years(profile.operating_years)
+    
     out = residual_risk(
         score.posture,
         profile.criticality if profile else None,
         firmographics.data_access_scope if firmographics else None,
+        age_band=age_band,
         blocked=score.blocked, refused=score.refused,
         # P8 — a declared `sole_source` escalates the published tier one band. Disclosed on the
         # response via `escalated_from`, never absorbed into the cell.
@@ -1547,6 +2031,7 @@ async def get_vendor_assurity(ref: str, store: StoreDep, sector: str | None = No
         "assurity": report.score,
         "published": report.published,
         "observed_signals": report.observed_signals,
+        "confidence": report.confidence,
         "inputs": [
             {"signal": i.signal, "band": i.band_key, "credit": i.credit,
              "cited": i.cited(), "evidence_id": i.evidence_id}
@@ -1719,12 +2204,19 @@ async def create_gap_analysis(ref: str, store: StoreDep) -> dict[str, Any]:
     continuity = continuity_report(ref, findings)
     expectation_gap = _expectation_gap_or_none(store, ref, score)
     substitutability = profile.substitutability if profile else None
+    
+    # Extract age band for age-based residual risk adjustments
+    age_band = None
+    if profile and hasattr(profile, 'operating_years') and profile.operating_years is not None:
+        age_band = age_band_from_years(profile.operating_years)
+    
     residual = residual_risk(
         score.posture, profile.criticality if profile else None,
         firmographics.data_access_scope if firmographics else None,
         blocked=score.blocked, refused=score.refused,
         substitutability=substitutability,
         provisional=profile.inherent_provisional if profile else False,
+        age_band=age_band,
     )
     spof = _spof_providers(store, ref)
     soonest = None
@@ -2050,7 +2542,12 @@ def _vendor_from_store(store: Store, ref: str) -> Vendor | None:
             break
     if domain is None:
         return None
-    return Vendor(ref=ref, domain=domain, resolved=True, resolution_confidence=1.0)
+    
+    profile = store.latest_profile(ref)
+    operating_years = profile.operating_years if profile else None
+    
+    return Vendor(ref=ref, domain=domain, resolved=True, resolution_confidence=1.0,
+                 operating_years=operating_years)
 
 
 # --------------------------------------------------------------------- portfolio (Phase 6)

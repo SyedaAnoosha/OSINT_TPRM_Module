@@ -163,7 +163,10 @@ def test_continuity_is_not_a_score():
 
 # --------------------------------------------------------------------- Business Stability (§1.3)
 
-CLASS_D = ("sec_filing", "insolvency_notice", "bankruptcy_petition")
+# The Business Stability axis: three registry/filing facts plus `sec_going_concern`, added at
+# Phase 2. The set is duplicated in `app/continuity.py`, and `test_business_stability_signal_sets_
+# match` is what stops the two drifting apart — as they did when Phase 2 grew one side to nine.
+CLASS_D = ("sec_filing", "sec_going_concern", "insolvency_notice", "bankruptcy_petition")
 
 
 def test_business_stability_signals_never_carry_a_posture_penalty():
@@ -182,7 +185,7 @@ def test_business_stability_signals_never_carry_a_posture_penalty():
 
 def test_business_stability_signals_excluded_from_planned_signal_count():
     """The whole reason this axis exists as a SEPARATE denominator (docs/tprm_feedback_redesign.md
-    §1.3): these three signals are reachable and do score (at `informational`), but must never
+    §1.3): these four signals are reachable and do score (at `informational`), but must never
     move Posture's confidence-ceiling / Ghost-detection math. Replaying the frozen regression
     corpus's pre-existing evidence against a grown denominator silently dropped every real
     vendor's confidence band — this is the regression guard for that defect."""
@@ -207,15 +210,18 @@ def test_business_stability_coverage_counts_only_class_d_signals():
         _finding("entity_status", "active_good_standing"),  # a Continuity signal, not Class D
     ]
     answered, tracked = business_stability_coverage(findings)
-    assert (answered, tracked) == (2, 3)
+    assert (answered, tracked) == (2, len(CLASS_D))
 
 
-def test_business_stability_coverage_is_zero_of_three_when_nothing_collected():
-    """No coverage for this vendor's jurisdiction reads as (0, 3), never as clean — the same
-    'absence is not health' principle as `continuity_report`'s own `unknown` standing."""
+def test_business_stability_coverage_is_zero_of_tracked_when_nothing_collected():
+    """No coverage for this vendor's jurisdiction reads as (0, N), never as clean — the same
+    'absence is not health' principle as `continuity_report`'s own `unknown` standing.
+
+    The denominator is `len(CLASS_D)` rather than a literal so that adding a signal to the axis
+    updates one place. A literal here is how the previous drift went unnoticed for a release."""
     from app.continuity import business_stability_coverage
     answered, tracked = business_stability_coverage([_finding("entity_status", "entity_inactive")])
-    assert (answered, tracked) == (0, 3)
+    assert (answered, tracked) == (0, len(CLASS_D))
 
 
 def test_bankruptcy_filing_flags_ceased_and_reorganisation_flags_watch():

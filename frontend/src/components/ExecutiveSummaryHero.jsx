@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import {
-  Building2, Globe, Minus, ShieldQuestion, TrendingDown, TrendingUp,
+  Building2, Globe, Minus, ShieldQuestion, TrendingDown, TrendingUp, Users, Layers, Landmark, CalendarClock,
 } from 'lucide-react'
-import { getAssurity, getHistory } from '../api.js'
+import { getAssurity, getHistory, getStability } from '../api.js'
 import { GRADE_MEANING } from '../lib/labels.js'
-import { BusinessStabilityBadge } from './BusinessStabilityCard.jsx'
 import { GhostState, InherentResidualPair } from './primitives.jsx'
 import { confColor, gradeColor, postureColor } from '../lib/utils.js'
 import { cn } from '../lib/utils.js'
@@ -28,6 +27,42 @@ import { cn } from '../lib/utils.js'
 export function ExecutiveSummaryHero({ ref_, score, profile, plan, continuity, residual, provisional }) {
   const domain = profile?.domain || score?.domain
   const lastScored = score?.computed_at ? new Date(score.computed_at) : null
+  const [stabilityScore, setStabilityScore] = useState(null)
+
+  useEffect(() => {
+    let live = true
+    getStability(ref_).then((d) => { if (live) setStabilityScore(d) }).catch(() => {})
+    return () => { live = false }
+  }, [ref_])
+
+  // Helper to format employee count as range
+  const employeeRange = (n) => {
+    if (typeof n !== 'number') return null
+    const bands = [
+      [10, '1–10'], [50, '11–50'], [200, '51–200'], [500, '201–500'],
+      [1000, '501–1,000'], [5000, '1,001–5,000'], [10000, '5,001–10,000'],
+    ]
+    for (const [cap, label] of bands) if (n <= cap) return label
+    return '10,000+'
+  }
+
+  // Helper to format revenue
+  const fmtRevenue = (amount, currency) => {
+    if (typeof amount !== 'number') return null
+    const curr = currency || ''
+    const units = [[1e9, 'B'], [1e6, 'M'], [1e3, 'K']]
+    for (const [scale, suffix] of units) {
+      if (amount >= scale) return `${curr} ${(amount / scale).toFixed(1)}${suffix}`.trim()
+    }
+    return `${curr} ${amount.toLocaleString()}`.trim()
+  }
+
+  // Helper to format domain age
+  const fmtAge = (days) => {
+    if (typeof days !== 'number') return null
+    const years = Math.floor(days / 365)
+    return years >= 1 ? `${years} yr${years > 1 ? 's' : ''}` : `${days} days`
+  }
 
   return (
     <header className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm md:sticky md:top-0 md:z-20 md:backdrop-blur md:bg-card/95">
@@ -58,14 +93,72 @@ export function ExecutiveSummaryHero({ ref_, score, profile, plan, continuity, r
         )}
       </div>
 
+      {/* Firmographics strip - compact key facts */}
+      <div className="grid grid-cols-2 gap-1 border-b border-border/60 bg-secondary/20 p-1 sm:grid-cols-4 lg:grid-cols-6">
+        {profile?.employees?.value && (
+          <div className="flex items-center gap-2 rounded-lg bg-card px-3 py-2">
+            <Users className="h-3.5 w-3.5 text-accent" />
+            <div className="min-w-0">
+              <div className="text-[9.5px] font-semibold uppercase tracking-wider text-muted-foreground">Employees</div>
+              <div className="text-[11.5px] font-semibold text-foreground truncate">{employeeRange(profile.employees.value)}</div>
+            </div>
+          </div>
+        )}
+        {profile?.revenue?.value && (
+          <div className="flex items-center gap-2 rounded-lg bg-card px-3 py-2">
+            <Layers className="h-3.5 w-3.5 text-accent" />
+            <div className="min-w-0">
+              <div className="text-[9.5px] font-semibold uppercase tracking-wider text-muted-foreground">Revenue</div>
+              <div className="text-[11.5px] font-semibold text-foreground truncate">{fmtRevenue(profile.revenue.value, profile.revenue_currency?.value)}</div>
+            </div>
+          </div>
+        )}
+        {profile?.country?.value && (
+          <div className="flex items-center gap-2 rounded-lg bg-card px-3 py-2">
+            <Landmark className="h-3.5 w-3.5 text-accent" />
+            <div className="min-w-0">
+              <div className="text-[9.5px] font-semibold uppercase tracking-wider text-muted-foreground">Country</div>
+              <div className="text-[11.5px] font-semibold text-foreground truncate">{profile.country.value}</div>
+            </div>
+          </div>
+        )}
+        {profile?.ownership?.value && (
+          <div className="flex items-center gap-2 rounded-lg bg-card px-3 py-2">
+            <Building2 className="h-3.5 w-3.5 text-accent" />
+            <div className="min-w-0">
+              <div className="text-[9.5px] font-semibold uppercase tracking-wider text-muted-foreground">Ownership</div>
+              <div className="text-[11.5px] font-semibold text-foreground truncate">{profile.ownership.value === 'listed' ? 'Public' : profile.ownership.value}</div>
+            </div>
+          </div>
+        )}
+        {profile?.domain_age_days?.value && (
+          <div className="flex items-center gap-2 rounded-lg bg-card px-3 py-2">
+            <CalendarClock className="h-3.5 w-3.5 text-accent" />
+            <div className="min-w-0">
+              <div className="text-[9.5px] font-semibold uppercase tracking-wider text-muted-foreground">Domain age</div>
+              <div className="text-[11.5px] font-semibold text-foreground truncate">{fmtAge(profile.domain_age_days.value)}</div>
+            </div>
+          </div>
+        )}
+        {profile?.industry_label?.value && (
+          <div className="flex items-center gap-2 rounded-lg bg-card px-3 py-2">
+            <Layers className="h-3.5 w-3.5 text-accent" />
+            <div className="min-w-0">
+              <div className="text-[9.5px] font-semibold uppercase tracking-wider text-muted-foreground">Industry</div>
+              <div className="text-[11.5px] font-semibold text-foreground truncate">{profile.industry_label.value}</div>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* the tile strip */}
-      <div className="grid grid-cols-2 gap-px bg-border/60 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-2 bg-border/60 p-1 sm:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6">
         {score?.blocked ? (
-          <div className="col-span-2 bg-card p-4 sm:col-span-3 lg:col-span-3">
+          <div className="col-span-2 bg-card rounded-lg p-4 sm:col-span-3 lg:col-span-3">
             <GhostState kind="blocked" />
           </div>
         ) : score?.refused || score?.posture == null ? (
-          <div className="col-span-2 bg-card p-4 sm:col-span-3 lg:col-span-3">
+          <div className="col-span-2 bg-card rounded-lg p-4 sm:col-span-3 lg:col-span-3">
             <GhostState kind="refused" confidence={score?.overall_confidence} />
           </div>
         ) : (
@@ -76,17 +169,8 @@ export function ExecutiveSummaryHero({ ref_, score, profile, plan, continuity, r
           </>
         )}
         <AssurityTile vendorRef={ref_} />
-        <div className="flex flex-col justify-center bg-card px-4 py-3">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            Business Stability
-          </div>
-          <div className="mt-1.5">
-            {continuity
-              ? <BusinessStabilityBadge standing={continuity.standing} />
-              : <span className="text-[12px] text-muted-foreground">—</span>}
-          </div>
-        </div>
-        <div className="flex flex-col justify-center bg-card px-4 py-3">
+        <BusinessStabilityTile continuity={continuity} stabilityScore={stabilityScore} />
+        <div className="flex flex-col justify-center bg-card rounded-lg px-3 py-3 min-w-0">
           <InherentResidualPair residual={residual} provisional={provisional} />
         </div>
       </div>
@@ -97,14 +181,14 @@ export function ExecutiveSummaryHero({ ref_, score, profile, plan, continuity, r
 function GradeTile({ grade }) {
   const tone = gradeColor(grade)
   return (
-    <div className="flex flex-col justify-center bg-card px-4 py-3" title={GRADE_MEANING[grade]}>
-      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+    <div className="flex flex-col justify-center bg-card px-3 py-3 min-w-0" title={GRADE_MEANING[grade]}>
+      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground truncate">
         Overall
       </div>
       <div className="mt-0.5 flex items-baseline gap-1.5">
         <span className="text-3xl font-black leading-none" style={{ color: tone }}>{grade}</span>
       </div>
-      <div className="mt-0.5 text-[11px] text-muted-foreground">{GRADE_MEANING[grade]}</div>
+      <div className="mt-0.5 text-[11px] text-muted-foreground truncate">{GRADE_MEANING[grade]}</div>
     </div>
   )
 }
@@ -130,8 +214,8 @@ function PostureTile({ ref_, posture }) {
 
   const tone = postureColor(posture)
   return (
-    <div className="flex flex-col justify-center bg-card px-4 py-3">
-      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+    <div className="flex flex-col justify-center bg-card px-3 py-3 min-w-0">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground truncate">
         Posture
       </div>
       <div className="mt-0.5 flex items-baseline gap-1.5">
@@ -153,15 +237,15 @@ function ConfidenceTile({ confidence, band, ghost }) {
   const pct = Math.round((confidence ?? 0) * 100)
   const tone = confColor(confidence)
   return (
-    <div className="flex flex-col justify-center bg-card px-4 py-3">
-      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+    <div className="flex flex-col justify-center bg-card px-3 py-3 min-w-0">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground truncate">
         Confidence
       </div>
       <div className="mt-0.5 flex items-baseline gap-1.5">
         <span className="text-3xl font-black leading-none tabular-nums" style={{ color: tone }}>{pct}</span>
         <span className="text-[12px] text-muted-foreground">%</span>
       </div>
-      <div className={cn('mt-0.5 text-[11px]', ghost && 'font-semibold')} style={ghost ? { color: 'var(--ghost)' } : undefined}>
+      <div className={cn('mt-0.5 text-[11px] truncate', ghost && 'font-semibold')} style={ghost ? { color: 'var(--ghost)' } : undefined}>
         {ghost ? <><ShieldQuestion className="mr-0.5 inline h-3 w-3" />Ghost — thin coverage</> : band}
       </div>
     </div>
@@ -180,9 +264,9 @@ function AssurityTile({ vendorRef }) {
   const data = res.ref === vendorRef ? res.data : null
   const score = data?.published ? data.assurity : null
   return (
-    <div className="flex flex-col justify-center bg-card px-4 py-3"
+    <div className="flex flex-col justify-center bg-card rounded-lg px-3 py-3 min-w-0"
       title="Independent assurance, not security — absence never subtracts, and this never adds to posture.">
-      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground truncate">
         Assurity
       </div>
       <div className="mt-0.5 flex items-baseline gap-1.5">
@@ -191,10 +275,44 @@ function AssurityTile({ vendorRef }) {
         </span>
         {score != null && <span className="text-[12px] text-muted-foreground">/100</span>}
       </div>
-      <div className="mt-0.5 text-[11px] text-muted-foreground">
+      <div className="mt-0.5 text-[11px] text-muted-foreground truncate">
         {(data?.compliance_gaps || []).length > 0
           ? `${data.compliance_gaps.length} compliance gap${data.compliance_gaps.length === 1 ? '' : 's'}`
           : score == null ? 'unevidenced' : 'no gaps observed'}
+      </div>
+    </div>
+  )
+}
+
+function BusinessStabilityTile({ continuity, stabilityScore }) {
+  const standing = continuity?.standing || stabilityScore?.gate_triggered ? 'ceased' : null
+  const score = stabilityScore?.score
+  const ageBand = stabilityScore?.age_band
+
+  return (
+    <div className="flex flex-col justify-center bg-card rounded-lg px-3 py-3 min-w-0"
+      title="Financial health — separate axis from cybersecurity posture. A bankrupt company can have excellent security.">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground truncate">
+        Business Stability
+      </div>
+      <div className="mt-0.5 flex items-baseline gap-1.5">
+        {score !== null && score !== undefined ? (
+          <>
+            <span className="text-3xl font-black leading-none tabular-nums" style={{ color: postureColor(score) }}>
+              {score}
+            </span>
+            <span className="text-[12px] text-muted-foreground">/100</span>
+          </>
+        ) : standing ? (
+          <span className="text-sm font-bold capitalize truncate" style={{ color: standing === 'ceased' ? 'var(--risk-critical)' : 'var(--risk-moderate)' }}>
+            {standing.replace('_', ' ')}
+          </span>
+        ) : (
+          <span className="text-[12px] text-muted-foreground">—</span>
+        )}
+      </div>
+      <div className="mt-0.5 text-[11px] text-muted-foreground truncate">
+        {ageBand ? ageBand.replace('_', ' ') : standing ? 'insolvency gate' : 'not assessed'}
       </div>
     </div>
   )

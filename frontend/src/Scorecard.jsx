@@ -329,7 +329,7 @@ function ScoredCard({ vendorRef, score, view = FULL_VIEW }) {
   }, [vendorRef])
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden shadow-sm">
       {/* ONE IMPLEMENTATION OF THE PAIRING RULE. This used to be two hand-built 24×24 badges here
           and a different pair on the vendor page — the same invariant expressed twice, which is
           twice as many places for it to quietly stop being true. `<PostureConfidencePair>` takes
@@ -349,16 +349,9 @@ function ScoredCard({ vendorRef, score, view = FULL_VIEW }) {
         </div>
       </div>
 
-      {/* The pairing rule, stated where both numbers are still on screen. */}
-      {/* <div className="border-t border-border/60 bg-secondary/20 px-6 py-2.5 text-[11px] leading-relaxed text-muted-foreground">
-        Two axes, never collapsed: <b className="text-foreground">posture</b> is how strong the vendor
-        looks, <b className="text-foreground">confidence</b> is how much evidence stands behind that
-        reading. A high posture at low confidence is unassessed, not safe.
-      </div> */}
-
       {score.ghost && (
         <div
-          className="border-t border-border/60 px-6 py-2.5 text-xs"
+          className="border-t border-border/60 px-6 py-3 text-xs"
           style={{ background: 'color-mix(in srgb, var(--ghost) 12%, transparent)', color: 'var(--ghost)' }}
         >
           {/* GHOST USES THE GHOST TOKEN, not a purple literal. It was hardcoded `purple-500`, which
@@ -369,11 +362,6 @@ function ScoredCard({ vendorRef, score, view = FULL_VIEW }) {
           grade alone.
         </div>
       )}
-
-      {/* Recommendation ("Proceed") section temporarily hidden.
-      {view.lead !== 'recommendation' && (
-        <RecommendationBanner rec={score.recommendation} profile={score.industry_profile} />
-      )} */}
 
       <Headline score={score} byCategory={byCategory} />
 
@@ -396,8 +384,12 @@ function ScoredCard({ vendorRef, score, view = FULL_VIEW }) {
           It is shown at all because withholding points silently is the failure mode. A vendor
           whose arithmetic earned 94 and who publishes 80 must not look like a vendor that earned
           80 — the second is a finding about their controls, the first is a limit on our evidence,
-          and only one of them is remediable by patching something. */}
-      {/* {score.confidence_ceiling_applied && (
+          and only one of them is remediable by patching something.
+
+          LIVE JSX, NOT A COMMENT. This block previously sat commented out, which left the ceiling
+          binding silently while the string still satisfied the test that guards it — an obligation
+          that had lapsed in every way except the one being checked. */}
+      {score.confidence_ceiling_applied && (
         <div className="flex items-start gap-2 border-t border-border bg-blocked/10 px-6 py-3 text-sm text-blocked">
           <FileWarning className="mt-0.5 h-4 w-4 shrink-0" />
           <span>
@@ -407,7 +399,7 @@ function ScoredCard({ vendorRef, score, view = FULL_VIEW }) {
             <em> our</em> assessment, not a finding against the vendor — more evidence raises it.
           </span>
         </div>
-      )} */}
+      )}
 
       <div className="border-t border-border">
         {/* materialOnly (procurement/risk/executive): show only categories that actually cost
@@ -564,30 +556,40 @@ function CategoryRow({ cat, findings = [], view = FULL_VIEW, vendorRef }) {
   const [open, setOpen] = useState(() => view.expandCategories && (cat.penalty ?? 0) > 0)
   const pct = Math.round((cat.coverage ?? 0) * 100)
   const color = postureColor(cat.posture)
+  const hasIssues = (cat.penalty ?? 0) > 0
+
   return (
-    <div className="border-b border-border last:border-b-0">
+    <div className="border-b border-border last:border-b-0 transition-colors hover:bg-secondary/30">
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="grid w-full grid-cols-[1fr_auto] items-center gap-4 px-6 py-3.5 text-left transition hover:bg-secondary/60 sm:grid-cols-[1fr_auto_150px]"
+        className="grid w-full grid-cols-[1fr_auto] items-center gap-4 px-6 py-4 text-left transition-all hover:bg-secondary/40 sm:grid-cols-[1fr_auto_150px]"
       >
         <span className="flex items-center gap-2 min-w-0">
-          {open ? <ChevronDown className="h-4 w-4 shrink-0 text-accent" /> : <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />}
+          <span className={`transition-transform duration-200 ${open ? 'rotate-90' : ''}`}>
+            {open ? <ChevronDown className="h-4 w-4 shrink-0 text-accent" /> : <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />}
+          </span>
           <span className="min-w-0">
-            <span className="block truncate text-sm font-medium">{PRETTY[cat.category] || cat.category}</span>
-            <span className="block text-[11px] text-muted-foreground">
-              {cat.posture == null ? 'not covered this run' : `-${cat.penalty} penalty · ${cat.findings} issue(s)`}
+            <span className="block truncate text-sm font-medium text-foreground">{PRETTY[cat.category] || cat.category}</span>
+            <span className={`block text-[11px] ${hasIssues ? 'text-muted-foreground' : 'text-risk-low'}`}>
+              {cat.posture == null ? 'not covered this run' : hasIssues ? `-${cat.penalty} penalty · ${cat.findings} issue(s)` : 'no issues found'}
             </span>
           </span>
         </span>
         <span
-          className="rounded-md px-2.5 py-1 text-center font-mono text-sm font-semibold"
-          style={{ color, background: `color-mix(in srgb, ${color} 13%, transparent)`, minWidth: 62 }}
+          className={`rounded-lg px-3 py-1.5 text-center font-mono text-sm font-semibold transition-all ${
+            hasIssues ? 'shadow-xs' : 'bg-secondary/50'
+          }`}
+          style={{
+            color: cat.posture == null ? 'var(--muted-foreground)' : color,
+            background: cat.posture == null ? 'transparent' : `color-mix(in srgb, ${color} 12%, transparent)`,
+            minWidth: 70
+          }}
         >
           {cat.posture == null ? 'n/a' : `${cat.posture}${cat.grade ? ' ' + cat.grade : ''}`}
         </span>
         <span className="hidden sm:block">
-          <Meter value={pct} color="var(--accent)" />
+          <Meter value={pct} color={pct >= 80 ? 'var(--risk-low)' : pct >= 50 ? 'var(--risk-med)' : 'var(--risk-high)'} />
           <span className="mt-1 block text-[11px] text-muted-foreground">{pct}% coverage</span>
         </span>
       </button>
@@ -676,53 +678,45 @@ function adjustmentText(f) {
 function FindingRow({ f, view = FULL_VIEW }) {
   const charged = Math.round((f.effective_penalty ?? 0) * 10) / 10
   const adjustment = adjustmentText(f)
-  // const [askOpen, setAskOpen] = useState(false)
+  const severity = f.severity || 'pass'
+  const severityColor = severity === 'critical' ? 'var(--risk-critical)' :
+                       severity === 'high' ? 'var(--risk-high)' :
+                       severity === 'medium' ? 'var(--risk-med)' :
+                       severity === 'low' ? 'var(--risk-low)' : 'var(--muted-foreground)'
+
   return (
-    <div className="grid grid-cols-[1fr_auto] gap-x-4 border-t border-border/60 py-2.5 first:border-t-0">
+    <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 border-t border-border/60 py-3 first:border-t-0 hover:bg-secondary/30 rounded-lg px-2 -mx-2 transition-colors">
       <div className="min-w-0">
-        <div className="text-[13px] font-medium text-foreground">{f.reason || deSnake(f.signal)}</div>
-        <div className="mt-0.5 text-[12px]">{f.observed}</div>
-        {adjustment && <div className="mt-0.5 text-[12px] italic">{adjustment}</div>}
+        <div className="flex items-start gap-2">
+          <div className={`mt-0.5 h-2 w-2 rounded-full shrink-0`} style={{ background: severityColor }} />
+          <div className="min-w-0 flex-1">
+            <div className="text-[13px] font-medium text-foreground">{f.reason || deSnake(f.signal)}</div>
+            <div className="mt-0.5 text-[12px] text-muted-foreground">{f.observed}</div>
+            {adjustment && <div className="mt-1 text-[12px] italic text-muted-foreground">{adjustment}</div>}
 
-        {f.dispute && (
-          // An accepted refute already discounted this deduction — say why, so a reader does not
-          // wonder why a critical-looking finding cost so little.
-          <div className="mt-1 inline-block rounded bg-risk-low/15 px-1.5 py-0.5 text-[11px] font-medium text-risk-low">
-            {f.dispute === 'nullified'
-              ? 'Refute accepted — does not apply here (penalty removed)'
-              : 'Refute accepted — evidenced remediation (×0.6 applied)'}
+            {f.dispute && (
+              <div className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-risk-low/15 px-2 py-1 text-[11px] font-medium text-risk-low">
+                <CheckCircle2 className="h-3 w-3" />
+                {f.dispute === 'nullified'
+                  ? 'Refute accepted — does not apply here (penalty removed)'
+                  : 'Refute accepted — evidenced remediation (×0.6 applied)'}
+              </div>
+            )}
+
+            {f.promoted_by && (
+              <div className="mt-1 text-[11px] text-risk-med">
+                Raised from <b>{f.base_severity}</b> to <b>{f.severity}</b> under the{' '}
+                {deSnake(f.promoted_by).toLowerCase()} profile.
+              </div>
+            )}
           </div>
-        )}
-
-        {f.promoted_by && (
-          // A promotion nobody can see is indistinguishable from a model that scores
-          // inconsistently — so name the sector rule that fired.
-          <div className="mt-1 text-[11px] text-risk-med">
-            Raised from <b>{f.base_severity}</b> to <b>{f.severity}</b> under the{' '}
-            {deSnake(f.promoted_by).toLowerCase()} profile.
-          </div>
-        )}
-
-
+        </div>
       </div>
       <div className="whitespace-nowrap text-right">
         <div className="font-mono text-[13px] font-semibold" style={{ color: 'var(--risk-high)' }}>
           −{charged}
         </div>
-        <div className="mt-0.5 text-[11px]">{SOURCE_LABELS[f.source] || deSnake(f.source)} · {whenText(f)}</div>
-        {/* {f.recheck_after && (
-          <div className="mt-0.5 text-[11px] text-muted-foreground">re-check {f.recheck_after}</div>
-        )} */}
-        {/* showReceipts (analyst + auditor): the evidence receipt this finding was read from — the
-            middle link in score → finding → RECEIPT → hash. The analyst wants "which receipt";
-            the auditor additionally gets the content hash below. */}
-        {/* {view.showReceipts && f.evidence_id && (
-          <div className="mt-0.5 font-mono text-[10px] text-muted-foreground"
-            title={`evidence receipt ${f.evidence_id}`}>
-            receipt {String(f.evidence_id).slice(0, 8)}…
-          </div>
-        )} */}
-        {/* The auditor's projection: the last link in score → finding → receipt → hash. */}
+        <div className="mt-0.5 text-[11px] text-muted-foreground">{SOURCE_LABELS[f.source] || deSnake(f.source)} · {whenText(f)}</div>
         {view.showHashes && f.content_hash && (
           <div className="mt-0.5 max-w-[9rem] truncate font-mono text-[10px] text-muted-foreground"
             title={`finding ${f.content_hash}\nevidence ${f.evidence_id || '—'}`}>
@@ -807,29 +801,47 @@ function CategoryDetail({ cat, findings = [], view = FULL_VIEW, vendorRef }) {
   // An executive gets the few findings that drove the score, not all nine. The rest are one
   // role-switch away, and the count is stated so nothing looks hidden.
   const issues = view.topFindingsOnly ? all.slice(0, view.topFindingsOnly) : all
+  const hasIssues = issues.length > 0
+
   return (
-    <div className="bg-secondary/40 px-6 pb-5 pt-1 text-sm text-muted-foreground">
-      <div className="mb-3 flex flex-wrap gap-x-6 gap-y-1">
-        <span>posture <b className="text-foreground">{cat.posture ?? '—'}{cat.grade ? ` (${cat.grade})` : ''}</b></span>
-        <span>penalty <b className="text-foreground">-{cat.penalty ?? 0}</b></span>
-        <span>coverage <b className="text-foreground">{Math.round((cat.coverage ?? 0) * 100)}%</b></span>
-        {cat.posture == null && <span className="text-ghost">absent- costs confidence, not posture</span>}
+    <div className="bg-secondary/40 px-6 pb-5 pt-2 text-sm text-muted-foreground">
+      <div className="mb-3 flex flex-wrap gap-x-6 gap-y-1.5 rounded-lg bg-card/50 px-4 py-2.5 border border-border/50">
+        <span className="flex items-center gap-1.5">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground">posture</span>
+          <b className="text-foreground text-sm">{cat.posture ?? '—'}{cat.grade ? ` (${cat.grade})` : ''}</b>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground">penalty</span>
+          <b className="text-foreground text-sm">-{cat.penalty ?? 0}</b>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground">coverage</span>
+          <b className="text-foreground text-sm">{Math.round((cat.coverage ?? 0) * 100)}%</b>
+        </span>
+        {cat.posture == null && (
+          <span className="flex items-center gap-1.5 text-ghost text-xs">
+            <FileWarning className="h-3 w-3" />
+            absent- costs confidence, not posture
+          </span>
+        )}
       </div>
 
-      {issues.length > 0 && (
+      {hasIssues && (
         <div>
-          <div className="mb-0.5 text-xs">Why it lost {Math.round(cat.penalty)} points</div>
+          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Why it lost {Math.round(cat.penalty)} points
+          </div>
           {issues.map((f) => <FindingRow key={f.id} f={f} view={view} vendorRef={vendorRef} />)}
           {all.length > issues.length && (
-            <div className="mt-1.5 text-[11px] italic">
+            <div className="mt-2 rounded-lg border border-border/60 bg-secondary/50 px-3 py-2 text-[11px] italic text-muted-foreground">
               {all.length - issues.length} further finding(s) not shown in this view — switch to
               Security analyst to see all of them.
             </div>
           )}
         </div>
       )}
-      {issues.length === 0 && (
-        <div className="text-[13px]">
+      {!hasIssues && (
+        <div className="rounded-lg border border-risk-low/30 bg-risk-low/10 px-4 py-3 text-[13px] text-risk-low">
           {cat.posture == null
             ? 'Not covered this run.'
             : 'Everything we could check here came back clean.'}

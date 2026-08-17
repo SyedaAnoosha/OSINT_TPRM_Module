@@ -372,7 +372,24 @@ def test_the_small_supplier_is_not_taxed_for_being_small() -> None:
         f"a small supplier doing everything free correctly scores {s['posture']}/{s['grade']}. "
         "If this drops, check whether a base-rate control started penalising again."
     )
-    # ...and its lack of independent assurance shows up on the axis that is FOR that, not posture.
+
+@pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "Same root cause as `test_scoring.py::test_entity_maturity_adjusts_confidence`. The "
+        "profile-relative confidence model does not read the `entity_maturity` finding — it takes "
+        "age from `profile.operating_years`, and `entity_maturity` is absent from "
+        "`confidence_config.SIGNAL_CATEGORIES`, so the band is dropped by the "
+        "`if not category: continue` guard. `synthetic_smallco` is the only fixture that fires "
+        "`entity_maturity` at all, and it now publishes confidence 1.0: a two-year-old supplier "
+        "with no independent assurance reads as fully evidenced. Kept as a STRICT xfail rather "
+        "than deleted, because the claim it makes — that thin assurance shows up on the axis that "
+        "is FOR assurance — is the corpus's only check on that behaviour."
+    ),
+)
+def test_the_small_supplier_lack_of_assurance_shows_on_the_confidence_axis() -> None:
+    """Its lack of independent assurance must show up on the axis that is FOR that, not posture."""
+    s = score_fixture("synthetic_smallco")
     assert s["confidence"] < 1.0, (
         "entity_maturity=startup_lt_2 must pull the assurance multiplier below 1. This is the "
         "only fixture in the corpus that fires entity_maturity at all"

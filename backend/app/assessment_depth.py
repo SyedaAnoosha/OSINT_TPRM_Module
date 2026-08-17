@@ -63,6 +63,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
+from .longevity import AgeBand
 from .residual_risk import InherentTier
 
 Depth = Literal["screening", "core", "full"]
@@ -116,6 +117,45 @@ _PLAN: dict[str, tuple[str, Depth, Cadence, tuple[str, ...]]] = {
 }
 
 _UNDECLARED = ("Unclassified", "full", "semi_annual", ("evidence request pack",))
+
+#: Age-based cadence adjustments. Young vendors get more frequent monitoring due to
+#: higher baseline risk and limited track record. Format: {base_cadence: age_adjusted_cadence}
+#: Young vendors (<5 years): quarterly instead of semi-annual/annual where possible
+#: Mature vendors (10+ years): can use standard cadence due to demonstrated stability
+_AGE_CADENCE_ADJUSTMENTS: dict[Cadence, dict[AgeBand, Cadence]] = {
+    "quarterly": {
+        "startup": "quarterly",    # Already maximum frequency
+        "young": "quarterly",      # Already maximum frequency
+        "established": "quarterly",
+        "mature": "quarterly",
+        "veteran": "quarterly",
+        "unknown": "quarterly",
+    },
+    "semi_annual": {
+        "startup": "quarterly",    # Elevate to quarterly for startups
+        "young": "quarterly",      # Elevate to quarterly for young vendors
+        "established": "semi_annual",
+        "mature": "semi_annual",
+        "veteran": "semi_annual",
+        "unknown": "semi_annual",
+    },
+    "annual": {
+        "startup": "quarterly",    # Elevate to quarterly for startups
+        "young": "semi_annual",    # Elevate to semi-annual for young vendors
+        "established": "annual",
+        "mature": "annual",
+        "veteran": "annual",
+        "unknown": "annual",
+    },
+    "passive": {
+        "startup": "quarterly",    # Young vendors should never be passive
+        "young": "annual",         # Young vendors need at least annual checks
+        "established": "passive",
+        "mature": "passive",
+        "veteran": "passive",
+        "unknown": "passive",
+    },
+}
 
 #: `recommend()`'s finding-level re-check vocabulary, in days, so the two clocks can be compared.
 #: Kept here rather than imported because the mapping from a label to a number is a scheduling
@@ -222,21 +262,53 @@ def _caveats(depth: Depth, publishes: bool, declared: bool) -> list[str]:
     return out
 
 
-def plan_for(tier: InherentTier | None) -> AssessmentPlan:
-    """The lookup. `None` is the undeclared row, and it is not the bottom one."""
+def plan_for(tier: InherentTier | None, age_band: AgeBand | None = None) -> AssessmentPlan:
+    """The lookup. `None` is the undeclared row, and it is not the bottom one.
+    
+    AGE-BASED CADENCE ADJUSTMENT. When age_band is provided, applies age-adjusted monitoring cadence:
+    - Young vendors (<5 years): elevated to quarterly or semi-annual from standard cadence
+    - Mature vendors (10+ years): standard cadence due to demonstrated stability
+    - Unknown age: no cadence adjustment applied
+    """
     label, depth, cadence, artefacts = _PLAN.get(tier or "", _UNDECLARED)  # type: ignore[assignment]
+    
+    # Apply age-based cadence adjustment if age_band is provided
+    original_cadence = cadence
+    if age_band and cadence in _AGE_CADENCE_ADJUSTMENTS:
+        age_adjusted_cadence = _AGE_CADENCE_ADJUSTMENTS[cadence].get(age_band, cadence)
+        if age_adjusted_cadence != cadence:
+            cadence = age_adjusted_cadence
+    
     publishes = depth != "screening"
     if tier:
         basis = (f"Inherent tier is {tier}, so this relationship is {label}. Collection runs at "
                  f"{depth} depth on a {_CADENCE_LABEL[cadence].lower()} review cycle.")
+        if cadence != original_cadence:
+            basis += (f" Age-based adjustment: monitoring cadence elevated from "
+                     f"{_CADENCE_LABEL[original_cadence].lower()} to {_CADENCE_LABEL[cadence].lower()} "
+                     f"due to vendor age ({age_band}) — young vendors require more frequent monitoring "
+                     f"due to higher baseline risk and limited track record.")
     else:
         basis = ("Inherent tier has not been declared, so no tier applies. The plan defaults to "
                  "FULL depth on a semi-annual cycle — the conservative direction — and says so.")
+        if cadence != original_cadence:
+            basis += (f" Age-based adjustment: monitoring cadence elevated from "
+                     f"{_CADENCE_LABEL[original_cadence].lower()} to {_CADENCE_LABEL[cadence].lower()} "
+                     f"due to vendor age ({age_band}).")
+    
+    caveats = _caveats(depth, publishes, declared=tier is not None)
+    if age_band and cadence != original_cadence:
+        caveats.append(
+            f"Age-adjusted monitoring cadence applied. Young vendors ({age_band}) receive more "
+            f"frequent monitoring due to elevated baseline risk and limited operational history. "
+            f"This is a risk-based adjustment, not a judgement about the vendor's current controls."
+        )
+    
     return AssessmentPlan(
         tier=tier, tier_label=label, depth=depth, cadence=cadence,
         cadence_days=_CADENCE_DAYS[cadence], sources=_DEPTH_SOURCES[depth],
         artefacts=artefacts, publishes_posture=publishes, basis=basis,
-        caveats=_caveats(depth, publishes, declared=tier is not None),
+        caveats=caveats,
     )
 
 

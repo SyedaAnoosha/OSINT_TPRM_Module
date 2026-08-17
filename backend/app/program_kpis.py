@@ -53,6 +53,7 @@ from .assessment_depth import is_due, plan_for
 from .inherent_register import classify as register_classify
 from .inherent_register import coverage as register_coverage
 from .inherent_register import relationships as register_relationships
+from .longevity import age_band_from_years
 from .logging_config import get_logger
 from .models import utcnow
 from .residual_risk import inherent_tier, residual_risk
@@ -477,11 +478,17 @@ def compute(store: Any, *, spof_count: int | None = None,
             profile = profiles.get(s.vendor_ref)
             attrs = attrs_all.get(s.vendor_ref) or {}
             is_prov = getattr(profile, "inherent_provisional", False) if profile else False
+            
+            # Extract age band for age-based residual risk adjustments
+            age_band = None
+            if profile and hasattr(profile, 'operating_years') and profile.operating_years is not None:
+                age_band = age_band_from_years(profile.operating_years)
+            
             r = residual_risk(
                 s.posture, profile.criticality if profile else None,
                 attrs.get("data_access_scope"), blocked=s.blocked, refused=s.refused,
                 substitutability=getattr(profile, "substitutability", None) if profile else None,
-                provisional=is_prov)
+                provisional=is_prov, age_band=age_band)
             key = r.residual if r.published else "not_published"
             dist[key] = dist.get(key, 0) + 1
             if r.published and is_prov:

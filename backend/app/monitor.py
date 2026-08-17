@@ -40,11 +40,14 @@ import asyncio
 from dataclasses import dataclass
 from typing import Literal
 
-from .assessment_depth import AssessmentPlan, Depth, as_dict as plan_as_dict, is_due, plan_for
+from .assessment_depth import AssessmentPlan, Depth, is_due, plan_for
+from .assessment_depth import as_dict as plan_as_dict
 from .benchmarking.service import firmographics_of
 from .logging_config import get_logger
+from .longevity import age_band_from_years
 from .models import Vendor, utcnow
 from .pipeline import run_pipeline
+from .profile import operating_years as profile_operating_years
 from .residual_risk import inherent_tier
 from .scoring.recommend import soonest_recheck
 from .scoring_config import get_scoring_config
@@ -87,9 +90,17 @@ def _vendor_from_evidence(store, ref: str) -> Vendor | None:
     Reading it back lets a scheduled recheck re-score without a caller re-supplying what the system
     already knows. Mirrors the same helper the dispute re-score path uses in the API.
     """
+    # `VendorProfile` HAS NO `operating_years` FIELD — it carries `inception` and
+    # `domain_age_days`, and `profile.operating_years(...)` is the helper that derives years from
+    # them (entity inception preferred over domain age; see its docstring for why that ordering is
+    # the point rather than a tie-break). Reading the attribute directly raised AttributeError on
+    # every sweep that found a stored profile, which is to say on every real sweep.
+    vendor_years = profile_operating_years(store.latest_profile(ref))
+
     for e in store.for_vendor(ref):
         if e.raw and isinstance(e.raw.get("domain"), str):
-            return Vendor(ref=ref, domain=e.raw["domain"], resolved=True, resolution_confidence=1.0)
+            return Vendor(ref=ref, domain=e.raw["domain"], resolved=True, resolution_confidence=1.0,
+                          operating_years=vendor_years)
     return None
 
 
@@ -111,9 +122,18 @@ def plan_of(store, ref: str) -> AssessmentPlan:
     Neither is inferred and neither is invented here: `criticality` rides on the profile,
     `data_access_scope` on the benchmarking attribute row, and an absent one leaves the tier
     undeclared — which routes to FULL depth, not to screening.
+    
+    AGE-BASED ADJUSTMENT. Vendor age is extracted from stored financial profile to apply
+    age-adjusted monitoring cadence when using --by-tier scheduling.
     """
     profile = store.latest_profile(ref)
     firmographics = firmographics_of(store, ref)
+    
+    # Extract age band for age-based monitoring cadence adjustment
+    age_band = None
+    if profile and hasattr(profile, 'operating_years') and profile.operating_years is not None:
+        age_band = age_band_from_years(profile.operating_years)
+    
     return plan_for(inherent_tier(
         profile.criticality if profile else None,
         firmographics.data_access_scope if firmographics else None,
@@ -122,7 +142,7 @@ def plan_of(store, ref: str) -> AssessmentPlan:
         # whole budget saving `--by-tier` exists for would never arrive. The register's own rule:
         # a provisional answer routes better than no answer, and it is labelled everywhere it is read.
         provisional=profile.inherent_provisional if profile else False,
-    ).tier)
+    ).tier, age_band=age_band)
 
 
 def _soonest_finding_recheck(store, ref: str) -> str | None:

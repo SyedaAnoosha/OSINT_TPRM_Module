@@ -53,6 +53,11 @@ class CollectorContext:
     # out" and "we fanned out and found nothing" are different facts.
     estate: Any = None
 
+    # Domain age in days (from RDAP), used as a proxy for company age during collection.
+    # This enables age-based reliability modifiers for clean receipts before operating_years
+    # is computed during profile assembly. None if RDAP hasn't run or failed.
+    domain_age_days: int | None = None
+
 
 class Collector(ABC):
     """Base class. Subclasses implement `_run` (which MAY raise); `collect` isolates it."""
@@ -127,9 +132,36 @@ class Collector(ABC):
             notes=notes,
         )
 
-    def _clean_reliability(self) -> float:
-        """Reliability to stamp on a clean receipt — `clean_reliability` if set, else default."""
-        return self.reliability if self.clean_reliability is None else self.clean_reliability
+    def _clean_reliability(self, ctx: CollectorContext | None = None) -> float:
+        """Reliability to stamp on a clean receipt — `clean_reliability` if set, else default.
+
+        Age-based adjustment: For certain signals (HIBP, regulatory), a clean result from a
+        very young company is weaker evidence than the same result from a mature company.
+        This is a confidence modifier, not a posture modifier. The adjustment is applied
+        only if the collector explicitly opts in via `age_adjusted_clean_reliability = True`.
+        """
+        base = self.reliability if self.clean_reliability is None else self.clean_reliability
+
+        # Only apply age adjustment if the collector opts in and we have age data
+        if not getattr(self, "age_adjusted_clean_reliability", False):
+            return base
+
+        if ctx is None or ctx.domain_age_days is None:
+            return base
+
+        # Convert domain age to years
+        years = ctx.domain_age_days / 365.25
+
+        # Age-based reliability adjustment:
+        # - Under 3 years: reduce clean reliability by 30% (weak evidence)
+        # - 3-10 years: reduce by 15% (moderate evidence)
+        # - 10+ years: no reduction (strong evidence)
+        if years < 3:
+            return base * 0.7
+        elif years < 10:
+            return base * 0.85
+        else:
+            return base
 
     async def _get_with_retry(
         self,
