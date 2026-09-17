@@ -5,7 +5,7 @@ import { Card, Meter } from './ui.jsx'
 import { cn } from '../lib/utils.js'
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
-// TIER 2 — "Evidence coverage bar". docs/tprm_feedback_redesign.md §3.2:
+// TIER 2 — "Evidence coverage bar". design note §3.2:
 // "overall fraction plus a per-category breakdown (X of 27 signals), including the new Business
 // Stability coverage fraction from §1.3."
 //

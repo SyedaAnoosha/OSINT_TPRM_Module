@@ -365,7 +365,7 @@ export const getAssurity = (ref) => getOrNull(`/api/vendors/${encodeURIComponent
 
 // ── peer benchmarking v2 (/api/v2) ────────────────────────────────────────────────────────────
 //
-// The system in docs/benchmarking-design.md, and the one the UI reads. The v1 route
+// The system in docs/design_decisions.md Part 1, and the one the UI reads. The v1 route
 // `/api/vendors/{ref}/benchmark` is deprecated server-side and goes one release from now; it
 // cannot do midrank ties, `rank_of_n`, a reproducible cohort snapshot, per-cohort discrimination
 // or the dispute path, all of which the screens below render.

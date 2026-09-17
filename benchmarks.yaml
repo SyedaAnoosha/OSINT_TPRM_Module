@@ -303,7 +303,7 @@ disclosure:
 # =============================================================================
 # BENCHMARKING v2 — the enterprise peer-comparison layer.
 #
-# Read docs/benchmarking-design.md before changing anything here; the five decisions recorded
+# Read docs/design_decisions.md Part 1 before changing anything here; the five decisions recorded
 # there are what these numbers implement, and changing a number without changing that document
 # leaves the runbook and the product disagreeing about what was decided.
 #
@@ -406,7 +406,7 @@ benchmarking:
   # ---------------------------------------------------------------------------
   # DISCRIMINATION — a signal that does not vary across the cohort cannot rank anything.
   #
-  # Automates by cohort the analysis docs/complete_plan.md ran by hand, which found six signals
+  # Automates by cohort the analysis the design notes ran by hand, which found six signals
   # penalising 100% of the corpus and twelve constant-pass: 19 of 27 signals contributing nothing
   # to ordering. Flagged signals are SUPPRESSED from the "behind your peers" list and DISCLOSED in
   # a labelled section — never silently included, never silently dropped.

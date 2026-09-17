@@ -36,7 +36,7 @@ layoffs all stay in `held_roadmap`: no lawful free source — a derived distress
 the credit-rating-territory invention item 3 above refuses, regardless of whether the underlying
 numbers could technically be sourced. General litigation and ownership-change also remain held.
 
-UPDATED (docs/tprm_feedback_redesign.md §1.2). Going-concern doubt and formal insolvency/
+UPDATED (design note §1.2). Going-concern doubt and formal insolvency/
 bankruptcy filings themselves are no longer fully held: `edgar_collector` reads SEC 8-K Item 1.03
 bankruptcy disclosures and 10-K/10-Q going-concern language for US SEC-registered entities,
 `gazette_collector` reads The Gazette's official UK corporate-insolvency notices (winding-up,
@@ -146,7 +146,7 @@ _FLAGS: dict[tuple[str, str], tuple[Standing, str]] = {
         "sound", "The domain registration is long-established and current.",
     ),
 
-    # --- financial/business-stability filings (docs/tprm_feedback_redesign.md §1.2) --------
+    # --- financial/business-stability filings (design note §1.2) --------
     # `no_adverse_filings` (the clean receipt for all three signals below) is deliberately NOT
     # mapped here. Absence of a matching filing is weaker evidence than a registry's explicit
     # confirmation of good standing — it is a name-search finding nothing, not a positive

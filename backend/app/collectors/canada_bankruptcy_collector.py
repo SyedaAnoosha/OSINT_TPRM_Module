@@ -4,7 +4,7 @@ WHY. The Office of the Superintendent of Bankruptcy (OSB) provides official
 bankruptcy records for Canadian companies. For Business Stability assessment,
 this detects active bankruptcy proceedings that should BLOCK scoring.
 
-LEGALITY — CLEARED (`source_assessment.md`). Official Canadian government portal,
+LEGALITY — CLEARED (`methodology.md` Part 3). Official Canadian government portal,
 paid access ($8 per search). Unset API key -> collector returns `empty`.
 
 ENTITY-LEVEL ONLY (§4.2). This reads corporate bankruptcy filings only.

@@ -17,7 +17,7 @@ export const PRETTY = {
 
 export const deSnake = (s) => String(s || '').replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())
 
-// scoring.yaml §0 / docs/tprm_feedback_redesign.md §0.1 — the two CONTEXT categories, asserted by
+// scoring.yaml §0 / design note §0.1 — the two CONTEXT categories, asserted by
 // a shipped backend test (`test_context_categories_never_penalise`) to never carry a penalty. They
 // always publish `posture: 100`, so a "top strengths" ranking that does not exclude them would
 // show the same two context categories on every vendor, forever, crowding out the scoring

@@ -13,7 +13,7 @@ other source, `app/profile.py` reads it, and the scoring engine never sees it. Z
 means zero effect on the CONFIDENCE axis — a thin profile weakens the COMPARISON, not the score.
 
 LEGALITY. Wikidata structured data is CC0 / public domain — no attribution, no commercial or
-automated-access bar (`source_assessment.md` §13). The one hard condition is Wikimedia's robot
+automated-access bar (`methodology.md` Part 3 §13). The one hard condition is Wikimedia's robot
 policy: a descriptive, contact-bearing User-Agent, which the shared client already sends.
 
 ENTITY-LEVEL ONLY (§4.2). `P749 parent organization` is a corporate parent. Founders, directors,

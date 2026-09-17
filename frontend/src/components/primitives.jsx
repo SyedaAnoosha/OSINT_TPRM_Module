@@ -9,7 +9,7 @@ import { Badge, Card } from './ui.jsx'
 // ═══════════════════════════════════════════════════════════════════════════════════════════
 // The invariants, expressed as components.
 //
-// `docs/frontend_redesign_plan.md` §7 lists ten rules the UI must not break. Most of them are
+// design note §7 lists ten rules the UI must not break. Most of them are
 // mirrors of backend invariants, and a rule that lives only in a document is a rule that gets
 // broken by the next person in a hurry. So the load-bearing ones are built into the component
 // signatures here: `<PostureConfidencePair>` cannot be rendered without a confidence, and
@@ -728,7 +728,7 @@ export function RiskBand({ tier, label, large }) {
 /**
  * INHERENT → RESIDUAL, AS ONE PAIR, NEVER TWO DISCONNECTED NUMBERS.
  *
- * docs/tprm_feedback_redesign.md §3.2: "shown as a pair … so the delta — what controls/mitigations
+ * design note §3.2: "shown as a pair … so the delta — what controls/mitigations
  * actually bought — is visible at a glance." Inherent is drawn muted (it is a client-supplied fact
  * about exposure, not a finding); only the residual side takes the risk colour, because E10b's
  * whole point is that a strong posture against a high inherent exposure is not automatically a low

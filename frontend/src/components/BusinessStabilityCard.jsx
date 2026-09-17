@@ -27,7 +27,7 @@ const AGE_BAND_CONFIG = {
 
 /**
  * THE TIER-1 GLANCE VERSION — one pill, wrapping `Continuity.standing` exactly as the full card
- * does (docs/tprm_feedback_redesign.md §3.4: "<BusinessStabilityBadge> (wraps Continuity.standing)").
+ * does (design note §3.4: "<BusinessStabilityBadge> (wraps Continuity.standing)").
  * Shares `STANDING_CONFIG` with the full card below so the hero row and the drill-down tab can never
  * disagree on what colour/label a standing gets — one mapping, two renderings.
  *
@@ -43,7 +43,7 @@ export function BusinessStabilityBadge({ standing }) {
     <span
       className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[12px] font-bold"
       style={{ background: `color-mix(in srgb, ${config.tone} 15%, transparent)`, color: config.tone }}
-      title="Registry-derived going-concern standing — Continuity.standing, relabelled. Never affects Posture (docs/tprm_feedback_redesign.md §0.1)."
+      title="Registry-derived going-concern standing — Continuity.standing, relabelled. Never affects Posture (design note §0.1)."
     >
       <Icon className="h-3.5 w-3.5" /> {config.label}
     </span>
@@ -54,7 +54,7 @@ export function BusinessStabilityBadge({ standing }) {
  * summary: { standing, registry_facts, flags, procurement_action, procurement_headline,
  *   procurement_blocking, caveats } — the shape GET /api/vendors/{ref}/continuity returns.
  * coverage: { answered, tracked } — a SEPARATE figure from Posture confidence, by design
- *   (docs/tprm_feedback_redesign.md §1.3, ScoringConfig.business_stability_signals). Never
+ *   (design note §1.3, ScoringConfig.business_stability_signals). Never
  *   implies "0 of 3" is clean — absence of data is not evidence of health.
  * statusPage: optional — P7's operational status, rendered beside going-concern standing, never
  *   inside it. A cloud outage and a deregistration are different facts on different clocks.

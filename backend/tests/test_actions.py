@@ -191,7 +191,7 @@ def test_urgency_follows_the_cadence():
 # What replaces them: test_scoring.test_sector_never_changes_a_severity asserts the INVERSE
 # invariant at the engine boundary, and test_scoring_config pins that the machinery is gone from
 # both the config and the loader. The sector obligation moves to the Compliance Gap (E9c) —
-# docs/compliance-gap-frameworks.md preserves both `basis:` strings verbatim.
+# the design notes preserves both `basis:` strings verbatim.
 # --------------------------------------------------------------------- end-to-end
 
 

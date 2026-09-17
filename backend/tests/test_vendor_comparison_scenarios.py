@@ -1,18 +1,18 @@
-"""Vendor comparison scenarios — Phase 2 of docs/tprm_feedback_redesign.md.
+"""Vendor comparison scenarios — Phase 2 of the design notes.
 
 Nine numbered scenarios (ten test functions — scenario 2 has a companion 2b isolating the new
 Business Stability collectors specifically), each demonstrating one thing the scoring model must
 get right —
 written as executable tests against the REAL scoring.yaml (never a mock), matching the convention
 in test_scoring.py. Each scenario also has a plain-English writeup in
-docs/vendor_comparison_scenarios.md so procurement/security/exec stakeholders can review the same
+docs/design_decisions.md Part 3 so procurement/security/exec stakeholders can review the same
 acceptance criteria without reading Python.
 
 Two scenarios below deliberately DIVERGE from a naive reading of the original feedback request:
 
   * "Adverse media" is implemented via `breach_by_data_class` (a REAL scored signal), not GDELT.
     GDELT-sourced adverse media is enrichment/review-queue only today (`held`/`ai_adjudicated`,
-    per docs/source_assessment.md) — it does not reach scoring.yaml and cannot move posture. A
+    per docs/methodology.md Part 3) — it does not reach scoring.yaml and cannot move posture. A
     scenario asserting otherwise would be testing a signal that doesn't exist in the shipped
     model. Scenario 1 tests the real breach-history signal and states the GDELT gap explicitly.
   * The "compounding findings" scenario uses two signals in the SAME category
@@ -127,7 +127,7 @@ def test_scenario_1b_gdelt_adverse_media_does_not_move_posture_today():
 
 def test_scenario_2_bankrupt_vs_healthy_posture_is_byte_identical():
     """THE central regression guard for the whole Business Stability feature
-    (docs/tprm_feedback_redesign.md §1.3, extending E4/change-notice-v5.md §3.4). All cyber
+    (design note §1.3, extending E4/design note §3.4). All cyber
     signals held identical; only the financial-standing evidence differs (`entity_status`, the
     Companies House going-concern signal — the exact one E4 removed from Posture). Posture AND
     confidence must be byte-identical — financial distress is real and must be visible (via
@@ -178,7 +178,7 @@ def test_scenario_2b_new_business_stability_collectors_follow_the_same_invariant
     `entity_status`): a `bankruptcy_petition` finding is excluded from Posture confidence
     entirely (`ScoringConfig.business_stability_signals`), so adding one changes NEITHER posture
     NOR confidence versus not having collected it at all — the per-axis design from
-    docs/tprm_feedback_redesign.md §1.3, built after scenario 2's original all-in-one-denominator
+    design note §1.3, built after scenario 2's original all-in-one-denominator
     version broke the frozen regression corpus (see test_scoring.py::
     test_business_stability_signals_cannot_move_posture_or_confidence for the full guard)."""
     cyber = _hygiene()
@@ -294,7 +294,7 @@ def test_scenario_7_corroborated_certification_scores_disclosure_alone_does_not(
     claimed_unverified` — `compliance_regulatory`, SCORES). Vendor B merely publishes a detailed
     trust/policy page with no verifiable certification claim (`program_disclosure.
     detailed_policies` — `assurance_context`, NEVER scores). This is the E5 distinction
-    (change-notice-v5.md §3.6): a claim corroborated against a registry is evidence; a marketing
+    (design note §3.6): a claim corroborated against a registry is evidence; a marketing
     trust page is not."""
     a = ScoringEngine().score(_vendor(), [
         _result("trust", [_f("cert_posture", K, "claimed_unverified")])]).score

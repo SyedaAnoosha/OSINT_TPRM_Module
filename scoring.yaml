@@ -39,7 +39,7 @@
 #
 # Every vendor's published posture moved. A consumer comparing a 4.x score with a 5.0 score is
 # comparing two different measurements — which is precisely what a major version is for.
-# Change notice, with the per-vendor movement: docs/change-notice-v5.md
+# Change notice, with the per-vendor movement: the design notes
 #
 # 5.1.0 (E6) is a MINOR bump, not another major one. The axes, the categories, the divisor and the
 # severity ladder are all unchanged; what changed is the INPUT to one signal — `stale_hosts` bands
@@ -177,7 +177,7 @@ business_stability:
 # it ships with `aggregation.decay` (E7a) because neither half is sufficient. Together: 3.06:1.
 #
 # THESE ARE EXPERT JUDGEMENT, NOT CALIBRATED VALUES, and must be labelled as such wherever they
-# are published. Calibrating them needs outcome labels — see docs/e0.4-outcome-labels-deferral.md.
+# are published. Calibrating them needs outcome labels — see the design notes.
 # `low: 1.5` is a FLOAT: anything asserting integer penalties will fail, which is intended.
 severity_penalties:
   critical:      50    # actively dangerous & confirmable — expired prod cert, unpatched KEV, CVSS 9-10
@@ -448,12 +448,12 @@ categories:
     entity_existence:    { entity_active_confirmed: pass, entity_dissolved: informational }
     entity_maturity:     { mature_gt_10: pass, established_5_10: pass, young_2_5: informational, startup_lt_2: informational, new_lt_1: informational }
     domain_registration: { domain_established: pass, domain_recent: informational, domain_new: informational, domain_expiring: informational, domain_suspended: informational }
-    # Added for the "Business Stability" feedback item (docs/tprm_feedback_redesign.md §1.2). Three
+    # Added for the "Business Stability" feedback item (design note §1.2). Three
     # new sources, one signal each, reusing the entity_status band vocabulary rather than inventing
     # new bands — `no_adverse_filings` is the clean receipt, `entity_inactive`/`registration_lapsed`
     # are the same severities the registry sources already use. All `informational`: these can no
     # more penalise posture than the four signals above them. This moves planned_signal_count()
-    # 27 -> 30 — deliberate and disclosed, not silent drift; see docs/business_stability.md and the
+    # 27 -> 30 — deliberate and disclosed, not silent drift; see the design notes and the
     # updated assertions in test_scoring_config.py / test_continuity.py / test_estate.py /
     # test_exposure.py.
     sec_filing:          { no_adverse_filings: pass, registration_lapsed: informational, entity_inactive: informational }
@@ -857,7 +857,7 @@ actions:
 # where a vendor is BOUND BY a framework and observed failing a control in it, emit a cited
 # finding about the reliability of their compliance position — not a heavier penalty on the
 # observation. Both `basis:` strings are preserved verbatim in
-# docs/compliance-gap-frameworks.md.
+# the design notes.
 #
 # Sector still reaches two places, legitimately: cohort assignment, and the Compliance Gap.
 # Neither changes what an observation is worth.
@@ -888,7 +888,7 @@ count_bands:
 # Before this block, `stale_hosts` banded on the raw number of abandoned hosts. A vendor with 4
 # public hosts and 2 abandoned ones paid 8; a vendor with 900 hosts and 9 abandoned ones paid 20.
 # The second runs a fifty-times tidier estate and paid two and a half times more, because the
-# model was measuring SIZE and calling it risk. docs/discrimination-analysis.md shows the
+# model was measuring SIZE and calling it risk. the design notes shows the
 # consequence: `stale_hosts` and `subdomain_estate` penalise 100% of real corpus vendors, and a
 # penalty nobody escapes ranks nobody.
 #
@@ -1111,7 +1111,7 @@ assurity:
 # conversation: one is a legal obligation, the other is the vendor's own marketing.
 #
 # Verbatim `basis:` strings preserved from the deleted industry_profiles block —
-# docs/compliance-gap-frameworks.md.
+# the design notes.
 #
 # WHICH CERTIFICATION, NOT MERELY THAT THERE IS ONE. `cert_posture` bands say `claimed_unverified`
 # — they do not say WHICH standard was claimed. So every `asserted_by` block must also name
@@ -1144,7 +1144,7 @@ assurity:
 # name a real dated instrument and the loader enforces it — a plausible expectation with an
 # official-looking citation is exactly what industry_profiles was.
 #
-# Roadmap and remaining candidates: docs/e9c-framework-roadmap.md
+# Roadmap and remaining candidates: the design notes
 # -----------------------------------------------------------------------------
 compliance_frameworks:
   # CPS 234 and CPS 230 SHIP SEPARATELY, and the split is not cosmetic. They are two prudential
@@ -1688,7 +1688,7 @@ aggregation:
   #
   # decay = 0.7 is EXPERT JUDGEMENT, chosen with the widened ladder so that
   # (4 Medium + 8 Low) : (1 Critical) lands at 3.06:1. It is not calibrated — that needs outcome
-  # labels (docs/e0.4-outcome-labels-deferral.md) — and must be labelled as judgement when published.
+  # labels (design note) — and must be labelled as judgement when published.
   #
   # WITHIN a category, never across. Categories are summed and divided by the fixed divisor, so a
   # cross-category discount would let a vendor's worst category be cheapened by their second-worst

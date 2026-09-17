@@ -5,7 +5,7 @@ import { CONTEXT_CATEGORIES, PRETTY, deSnake } from '../lib/labels.js'
 import { Card } from './ui.jsx'
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
-// TIER 2 — SCAN, 30-60 SECONDS. docs/tprm_feedback_redesign.md §3.2:
+// TIER 2 — SCAN, 30-60 SECONDS. design note §3.2:
 // "Top 3 strengths and top 3 weaknesses, ranked by penalty magnitude (weaknesses) and by
 // category headroom (strengths)."
 //

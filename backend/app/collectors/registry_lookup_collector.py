@@ -4,7 +4,7 @@ WHY. Registry Lookup provides access to 521M entities across 309 jurisdictions
 as a backup when primary collectors fail. For Business Stability assessment,
 this provides redundancy for incorporation dates and company status.
 
-LEGALITY — CLEARED (`source_assessment.md`). Freemium API with 5,000 free calls/month.
+LEGALITY — CLEARED (`methodology.md` Part 3). Freemium API with 5,000 free calls/month.
 Commercial use permitted. Unset API key -> collector returns `empty`, lowering coverage.
 
 ENTITY-LEVEL ONLY (§4.2). This reads corporate entity data only. No natural-person data.

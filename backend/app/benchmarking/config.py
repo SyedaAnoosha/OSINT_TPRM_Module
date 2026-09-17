@@ -75,7 +75,7 @@ class BenchmarkingConfig:
         if not self._d:
             raise BenchmarkingConfigError(
                 f"{path} has no `benchmarking:` block. The peer-comparison layer cannot infer its "
-                f"own thresholds — see docs/benchmarking-design.md"
+                f"own thresholds — see docs/design_decisions.md Part 1"
             )
         self._validate()
 

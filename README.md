@@ -4,7 +4,9 @@ Vendor name or domain **in** → a defensible, evidence-linked risk record **out
 lawfully-public OSINT. Two axes (risk 0–100, confidence 0–1) that are never collapsed.
 
 **The methodology is the product** — see [`docs/methodology.md`](docs/methodology.md) and the
-machine-readable model in [`scoring.yaml`](scoring.yaml). This is the guide to *running* it.
+machine-readable model in [`scoring.yaml`](scoring.yaml). This is the fast path to *running* it —
+for Postgres/Neon specifics, monitoring and troubleshooting, see
+[`docs/running_guide.md`](docs/running_guide.md).
 
 ```
 ┌──────────┐   POST /score    ┌─────────────────────────┐   SSE progress   ┌──────────┐
@@ -119,7 +121,7 @@ Guardrails, by design: the summary **never computes or changes a score** and **n
 evidence store** — it reads the published score plus the hash-stamped receipt index, is returned
 marked *AI-generated*, and cites the hashes it was built from. **Raw collector payloads are never
 sent to the LLM** — only score roll-ups + receipt metadata leave the system (the single, documented
-egress point; see [`docs/source_assessment.md`](docs/source_assessment.md) → *Data egress*). Without
+egress point; see [`docs/methodology.md`](docs/methodology.md) Part 3 → *Data egress*). Without
 the keys, `POST /api/vendors/{ref}/summary` returns **503** and the button stays hidden.
 
 ---
@@ -128,7 +130,7 @@ the keys, `POST /api/vendors/{ref}/summary` returns **503** and the button stays
 
 ```bash
 # backend  (from backend/, venv active)
-pytest -q                       # 109 tests
+pytest -q                       # 1,334 tests
 ruff check app tests            # lint
 
 # frontend (from frontend/)
@@ -224,13 +226,31 @@ scoring.yaml        the model (the deliverable) — bands, penalties, gates, con
 benchmarks.yaml     peer cohorts, size bands, the minimum-peers gate — interpretation, no arithmetic
 backend/            FastAPI API, collectors, scoring engine, append-only evidence store
 frontend/           React + Vite single-screen streaming scorecard
-docs/               methodology, scoring model, metrics, source assessment, running guide
+docs/               five documents — methodology, the model, design decisions (see below)
 ops/                scheduled monitoring (cron / systemd / Windows Task Scheduler)
 ```
 
-See [`docs/`](docs/) for the full documentation set — start with
-[`docs/methodology.md`](docs/methodology.md) (the research and rationale) and
-[`docs/system_retrospective.md`](docs/system_retrospective.md) (current, verified status).
+## Documentation
+
+**Start here:** [`methodology.md`](docs/methodology.md) — the research and rationale; the document the
+model is derived from. Then [`system_retrospective.md`](docs/system_retrospective.md) for current,
+verified status.
+
+Five documents. Each is split into parts; the part is the citable unit.
+
+| Document | Part | What it covers |
+|---|---|---|
+| [`methodology.md`](docs/methodology.md) | **1 · Research methodology** | **The product.** Full derivation of the model and what OSINT can and cannot reach |
+| | **2 · Legal & standards basis** | Model-level legal basis — *once collected, does the score stand up?* |
+| | **3 · Source assessment** | Per-source signals, reliability, limits and legal/ToS position — *may we lawfully collect this?* |
+| [`scoring_model.md`](docs/scoring_model.md) | **1 · The model in brief** | The guided summary of `scoring.yaml` — severity ladder, grades, roll-up, the three axes |
+| | **2 · Metrics reference** | Every published metric and the arithmetic implemented, each constant read from code |
+| | **3 · Vendor age differentiation** | How age is used — and why it never touches cybersecurity posture |
+| [`design_decisions.md`](docs/design_decisions.md) | **1 · Peer benchmarking** | Cohort scoping, placement thresholds, the refusal-to-compare gate |
+| | **2 · Financial data integration** | Collector chains, API surface, schema, the Business Stability axis |
+| | **3 · Vendor comparison scenarios** | Nine acceptance scenarios in plain English, executable as a test file |
+| [`system_retrospective.md`](docs/system_retrospective.md) | — | What was built, what was rejected, and the defects found and fixed along the way |
+| [`running_guide.md`](docs/running_guide.md) | — | Postgres/Neon specifics, monitoring and troubleshooting — the long form of this README |
 
 ## License
 

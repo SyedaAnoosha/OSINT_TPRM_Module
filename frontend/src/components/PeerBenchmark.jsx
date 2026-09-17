@@ -7,7 +7,7 @@ import { Card, Badge } from './ui.jsx'
 import { cn } from '../lib/utils.js'
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
-// PEER BENCHMARKING — the v2 system (docs/benchmarking-design.md), and the only one drawn.
+// PEER BENCHMARKING — the v2 system (docs/design_decisions.md Part 1), and the only one drawn.
 //
 // The screens read `/api/vendors/{ref}/benchmark` until now, which is deprecated server-side and
 // cannot express midrank ties, `rank_of_n`, a reproducible cohort snapshot, per-cohort

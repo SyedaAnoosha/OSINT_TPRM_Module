@@ -15,7 +15,7 @@ import { getStability, getFinancial } from '../api.js'
 
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
-// TIER 3 — DRILL-DOWN, ON DEMAND. docs/tprm_feedback_redesign.md §3.2/§3.3/§3.4:
+// TIER 3 — DRILL-DOWN, ON DEMAND. design note §3.2/§3.3/§3.4:
 // "Existing components, reorganized under tabs/accordion rather than a single long scroll."
 //
 // `<VendorDetailTabs>` is a wrapper only — none of the panels it renders changed internally, per

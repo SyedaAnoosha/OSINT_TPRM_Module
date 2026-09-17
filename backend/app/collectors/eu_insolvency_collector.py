@@ -4,7 +4,7 @@ WHY. The EU Insolvency Registers Interconnection System provides cross-border
 insolvency proceedings information across EU member states. For Business Stability
 assessment, this detects active insolvency proceedings that should BLOCK scoring.
 
-LEGALITY — CLEARED (`source_assessment.md`). Official EU e-Justice Portal, free access,
+LEGALITY — CLEARED (`methodology.md` Part 3). Official EU e-Justice Portal, free access,
 commercial use permitted. No API key required but rate limiting applies.
 
 ENTITY-LEVEL ONLY (§4.2). This reads corporate insolvency proceedings only.

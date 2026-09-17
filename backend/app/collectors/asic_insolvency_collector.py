@@ -4,7 +4,7 @@ WHY. ASIC provides official insolvency and liquidator registers for Australian
 companies. For Business Stability assessment, this detects active insolvency
 proceedings that should BLOCK scoring.
 
-LEGALITY — CLEARED (`source_assessment.md`). Official Australian government portal,
+LEGALITY — CLEARED (`methodology.md` Part 3). Official Australian government portal,
 free access for basic searches, commercial use permitted.
 
 ENTITY-LEVEL ONLY (§4.2). This reads corporate insolvency proceedings only.

@@ -3,7 +3,7 @@ import { AlertTriangle, } from 'lucide-react'
 import { ActionCard, ActionRow, DeclareInherentPrompt } from './primitives.jsx'
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
-// TIER 2 — "Key recommendations". docs/tprm_feedback_redesign.md §3.2/§3.4:
+// TIER 2 — "Key recommendations". design note §3.2/§3.4:
 // "merges existing remediation guidance with the new Phase 1 procurement-rule output, so a
 // ceased/impaired Business Stability flag surfaces here, not buried in a sub-tab."
 //

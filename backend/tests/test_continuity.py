@@ -184,8 +184,7 @@ def test_business_stability_signals_never_carry_a_posture_penalty():
 
 
 def test_business_stability_signals_excluded_from_planned_signal_count():
-    """The whole reason this axis exists as a SEPARATE denominator (docs/tprm_feedback_redesign.md
-    §1.3): these four signals are reachable and do score (at `informational`), but must never
+    """The whole reason this axis exists as a SEPARATE denominator (design note §1.3): these four signals are reachable and do score (at `informational`), but must never
     move Posture's confidence-ceiling / Ghost-detection math. Replaying the frozen regression
     corpus's pre-existing evidence against a grown denominator silently dropped every real
     vendor's confidence band — this is the regression guard for that defect."""

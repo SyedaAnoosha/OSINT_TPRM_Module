@@ -88,7 +88,7 @@ class Store(Protocol):
     # the percentile trend reads points frozen when true, not today's cohort on an old posture.
     def put_benchmark_snapshot(self, snap: BenchmarkSnapshot) -> str: ...
     def benchmark_history(self, vendor_ref: str) -> list[BenchmarkSnapshot]: ...
-    # Benchmarking v2 — the enterprise peer-comparison layer (docs/benchmarking-design.md). All
+    # Benchmarking v2 — the enterprise peer-comparison layer (docs/design_decisions.md Part 1). All
     # append-only, for a reason that is stronger here than for a cache: a placement's whole claim is
     # "this was true against THAT population", so an UPDATE would let a historical comparison be
     # silently restated against a different peer group.

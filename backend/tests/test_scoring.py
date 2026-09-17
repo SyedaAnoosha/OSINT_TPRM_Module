@@ -497,7 +497,7 @@ def test_a_silent_source_cannot_lower_the_posture_either():
 
 
 def _business_stability_clean():
-    """The three Business Stability signals (docs/tprm_feedback_redesign.md §1.3), all answering
+    """The three Business Stability signals (design note §1.3), all answering
     clean — Gazette/EDGAR/CourtListener all reachable and finding nothing adverse."""
     return [_f("sec_filing", X, "no_adverse_filings"),
             _f("insolvency_notice", X, "no_adverse_filings"),

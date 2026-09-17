@@ -6,7 +6,7 @@ THE DEFECT, IN ONE COMPARISON. Before this phase `stale_hosts` banded on a raw c
     Vendor B: 900 public hosts,  9 abandoned  ->   1%  -> band `many` -> -20
 
 B runs an estate fifty times tidier and paid two and a half times more, because the model was
-measuring how BIG a vendor is and calling the answer risk. `docs/discrimination-analysis.md`
+measuring how BIG a vendor is and calling the answer risk. the design notes
 measured the consequence: `stale_hosts` and `subdomain_estate` penalise 100% of real corpus
 vendors, and a penalty nobody escapes cannot rank anyone.
 

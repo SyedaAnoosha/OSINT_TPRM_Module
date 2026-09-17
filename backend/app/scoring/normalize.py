@@ -186,7 +186,7 @@ def normalize_one(finding: Finding, cfg: ScoringConfig, evidence_id: str | None,
 
     The parameter stays on the signature so callers do not have to change in lockstep, and so a
     future reader finds this note rather than wondering where sector handling went. The sector
-    obligation survives as a Compliance Gap finding (E9c); see docs/compliance-gap-frameworks.md.
+    obligation survives as a Compliance Gap finding (E9c); see the design notes.
     """
     if not finding.category or not finding.signal:
         return None

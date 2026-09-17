@@ -6,7 +6,7 @@ scored `some` and paid 8, while a vendor with 900 hosts and 9 abandoned ones sco
 paid 20. The second is running a tidier estate by a factor of fifty and paid two and a half times
 more. The model was measuring how BIG a vendor is and calling the answer risk.
 
-`docs/discrimination-analysis.md` shows this is not hypothetical: `stale_hosts`,
+the design notes shows this is not hypothetical: `stale_hosts`,
 `subdomain_estate` and `weak_issuance` charge **every** real corpus vendor. Three of the four
 remaining flat taxes are footprint signals, and a penalty nobody escapes ranks nobody.
 

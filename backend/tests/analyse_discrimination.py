@@ -2,7 +2,7 @@
 
     python -m tests.analyse_discrimination        (from backend/)
 
-Writes `docs/discrimination-analysis.md`.
+Writes the design notes.
 
 THE QUESTION. A signal that every vendor fails, or that every vendor passes, cannot order anyone.
 It moves the intercept and nothing else — a flat tax wearing the clothes of a comparison. E0.3
@@ -43,7 +43,7 @@ from app.scoring_config import get_scoring_config
 
 from .test_corpus import ALL_REFS, ARCHETYPE_REFS, AS_AT, VENDOR_REFS, load_fixture
 
-REPORT = Path(__file__).resolve().parents[2] / "docs" / "discrimination-analysis.md"
+REPORT = Path(__file__).resolve().parents[2] / "docs" / "the design notes"
 
 
 def corpus_peers() -> tuple[list[PeerRecord], list[str]]:

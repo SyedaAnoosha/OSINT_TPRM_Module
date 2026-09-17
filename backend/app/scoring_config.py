@@ -73,7 +73,7 @@ _ENGINE_READS = {
 # same evidence score differently depending on a label we assigned. Deliberately NOT moved to
 # _DOCUMENTATION_ONLY: the block is gone from scoring.yaml entirely, and leaving the key declared
 # anywhere would let six lines of YAML silently re-enable it. The sector obligation survives as a
-# Compliance Gap finding (E9c) — see docs/compliance-gap-frameworks.md.
+# Compliance Gap finding (E9c) — see the design notes.
 _DOCUMENTATION_ONLY = {
     "supersedes":       "provenance — which version this replaces",
     "model":            "names the model family (penalty_subtractive)",
@@ -173,11 +173,11 @@ class ScoringConfig:
         ("how much do we know about this vendor's SECURITY"). Counting them in the SAME
         denominator that gates the Posture confidence-ceiling and Ghost detection would let
         Business Stability coverage move Posture's calibration, which is exactly the E4 defect
-        (change-notice-v5.md §3.4) one layer up — same mistake, different axis.
+        (design note §3.4) one layer up — same mistake, different axis.
         Business Stability gets its OWN coverage instead: `continuity.business_stability_
         coverage()`. This is a HARD EXCLUSION, not a config-gated one like
         `unreachable_signals()` — these signals ARE reachable, they simply belong elsewhere.
-        docs/tprm_feedback_redesign.md §1.3.
+        design note §1.3.
 
         ONLY SIGNALS THE MODEL ACTUALLY DECLARES BELONG HERE. A previous revision added
         `revenue_stability`, `debt_position`, `cash_flow`, `current_status` and `operating_years`

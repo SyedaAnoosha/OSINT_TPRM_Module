@@ -8,7 +8,7 @@ This is narrow coverage (public companies only) but very high signal quality whe
 For TPRM continuity assessment, this complements The Gazette (UK) and Companies House with a
 US-specific authoritative source.
 
-LEGALITY — CLEARED (`source_assessment.md`). Free, no API key required, commercial use permitted.
+LEGALITY — CLEARED (`methodology.md` Part 3). Free, no API key required, commercial use permitted.
 The SEC's EDGAR system is designed for programmatic access. Rate limit: be respectful (≤10 req/sec).
 
 ENTITY-LEVEL ONLY (§4.2). This reads corporate filings only. No natural-person data enters the model.
@@ -40,7 +40,7 @@ from .base import Collector, CollectorContext
 _SEARCH = "https://efts.sec.gov/LATEST/search-index"
 _HOST = "efts.sec.gov"
 # v5.0.0 (E4/E5) renamed this category from `business_financial_stability` to `continuity_context`
-# — see change-notice-v5.md §3.4. Findings land here at `informational` bands only; they are
+# — see design note §3.4. Findings land here at `informational` bands only; they are
 # reported (app/continuity.py) and NEVER penalise posture.
 _CAT = "continuity_context"
 _SUB = "sec_filing"

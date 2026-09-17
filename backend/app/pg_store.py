@@ -293,7 +293,7 @@ CREATE INDEX IF NOT EXISTS idx_profiles_dims
 
 -- ===========================================================================
 -- BENCHMARKING v2 — the enterprise peer-comparison layer.
--- See docs/benchmarking-design.md. Additive throughout: the v1 columns and tables above are
+-- See docs/design_decisions.md Part 1. Additive throughout: the v1 columns and tables above are
 -- untouched, so stored v1 snapshots keep deserialising through the deprecation release.
 -- ===========================================================================
 

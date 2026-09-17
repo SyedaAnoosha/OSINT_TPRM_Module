@@ -1,7 +1,7 @@
 """Peer benchmarking v2 — the hard rules, asserted.
 
 Organised around the five success criteria and the seven hard rules in
-`docs/benchmarking-design.md`, because those are the specification and a test suite that does not map
+`docs/design_decisions.md` Part 1, because those are the specification and a test suite that does not map
 onto it cannot tell anyone whether the thing was built.
 
 NO DATABASE. Every test drives the pure layers through an in-memory `PeerLookup`. That is the payoff

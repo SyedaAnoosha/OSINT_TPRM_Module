@@ -26,7 +26,7 @@ history (HIBP), vulnerability feeds (KEV/NVD), sanctions (ITA), entity registers
 OpenCorporates, regional company registries), regulatory/insolvency filings (SEC EDGAR/XBRL, EU/UK/
 Canada/Germany insolvency registers), and adverse media (GDELT). Each returns the same
 `CollectorResult` envelope; see [`../docs/methodology.md`](../docs/methodology.md) §4 and
-[`../docs/source_assessment.md`](../docs/source_assessment.md) for the per-source legality and
+[`../docs/methodology.md`](../docs/methodology.md) Part 3 for the per-source legality and
 reliability register.
 
 Every collector returns the same `CollectorResult` envelope and is **failure-isolated**

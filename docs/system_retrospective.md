@@ -2,7 +2,7 @@
 
 **Model:** `scoring.yaml` v5.4.0, `penalty_subtractive` · **Verified against the running system:** 2026-08-06
 **Status:** 1,332 backend tests passing (2 documented `xfail`), frontend building clean.
-**Companion:** `docs/metrics.md` — the per-metric arithmetic, every constant read from code.
+**Companion:** `scoring_model.md` Part 2 — the per-metric arithmetic, every constant read from code.
 
 ---
 
@@ -81,7 +81,7 @@ Where a source states no licence, that was recorded as an open question, not ass
 
 The consequential rejections were subjective category weighting — deleted rather than asserted,
 since no defensible weights could be derived from published evidence — and sector-based severity
-promotion. `context-aware-vendor-risk-scoring-study.md` found signal importance should almost never
+promotion. The underlying research found signal importance should almost never
 vary with a vendor's age, revenue or headcount; it should vary with measured exposure, and
 consequences should vary with the buyer's engagement. Those are three different adjustments, and
 conflating them is the central error context-adjustment introduces.
@@ -146,8 +146,8 @@ stayed in the denominator while leaving the numerator, so a collector outage sco
 the vendor lacking the control — the two-axis confusion reappearing inside the confidence axis.
 
 **Configuration drift.** Age base scores existed in four inconsistent versions — model file,
-hard-coded copy in `longevity.py`, tests, and `SYSTEM_EXPLANATION.md`. The YAML block was **inert**:
-the runtime never loaded it, so `docs/methodology.md` documented values that never executed.
+hard-coded copy in `longevity.py` and tests. The YAML block was **inert**:
+the runtime never loaded it, so `methodology.md` Part 1 documented values that never executed.
 Confidence changed meaning without a version bump, moving every published confidence while postures
 stayed put. The Business Stability signal set, duplicated across two modules for independence, grew
 on one side only and acquired five signals the model declares nowhere.
@@ -244,7 +244,7 @@ normalisation defects far sooner.
 6. **`calculate_from_profile` passes `sector` into the `jurisdiction` parameter**, dropping
    `sec_filing` from the denominator for medium+ vendors.
 7. Several `age_risk_factors` inputs are placeholders, not collector-fed.
-8. `SYSTEM_EXPLANATION.md` documents an age-score table matching neither code nor model.
+8. Legacy explanatory notes documented an age-score table matching neither code nor model.
 
 ## 7. Future Work
 

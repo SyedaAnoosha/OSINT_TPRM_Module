@@ -9,7 +9,7 @@ both emit `subdomain_estate` and the engine takes the worst (no double-count); w
 carries the category so the vendor is not falsely refused.
 
 LEGALITY / KEY. OTX is free with a registered API key (`otx.alienvault.com`). Cleared as CT
-redundancy (`roadmap.md` §6). Unset key is NOT an error — the collector returns `empty`, which
+redundancy (design note §6). Unset key is NOT an error — the collector returns `empty`, which
 lowers coverage and never posture, exactly like every other keyed source. The app runs unconfigured.
 
 WHAT IT IS NOT. Passive DNS shows a hostname was OBSERVED, not that it is live now — the same

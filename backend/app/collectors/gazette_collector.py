@@ -5,7 +5,7 @@ petitions, liquidator/receiver/administrator appointments, and insolvency notice
 downstream aggregation; it is the register itself. For TPRM continuity assessment, this is the
 cleanest signal on the table for UK entities.
 
-LEGALITY — CLEARED (`source_assessment.md`). Crown copyright, Open Government Licence (OGL),
+LEGALITY — CLEARED (`methodology.md` Part 3). Crown copyright, Open Government Licence (OGL),
 commercial use permitted, no API key required. Rate limit: be respectful (the service asks for
 ≤10 req/sec). Unreachable is NOT an error: the collector returns `empty`, lowering coverage and
 never posture, and the app runs unconfigured like every other keyed source.
@@ -35,7 +35,7 @@ from .base import Collector, CollectorContext
 _SEARCH = "https://www.thegazette.co.uk/insolvency/notice/data.json"
 _HOST = "www.thegazette.co.uk"
 # v5.0.0 (E4/E5) renamed this category from `business_financial_stability` to `continuity_context`
-# — see change-notice-v5.md §3.4. Findings land here at `informational` bands only; they are
+# — see design note §3.4. Findings land here at `informational` bands only; they are
 # reported (app/continuity.py) and NEVER penalise posture.
 _CAT = "continuity_context"
 _SUB = "insolvency_notice"

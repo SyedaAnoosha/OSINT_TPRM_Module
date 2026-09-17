@@ -19,7 +19,7 @@ from app.scoring_config import (
 def test_real_scoring_yaml_loads_and_validates():
     cfg = load_scoring_config()  # the actual repo-root scoring.yaml
     # MAJOR bumped at E5: 4.x and 5.x postures are different measurements, not the same one
-    # moving — see docs/change-notice-v5.md. E6 is a MINOR bump on top (5.1.0): same axes, same
+    # moving — see the design notes. E6 is a MINOR bump on top (5.1.0): same axes, same
     # divisor, one signal's banding input changed. `supersedes` must record what it replaced,
     # whatever the current version is.
     assert cfg.version.startswith("5.")
@@ -131,7 +131,7 @@ def test_the_engine_actually_reads_what_we_claim_it_reads():
 # scored differently depending on a label WE assigned, which destroys cross-vendor comparability.
 #
 # The sector obligation was real and survives, as a Compliance Gap FINDING (E9c). See
-# docs/compliance-gap-frameworks.md, which captured both `basis:` strings before deletion.
+# the design notes, which captured both `basis:` strings before deletion.
 
 
 def test_scoring_yaml_declares_no_industry_profiles():

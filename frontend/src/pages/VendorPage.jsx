@@ -13,7 +13,7 @@ import { VendorDetailTabs } from '../components/VendorDetailTabs.jsx'
 import { Card } from '../components/ui.jsx'
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
-// THE EXECUTIVE DASHBOARD — three tiers, docs/tprm_feedback_redesign.md §3.
+// THE EXECUTIVE DASHBOARD — three tiers, design note §3.
 //
 //   Tier 1 (glance, <15s)   — <ExecutiveSummaryHero>: identity, grade, posture+trend,
 //                             confidence, assurity, Business Stability, inherent→residual.
@@ -23,7 +23,7 @@ import { Card } from '../components/ui.jsx'
 //   Tier 3 (drill-down)     — <VendorDetailTabs>: category detail, peer benchmark, gap analysis,
 //                             dependencies, assurance detail, Business Stability citations.
 //
-// This extends `docs/frontend_redesign_plan.md`'s What/So-what/Now-what spine — it does not
+// This extends the design notes's What/So-what/Now-what spine — it does not
 // replace it. The three questions that spine protects still get answered, in the same order, on
 // this same page: Tier 1+2's "top weaknesses" and coverage bar ARE the What; Tier 1's
 // inherent→residual pair and Tier 3's Residual detail ARE the So-what; Tier 2's Recommendations

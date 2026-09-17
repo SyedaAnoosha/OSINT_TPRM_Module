@@ -93,7 +93,7 @@ register(SecXbrlCollector())             # SEC XBRL financial data
 #                              "Information Services Policy Guidelines" govern permitted data use
 #                              and a separate LICENSED API (ASXonline/MIA) exists as the sanctioned
 #                              path. Ask-before-collect, same gate as DFAT/Modern Slavery/
-#                              OpenCorporates in docs/roadmap.md §2.4 — not wired until confirmed.
+#                              OpenCorporates in design note §2.4 — not wired until confirmed.
 # register(AsicCollector())  # HELD — publishednotices.asic.gov.au (the Companies-House/Gazette
 #                              analogue for AU insolvency notices) is legally clear (a statutory
 #                              public record, Corporations Act 2001) but its current site structure

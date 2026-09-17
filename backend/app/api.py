@@ -156,7 +156,7 @@ def store_dep() -> Any:
 
 StoreDep = Annotated[Store, Depends(store_dep)]
 
-# Peer benchmarking v2, under /api/v2 (docs/benchmarking-design.md). Mounted alongside the v1
+# Peer benchmarking v2, under /api/v2 (docs/design_decisions.md Part 1). Mounted alongside the v1
 # `/api/vendors/{ref}/benchmark` rather than replacing it, so a client is never handed a different
 # response shape under the same URL. The v1 endpoint is deprecated and goes one release from now.
 app.include_router(benchmarking_router)
@@ -1092,7 +1092,7 @@ async def get_vendor_continuity(ref: str, store: StoreDep) -> dict[str, Any]:
     else:
         standing = report.standing
     
-    # `procurement_rules.py` (docs/tprm_feedback_redesign.md §1.3): a deterministic advisory
+    # `procurement_rules.py` (design note §1.3): a deterministic advisory
     # keyed on standing, never a number — surfaced here so the frontend's Business Stability
     # card can show it beside the registry facts, not as a second endpoint round-trip.
     advice = get_procurement_advice(standing)
@@ -1114,7 +1114,7 @@ async def get_vendor_continuity(ref: str, store: StoreDep) -> dict[str, Any]:
         "procurement_headline": advice.headline,
         "procurement_blocking": advice.blocking,
         "caveats": report.caveats,
-        # docs/tprm_feedback_redesign.md §1.3 — a SEPARATE coverage figure from Posture's
+        # design note §1.3 — a SEPARATE coverage figure from Posture's
         # confidence axis (ScoringConfig.business_stability_signals excludes these signals from
         # that one entirely). "0 of 3" is not "clean"; it is "not evidenced for this vendor's
         # jurisdiction" — the UI must not read an empty numerator as good news.

@@ -1,4 +1,21 @@
-# Scoring Model — v2 (`scoring.yaml` v5.3.0, penalty-based posture + Business Stability axis)
+# Scoring Model — v2 (`scoring.yaml` v5.4.0, penalty-based posture + Business Stability axis)
+
+**OSINT TPRM vendor scoring — the model, and the arithmetic behind every published number.**
+
+> **Direction, stated once and never inverted: `100 = strongest posture, 0 = weakest`. A penalty is
+> *subtracted* for each issue found.**
+
+*The model is the deliverable. It lives in machine-readable form in [`scoring.yaml`](../scoring.yaml) —
+a file a non-engineer can read in a room with a client. The full legal and epistemic defence is
+[`methodology.md`](methodology.md) Part 1 §5.*
+
+| Part | What it covers |
+|---|---|
+| **1 · The model in brief** | The guided summary — severity ladder, grades, categories, roll-up, the three axes |
+| **2 · Metrics reference** | Every published metric and the arithmetic actually implemented, each constant read from code |
+| **3 · Vendor age differentiation** | How age is used across Longevity, Maturity and Business Stability — and why it never touches cybersecurity posture |
+
+## Part 1 · The model in brief
 
 **OSINT TPRM vendor scoring — the model in brief.**
 
@@ -6,11 +23,11 @@
 
 *The model is the deliverable. It lives in machine-readable form in [`scoring.yaml`](../scoring.yaml) — a file a
 non-engineer can read in a room with a client. This page is the guided summary; the full legal and epistemic
-defence is [`methodology.md`](methodology.md) §5, and the one-level-deeper tour is [`scoring_framework.md`](scoring_framework.md).*
+defence is [`methodology.md`](methodology.md) Part 1 §5.*
 
 ---
 
-## The model in one line
+### The model in one line
 
 Take a vendor name or domain, collect lawfully-public evidence, and **start every vendor at 100**. For each
 issue found, **subtract a penalty sized by severity**. A category's posture is 100 minus its own penalties; the
@@ -24,7 +41,7 @@ hygiene elsewhere.
 The core difference from a single-grade platform: **we never collapse posture, confidence and assurity into one
 figure.**
 
-### The three axes, and the four readings beside them
+#### The three axes, and the four readings beside them
 
 | | What it answers | Range | Who owns it |
 |:--|:--|:--|:--|
@@ -42,7 +59,7 @@ Everything below the axes **interprets** the scores. None of it can move them.
 
 ---
 
-## Why penalty-based (and why we changed)
+### Why penalty-based (and why we changed)
 
 The earlier model needed a defensible *weight* for every category — *why is Cyber Hygiene 31%?* — a question with
 no authoritative answer (no standard publishes vendor-risk weights). A penalty model **deletes that problem**: a
@@ -53,7 +70,7 @@ that a pure technical rating does not have.
 
 ---
 
-## 1 · Severity penalties — the only points table
+### 1 · Severity penalties — the only points table
 
 Every signal is a **pass** (no penalty) or a fail at exactly one severity. Four fixed penalties drive everything —
 no per-signal point-tuning, no category-weight derivation to defend.
@@ -71,7 +88,7 @@ without a redeploy. Each finding is then adjusted by the NIST SP 1326 variables 
 
 ---
 
-## 2 · The grades
+### 2 · The grades
 
 The overall posture (0–100) maps to a letter grade — a documented, client-tunable default (no authority publishes
 vendor-risk cut-points).
@@ -88,7 +105,7 @@ Confidence runs **0–1** and is reported *beside* the grade, never mixed into i
 
 ---
 
-## 3 · Categories and signals
+### 3 · Categories and signals
 
 **Five scoring categories and two context categories.** Each **signal** maps an observation to a severity (or
 pass) in [`scoring.yaml`](../scoring.yaml) — **no category percentages**; a category's influence emerges from
@@ -97,7 +114,7 @@ the issues found in it, which is the whole point of a penalty model.
 The keys below are the ones the engine uses and the scorecard renders, so a category name can be carried from
 this page to a vendor's record and back.
 
-### Scoring categories — *how exposed is this vendor to compromise?*
+#### Scoring categories — *how exposed is this vendor to compromise?*
 
 | # | Category | Engine key | Example signals | Fed by |
 |:-:|:--|:--|:--|:--|
@@ -107,7 +124,7 @@ this page to a vendor's record and back.
 | 4 | **Transparency** | `transparency` | vulnerability-disclosure programme, `security.txt` | HTTP headers, trust pages |
 | 5 | **Compliance & Regulatory** | `compliance_regulatory` | certification posture (claimed vs registry-corroborated), regulator action | trust pages, regulator feeds |
 
-### Context categories — collected, counted toward coverage, **never penalising**
+#### Context categories — collected, counted toward coverage, **never penalising**
 
 | Category | Engine key | Signals | Feeds |
 |:--|:--|:--|:--|
@@ -140,7 +157,7 @@ exploitation (KEV) outranks a theoretical CVE (NVD). What *happened* penalises h
 
 ---
 
-## 4 · How a single finding is penalised — the NIST variables
+### 4 · How a single finding is penalised — the NIST variables
 
 NIST SP 1326's variables, applied to the **penalty** per finding before it is subtracted:
 
@@ -171,7 +188,7 @@ The rule is real; the discount is not yet being handed out.
 
 ---
 
-## 5 · How the numbers roll up
+### 5 · How the numbers roll up
 
 ```
 observation → severity → penalty (× age × frequency × mitigation)
@@ -192,7 +209,7 @@ deliberately **not** an average of the categories that happened to return data �
 **+23 posture**, because each clean category entered the average as a 100 and pulled it up. A silent source adds
 no penalty and cannot move the denominator, so *"missing data never changes posture"* is arithmetic, not a promise.
 
-### Why 2.86, and why the divisor must move when the category count does
+#### Why 2.86, and why the divisor must move when the category count does
 
 The model's **maximum damage** is `scoring_categories × 100 ÷ divisor`. That product is the thing being held
 fixed, and it is the trap the E5 restructure had to avoid:
@@ -227,7 +244,7 @@ either; silence is a confidence problem, surfaced as such.
 
 ---
 
-## 6 · The three differentiators (where normal subtraction stops)
+### 6 · The three differentiators (where normal subtraction stops)
 
 Spreading the total over a divisor is *compensatory* — strengths dilute weaknesses. That is correct for hygiene
 signals that genuinely trade off, and **wrong** for these three, which we keep deliberately.
@@ -255,7 +272,7 @@ problem — it surfaces flagged for review.)
 
 ---
 
-## 7 · Confidence — the second axis
+### 7 · Confidence — the second axis
 
 Confidence is **evidence coverage first**: of the signals we planned to collect, how many returned data. A
 bounded multiplier for the vendor's **operating history** is then applied — how much track record stands behind
@@ -276,7 +293,7 @@ source that is successfully queried and comes back clean (HIBP no breach, KEV no
 coverage as a benign pass — this is what lifts a genuinely-clean vendor out of the Ghost quadrant without claiming
 false certainty. Note this is the *only* thing a clean receipt does: it lifts confidence and **never** posture (§5).
 
-### The ceiling ramp — thin evidence caps how good a vendor may *look*
+#### The ceiling ramp — thin evidence caps how good a vendor may *look*
 
 `refuse_below: 0.4` used to be the whole story: a cliff at 40%, and above it nothing. So a vendor seen through
 four collectors could publish **100** and read identically to one seen through fourteen — which made *being
@@ -307,7 +324,7 @@ into a Ghost.
 
 ---
 
-## 7.1 · Operating history — continuous, and fenced off from posture
+### 7.1 · Operating history — continuous, and fenced off from posture
 
 How long the entity has traded, on a **saturating curve** rather than a ladder of bands
 ([`backend/app/maturity.py`](../backend/app/maturity.py)):
@@ -356,7 +373,7 @@ score non-comparable across vendors, unvalidatable against outcomes, and purchas
 
 ---
 
-## 7.2 · Target maturity — the baseline that needs no peers
+### 7.2 · Target maturity — the baseline that needs no peers
 
 Peer benchmarking answers *"am I typical?"*. This answers *"am I adequate?"* — and the vendors where the two
 **disagree** are the interesting ones. Configured in [`benchmarks.yaml`](../benchmarks.yaml) under
@@ -405,7 +422,7 @@ disciplines the engine applies one level up.
 
 ---
 
-## 8 · Assurity — the third axis
+### 8 · Assurity — the third axis
 
 *Implemented in [`backend/app/assurity.py`](../backend/app/assurity.py); configured under `assurity:` in
 [`scoring.yaml`](../scoring.yaml). Served at `GET /api/vendors/{ref}/assurity`.*
@@ -451,7 +468,29 @@ both extremes.
 > points lost to an expired certificate. Keeping them apart is what stops assurance theatre becoming a security
 > score, and it is the same discipline that keeps confidence out of posture.
 
-### 8.1 · The compliance gap — the only thing that lowers assurity
+**Worked example — why "no gaps" doesn't mean equal scores.** Two vendors with zero compliance gaps still land
+on different numbers, because the credits — not the absence of gaps — are the only thing driving the score
+above baseline:
+
+```
+Vendor A: cert_posture registry-corroborated (+1.4) + program_disclosure detailed (+0.6) + security_txt (+0.2)
+          = 2.2 credits → 100·sigmoid(−1.2 + 2.2) ≈ 73
+
+Vendor B: same two, no security_txt
+          = 2.0 credits → 100·sigmoid(−1.2 + 2.0) ≈ 69
+```
+
+The 4-point gap is one missing `security_txt: present` credit (+0.2) — "no gaps observed" only means neither
+vendor *contradicted* a claim; it says nothing about how much positive evidence either one actually has.
+
+**Independent verification, not self-report at face value.** Two collectors feed this axis at different
+reliability: `trust_collector.py` (reliability 0.5) reads vendor-published claims off their own trust page —
+explicitly marked *"claim, not evidence"* — while `registry_lookup_collector.py` (reliability 0.8) corroborates
+against official company registries. A claimed-but-uncorroborated certification earns `claimed_unverified`
+(+0.2); the same certification independently confirmed earns `registry_corroborated` (+1.4) — a 7× difference
+in credit for the same fact, scaled by how much it should be trusted.
+
+#### 8.1 · The compliance gap — the only thing that lowers assurity
 
 *Implemented in [`backend/app/compliance_gap.py`](../backend/app/compliance_gap.py).*
 
@@ -493,7 +532,7 @@ can be argued with — which the first cannot, because there is nothing to argue
 
 ---
 
-## 9 · Inherent risk and residual risk
+### 9 · Inherent risk and residual risk
 
 *Implemented in [`backend/app/residual_risk.py`](../backend/app/residual_risk.py). Served at
 `GET /api/vendors/{ref}/residual-risk`.*
@@ -538,11 +577,11 @@ and the declared exposure together support. The client decides.
 
 ---
 
-## 10 · Peer benchmarking — am I typical?
+### 10 · Peer benchmarking — am I typical?
 
 *Implemented in [`backend/app/benchmarking/`](../backend/app/benchmarking/), configured under `benchmarking:`
 in [`benchmarks.yaml`](../benchmarks.yaml), served under `/api/v2/suppliers/{ref}/…`. Design notes:
-[`benchmarking-design.md`](benchmarking-design.md).*
+[`design_decisions.md`](design_decisions.md) Part 1.*
 
 **`n` travels with every figure, and the refusal is the figure.** Not a greyed-out number, not a dash that
 reads as a rendering bug — the sentence, with the actual `n` in it.
@@ -580,7 +619,7 @@ cannot carry peer refs.
 deterministic lookups over the inputs and carry no independent judgement. Dispute an *input* — sector, size
 band, delivery model, headcount, revenue.
 
-### 10.1 · The expectation gap — am I what my peer group predicts?
+#### 10.1 · The expectation gap — am I what my peer group predicts?
 
 `Posture − E[Posture ∣ cohort]`, with the observations that account for it. The sentence this whole subsystem
 exists to produce:
@@ -603,7 +642,7 @@ Two disciplines:
 
 ---
 
-## 11 · Every deduction has a sentence
+### 11 · Every deduction has a sentence
 
 A score a client cannot have explained to them is the thing this product exists **not** to produce. So every
 band that costs points carries a plain-English reason in [`scoring.yaml`](../scoring.yaml), written
@@ -638,7 +677,7 @@ UI must not describe a calculation that never ran.
 
 ---
 
-## 12 · Worked example — a real vendor, reproducible
+### 12 · Worked example — a real vendor, reproducible
 
 Not a toy. **Atlassian**, as it stands in the live store. Re-run the frozen-corpus version with
 `python -m tests.regolden`.
@@ -681,7 +720,7 @@ regardless of the good hygiene elsewhere.*
 
 ---
 
-## 13 · Honest about what this simplifies
+### 13 · Honest about what this simplifies
 
 - **Perimeter ≠ posture.** OSINT measures what a stranger can see; a perfect header score is fully compatible with
   a bad internal posture. It's a proxy, labelled as one.
@@ -712,10 +751,1289 @@ regardless of the good hygiene elsewhere.*
 
 ---
 
-### See also
+#### See also
 
 - [`scoring.yaml`](../scoring.yaml) — the machine-readable model (the actual deliverable)
-- [`scoring_framework.md`](scoring_framework.md) — the guided tour, one level deeper than this page
-- [`methodology.md`](methodology.md) §5 — full derivation, legal basis, and benchmark defence
-- [`research_doc.md`](research_doc.md) — per-source reliability, legality, and limits
-- [`roadmap.md`](roadmap.md) — how this productises toward the Wahid AI third-party module
+- [`methodology.md`](methodology.md) Part 1 §5 — full derivation, legal basis, and benchmark defence
+- [`methodology.md`](methodology.md) Part 3 — per-source reliability, legality, and limits
+- Part 2 of this document — the per-metric arithmetic, every constant read from code
+
+---
+
+## Part 2 · Metrics reference
+
+*Where configuration and code disagree, that is called out explicitly rather than smoothed over.*
+
+This document explains the metrics the OSINT TPRM Module publishes, the theory each one rests on,
+and the arithmetic actually implemented in the code. Every constant quoted here was read from
+`scoring.yaml` or the module named beside it — where configuration and code disagree, that is
+called out explicitly rather than smoothed over.
+
+Model version: `scoring.yaml` `version: 5.4.0`, `model: penalty_subtractive`.
+
+### Overview
+
+The module deliberately reports several **separate axes** rather than one blended number, because
+each answers a different question and blending them destroys the ability to act on any of them:
+
+| Axis | Question it answers | Where it is computed |
+|---|---|---|
+| **Posture** | How exposed is this vendor to compromise? | `scoring/engine.py` |
+| **Confidence** | How much of the evidence we would *expect* for a company like this did we find? | `confidence_calculator.py` |
+| **Business Stability** | How likely is this vendor to still be trading? | `business_stability.py` |
+| **Assurity** | How much *independent* assurance stands behind their claims? | `assurity.py` |
+| **Longevity / Maturity** | How long have they operated, and how well is that evidenced? | `longevity.py`, `maturity.py` |
+| **Lifecycle** | What organisational stage are they in? | `lifecycle.py` |
+
+#### The theoretical commitment behind separate axes
+
+This is a **multi-attribute decision model with deliberately non-compensatory aggregation across
+axes**. In MCDA terms, a fully compensatory model (weighted sum of everything) allows a strong
+attribute to buy back a weak one. That is the wrong property here: a published trust page must
+never offset an expired production certificate, and financial distress must never read as a
+security failing. Each axis is therefore aggregated internally (partially compensatory, with
+limits) and **never** across axes.
+
+Two structural rules follow, and both are enforced in arithmetic rather than by convention:
+
+1. **Missing data reduces Confidence, never Posture.** The posture divisor is fixed by the model,
+   so a silent collector contributes no penalty *and* cannot move the denominator.
+2. **Absence never subtracts on Assurity.** Not holding a certification is not a finding. The
+   only thing that subtracts on that axis is a *compliance gap* — a vendor asserting a framework
+   and being observed failing a control inside its scope.
+
+---
+
+### 1. Posture Score
+
+#### What it measures
+
+The strength of a vendor's externally observable security posture — how exposed they are to
+compromise, on public evidence only.
+
+#### Theoretical model
+
+A **subtractive penalty model**, not a weighted-additive scorecard. Every vendor starts at 100 and
+each observed issue subtracts. The property this buys is the important one: a signal that returned
+nothing contributes nothing, so the model cannot reward opacity or punish a vendor for being
+hard to observe. There are **no category weights at all** — influence emerges from what was found,
+which is the point of a penalty model.
+
+The severity ladder and the aggregation decay are **expert judgement, not calibrated values**, and
+`scoring.yaml` requires them to be labelled as such wherever they are published. Calibration
+requires outcome labels, which this deployment does not yet collect.
+
+#### Scale
+
+- **0–100** (100 = strongest, 0 = weakest)
+- **Grades** (`scoring.yaml grades`): **A ≥ 85 · B ≥ 70 · C ≥ 50 · D ≥ 30 · F ≥ 0**
+
+#### Severity ladder (`severity_penalties`)
+
+| Severity | Penalty | Example |
+|---|---:|---|
+| Critical | **50** | expired production cert, unpatched KEV, CVSS 9–10 |
+| High | **20** | no DMARC, TLS 1.0/1.1, confirmed breach of personal data |
+| Medium | **6** | weak TLS, `p=none`, missing SPF, CVSS 4–6.9 |
+| Low | **1.5** | missing security header, no DNSSEC, CVSS 0.1–3.9 |
+| Informational | **0** | recorded but **not scored** — unverifiable observations |
+
+Critical : Low is **33.3 : 1**. This ratio was widened deliberately (E7b). At the old ladder,
+four Medium plus eight Low findings (56 points) outranked one Critical (40) — a dozen missing HTTP
+headers beating an actively-exploited vulnerability at 0.71 : 1. Widening alone only reaches
+1.39 : 1; it ships with rank decay (below) because neither half is sufficient. Together: **3.06 : 1**.
+
+#### Categories (`scoring.yaml categories`)
+
+**Five scoring categories** — these can penalise:
+
+1. **`breach_compromise_history`** — realized > exploited > theoretical
+   (`breach_by_data_class`, `kev_listed_cve`, `nvd_cve`)
+2. **`attack_surface_hygiene`** — the estate and how well it is kept
+   (`tls_version`, `cert_validity`, `hsts`, `csp`, `x_frame_opts`, `dnssec`, `caa`,
+   `subdomain_estate`, `stale_hosts`, `weak_issuance`, `estate_tls_legacy`, `estate_cert_expired`)
+3. **`identity_email`** — can this vendor be impersonated? (`dmarc`, `spf`, `dkim`)
+4. **`transparency`** — can this vendor be *told* about a vulnerability? (`vd_program`, `security_txt`)
+5. **`compliance_regulatory`** — claim reliability, not audit budget (`cert_posture`, `regulator_action`)
+
+**Two context categories** — they count toward coverage but contribute **exactly zero** to posture
+by construction:
+
+6. **`continuity_context`** — will this vendor still be trading? (`entity_status`, `entity_existence`,
+   `entity_maturity`, `domain_registration`, `sec_filing`, `sec_going_concern`, `insolvency_notice`,
+   `bankruptcy_petition`)
+7. **`assurance_context`** — `contactability`, `program_disclosure`, `reporting_posture`
+
+Context categories exist rather than the signals being deleted because `planned_signal_count` is
+the coverage denominator (**27** signals). Deleting them would raise every vendor's confidence for
+no evidential reason — the check still ran, we would simply have stopped recording it.
+
+#### Per-finding modifiers (`modifiers`)
+
+Applied to each finding before aggregation:
+
+- **Age decay** — `0.5 ^ (months / 36)`, floored at **0.15**. A three-year half-life on historic
+  occurrences. `cert_validity` is in `never_decays`: a certificate's `notAfter` is a *state
+  boundary*, not an event, so decaying it made a cert expired six years ago cheaper than one
+  expiring next week.
+- **Frequency** — `1 + 0.25 × (n − 1)`, capped at **2.0**. Three breaches are a pattern (×1.5),
+  not one breach counted three times. `kev_listed_cve` and `nvd_cve` are exempt: a bag of
+  keyword-matched CVEs is coarse-match noise, not distinct events.
+- **Mitigation** — **×0.6**, applied only where remediation is *evidenced*, and applied once.
+
+#### Aggregation within a category (`aggregation.decay = 0.7`)
+
+```
+CategoryPenalty(c) = Σᵢ pᵢ × 0.7^(rankᵢ − 1)      # ranked by descending penalty
+```
+
+**Rationale.** The tenth missing header on a vendor already missing nine tells you almost nothing
+new — you already know nobody is minding the headers. Charging it in full counts one organisational
+fact ten times. Rank decay expresses diminishing informational return, and it is applied **within**
+a category only: a cross-category discount would let a vendor's worst category be cheapened by
+their second-worst, which is precisely the compensatory behaviour the critical ceiling exists to
+prevent.
+
+Two prior steps protect the ranking:
+- **Worst-of collapse** — every `(category, signal)` group contributes one penalty, its worst
+  member *after* decay. So a fresh High can outrank a long-decayed Critical.
+- **Root-cause deduplication** — one remediation ticket, one penalty. Patching a KEV-listed CVE
+  fixes the NVD finding in the same action. Suppression zeroes the *penalty*, never the *evidence*.
+
+#### Final posture
+
+```
+Posture = 100 − ( Σ_categories min(penalty, 100) ) / 2.86
+```
+
+**Why a fixed divisor.** It is *not* a mean over the categories that answered. Averaging only
+answering categories made a clean trust page worth +23 posture, because each clean category entered
+the average as a 100 and pulled it up — silence changing the score, which is exactly what
+"missing data never changes posture" forbids.
+
+**Why 2.86 specifically.** `divisor(n) = n × (4/7)` holds maximum damage constant at 175 posture
+points regardless of how many scoring categories exist. Five scoring categories → **2.86**. Leaving
+it at the old 4 would have cut maximum damage to 125 and made the model *quietly more forgiving*
+without anything visibly failing. Asserted by `test_divisor_preserves_maximum_damage`.
+
+Category-level posture shown in the breakdown is `100 − category_penalty` (undivided).
+
+#### Non-compensatory overrides
+
+- **Gates (emit nothing).** Entity resolution confidence < **0.5**, a sanctions hit, or a
+  configured finding gate (`entity_dissolved`) **BLOCKS**: no posture, no grade, routed to a human.
+  A gate is not a low score — a vendor with a disqualifying finding publishing 60 clears a
+  ">= 50" procurement threshold and gets onboarded by a rule nobody re-read.
+- **Critical ceiling (caps, never sets).** A directly-observed current critical caps posture at
+  **49** — the top of Grade D. Armed only by `cert_validity` on the **apex host**
+  (`auto_signal_scope`); arming on any host in a fanned-out estate would cap every large vendor on
+  one abandoned staging certificate, and a non-compensatory response that fires constantly is one
+  nobody reads. `kev_listed_cve` and `breach_by_data_class` require human confirmation to arm.
+- **Confidence ceiling ramp** — see §2.
+- **Refusal (the Ghost).** Confidence < **0.40** → posture is **not published**. Per
+  `insufficient_evidence_is_adverse: true`, this is an **adverse** result, not a neutral one, and
+  the UI is required to render it that way.
+
+#### Log-odds preview (E13, not published as posture)
+
+`max(0, …)` means a vendor at three times the cap and one at six times both publish 0, so the model
+cannot rank the worst suppliers in a book. A bounded log-odds transform with shrinkage toward a
+peer rate (`scoring/log_odds.py`) is computed **alongside** as a preview field. It refuses whenever
+`L_peer` would come from fewer than eight real peers — shrinking an under-evidenced vendor toward
+invented postures is worse than not shrinking at all.
+
+---
+
+### 2. Confidence Score
+
+#### What it measures
+
+Not "how much data did we get" but: **what percentage of the evidence we would expect to exist for
+a company like this did we actually find?**
+
+#### Theoretical model
+
+The naïve formulation `found / all_possible` embeds a systematic bias: it penalises young and
+small companies for lacking evidence they could not yet have produced. A two-month-old startup has
+no five-year SOC 2 observation window, and no SEC filings, and cannot acquire either by trying
+harder.
+
+The implemented alternative is a **conditional expectation ratio** — the denominator is the
+evidence set expected *given the vendor's profile*, so an unattainable signal never enters it:
+
+```
+Confidence = Σ weights(expected ∧ found) / Σ weights(expected)      # capped at 1.0
+```
+
+This is the same principle as `attainable_after_years` in `benchmarks.yaml`: measure vendors
+against what is attainable for them, not against an absolute footprint.
+
+#### Scale
+
+- **0.0–1.0**
+- **Bands** (`confidence.bands`): **High ≥ 0.90 · Medium ≥ 0.70 · Low < 0.70**
+- Below **0.40** (`refuse_below`) nothing is published.
+
+#### Signal expectations (`confidence_config.py`)
+
+**Always expected — attainable day 1, total weight 108:**
+
+| Signal | Weight | | Signal | Weight |
+|---|---:|---|---|---:|
+| `domain_registration` | 15 | | `dmarc` | 12 |
+| `entity_status` | 15 | | `spf` | 8 |
+| `cert_validity` | 12 | | `dkim` | 5 |
+| `entity_existence` | 10 | | `hsts` | 5 |
+| `tls_version` | 10 | | `csp` | 5 |
+| `dnssec` | 5 | | `x_frame_opts` | 3 |
+| `caa` | 3 | | | |
+
+**Scales with age** — expected only past a minimum operating age:
+
+| Signal | Weight | Expected after |
+|---|---:|---|
+| `insolvency_notice`, `bankruptcy_petition` | 15, 15 | 1 year |
+| `kev_listed_cve`, `nvd_cve` | 15, 10 | 1 year |
+| `security_txt`, `contactability` | 5, 8 | 1 year |
+| `regulator_action` | 20 | 2 years |
+| `breach_by_data_class` | 15 | 2 years |
+| `vd_program`, `program_disclosure`, `reporting_posture` | 12, 10, 8 | 2 years (and ≥ small) |
+| `sec_filing` | 20 | 2 years (and ≥ medium, US only) |
+| `cert_posture` | 15 | 3 years (and ≥ small) |
+
+**Scales with size** — `subdomain_estate` (8), `stale_hosts` (10), `estate_tls_legacy` (10),
+`estate_cert_expired` (10) require ≥ medium; `weak_issuance` (8) requires ≥ small.
+
+#### Expected-weight denominators (computed from the code)
+
+| Operating years | Band | Size unknown | Size small | Size medium+ |
+|---|---|---:|---:|---:|
+| 0.5 | startup | 108 | 116 | 154 |
+| 1.5 | startup | 176 | 184 | 222 |
+| 2.5 | young | 211 | 249 | 307 |
+| 3.5+ | young → veteran | 211 | 264 | 322 |
+
+The denominator **plateaus at three years** — past that, age adds no further expectations and only
+size does. Note that an **unknown size band is treated as the smallest**, so every size-gated
+signal drops out of the denominator; this is conservative but it means confidence for a vendor with
+no size evidence is computed over a materially smaller expected set.
+
+#### Worked comparison
+
+- **Startup, 0.5 years, size unknown, all 13 always-expected signals found** → 108/108 = **100%**.
+- **Veteran, 15 years, size unknown, only the always-expected 13 found** → 108/211 = **51.2%** (Low).
+
+A veteran missing financial filings is penalised; a startup missing the same filings is not,
+because they are not yet expected. The differentiation is produced by the denominator, not by a
+flat penalty table.
+
+#### Signal statuses
+
+Only `FOUND` and `NOT_FOUND` move the number. `SEARCH_FAILED` (our collector broke),
+`NOT_APPLICABLE` and `NOT_CHECKED` are excluded from **both** numerator and denominator — our
+infrastructure failing is not the vendor's evidence gap. Signals the run *planned* and got nothing
+for are reclassified as `NOT_FOUND`: planned means attempted, and attempted-and-absent is exactly
+what a reader needs itemised.
+
+#### Confidence ceiling ramp (`confidence.ceiling_ramp`)
+
+Thin evidence caps how good a vendor may **look** — a cap, never a deduction, so no category
+penalty is touched:
+
+| Coverage ≥ | Posture ceiling |
+|---|---:|
+| 0.90 | 100 (no cap) |
+| 0.75 | 97 |
+| 0.60 | 90 |
+| 0.40 | 80 |
+| < 0.40 | not published |
+
+Before this ramp there was a single cliff at 40%: a vendor seen through four collectors could
+publish 100 and read identically to one seen through fourteen, making *being hard to observe* the
+cheapest route to a high score.
+
+#### Fallback path
+
+If the age-based calculation raises, `scoring/engine.py` falls back to raw coverage
+(`covered / planned`) multiplied by a bounded assurance multiplier derived from `entity_maturity`
+(floor **0.40**, ceiling **1.04**). When multiple maturity observations exist, the **most
+conservative** multiplier wins, so an old domain in front of a young company cannot buy assurance
+the company has not earned.
+
+#### Deduction labels
+
+Each gap carries a human-readable label and category — e.g. "DMARC email authentication missing"
+(`email_security`, −12), "SEC regulatory filings missing" (`financial_transparency`, −20). Impact
+is banded: high ≥ 15, medium ≥ 8, low otherwise.
+
+> **Known defect.** `ConfidenceCalculator.calculate_from_profile` passes `profile.sector` into the
+> `jurisdiction` parameter. For `sec_filing` (the only `jurisdiction_required` signal) any
+> non-US-looking value drops it from the denominator. Harmless while size is unknown, since
+> `sec_filing` is size-gated anyway, but wrong for medium+ vendors.
+
+---
+
+### 3. Business Stability Score
+
+#### What it measures
+
+Financial health and continuity — will this vendor still be trading? Deliberately separate from
+posture: **a bankrupt company can have excellent security controls, and a secure startup can run
+out of cash.**
+
+#### Theoretical model
+
+Age-anchored base score plus evidenced adjustments. The age anchor rests on the **liability of
+newness** (Stinchcombe, 1965): young organisations face materially higher hazard rates because
+they must build roles, routines and external trust from nothing while consuming scarce resources.
+
+**Real-world survival base rates.** US Bureau of Labor Statistics Business Employment Dynamics
+establishment survival data supports, approximately:
+
+- ~**20%** of new establishments fail within the first year
+- ~**50%** survive to five years
+- ~**33%** survive to ten years
+- surviving cohorts show a **declining hazard rate** — the longer a firm has traded, the lower its
+  annual failure probability, which is what justifies survivorship credit
+
+These are establishment-level US figures used as a **proxy** for entity survival, not a fitted
+model of any specific vendor. They set the shape of the base curve; they are not a prediction.
+
+**Explicitly out of scope:** Altman Z-score, cash burn, funding runway, D&B-style credit scoring
+and any natural-person financial data. Computing an in-house distress index from scraped
+fundamentals is credit-rating territory and defamation-adjacent when wrong. These sit on
+`held_roadmap` (see `continuity.py`).
+
+#### Scale
+
+- **0–100**, or **None** when gated
+- **Standing**: sound ≥ 80 · watch ≥ 60 · impaired ≥ 40 · ceased < 40 (or gated)
+
+#### Gate logic (checked first, blocks scoring)
+
+- Any insolvency record with `status == "active"` → **BLOCK**
+- Company status in {`liquidation`, `administration`, `receivership`, `dissolved`} → **BLOCK**
+
+A gate returns `score: None` with a stated reason. Historical insolvency is a penalty, not a gate.
+
+#### Base score by age band (`longevity.py base_age_score`)
+
+| Band | Years | Base | `base_adjustment` | **Effective base** |
+|---|---|---:|---:|---:|
+| startup | < 2 | 50 | −30 | **20** |
+| young | 2–5 | 65 | −20 | **45** |
+| established | 5–10 | 80 | 0 | **80** |
+| mature | 10–20 | 90 | 0 | **90** |
+| veteran | 20+ | 100 | 0 | **100** |
+| unknown | — | 60 | not applied* | **60** |
+
+\* `_apply_age_based_adjustments` returns early for `unknown`, so neither the −15 adjustment nor
+any multiplier is applied.
+
+#### Financial penalties (`_apply_financial_penalties`)
+
+| Signal | Penalty | Source |
+|---|---:|---|
+| Going-concern language | 25 | SEC EDGAR — the vendor's own auditor doubting continuity |
+| Historical insolvency, ≤ 3 years ago | 20 | resolved but recent |
+| Historical insolvency, > 3 years ago | 5 | minor |
+| Revenue declining across recent periods | 15 | every consecutive period lower |
+| Debt-to-equity > 3 | 10 | latest period |
+| Debt-to-equity > 2 | 5 | latest period |
+| Negative net income across last 2 periods | 15 | net income used as a cash-flow proxy |
+
+Only one historical-insolvency penalty is charged. `scoring.yaml` additionally declares
+`voluntary_arrangement` (15), `declining_profitability` (10), `high_customer_concentration` (10)
+and `no_recent_funding_18_months` (5) — **these are declared but not yet wired** in
+`business_stability.py`.
+
+#### Survivorship bonus and age multipliers
+
+Bonus: mature **+5**, veteran **+10**, others 0 (a further +5 for surviving a known downturn is
+implemented in `survivorship_bonus` but not currently invoked by the engine).
+
+| Band | Penalty × | Bonus × |
+|---|---:|---:|
+| startup | 1.5 | 0.5 |
+| young | 1.2 | 0.7 |
+| established | 1.0 | 1.0 |
+| mature | 0.9 | 1.2 |
+| veteran | 0.8 | 1.5 |
+
+The asymmetry is the theory made arithmetic: a young firm has less balance-sheet buffer, so the
+same distress signal is worse; a veteran has demonstrated it can absorb shocks, so the same signal
+is less predictive of exit.
+
+```
+Business Stability = clamp(0, 100, effective_base − Σ(penalties × mult) + Σ(bonuses × mult))
+```
+
+#### Outcomes with no adverse financial evidence at all
+
+| Band | Score | Standing |
+|---|---:|---|
+| startup | **20** | ceased |
+| young | **45** | impaired |
+| established | **80** | sound |
+| mature | **96** | sound |
+| veteran | **100** | sound |
+| unknown | **60** | watch |
+
+> **⚠️ Two divergences that need a decision.**
+>
+> 1. **Config and code disagree on the base curve.** `scoring.yaml`
+>    `business_stability.age_base_scores` reads 70/75/80/85/100/60 and its
+>    `confidence_adjustments` read −0.15/−0.10. The runtime path
+>    (`business_stability.py` → `longevity.py`) reads 50/65/80/90/100/60 and −0.60/−0.50, and never
+>    loads the YAML block. **The code wins at runtime; the YAML block is inert.** `methodology.md` Part 1
+>    documents the YAML numbers and is therefore describing values that never execute.
+> 2. **A clean startup is labelled "ceased".** With zero adverse findings, a <2-year-old vendor
+>    scores 20 and lands in the same standing as a company in liquidation. That is a base-rate
+>    prior being reported in vocabulary reserved for an observed outcome, and it contradicts
+>    `lifecycle.py`'s own caveat: *"A young company is not thereby an impaired counterparty — that
+>    is the founding-date scoring this system refuses."* Either the base curve or the standing
+>    thresholds should move.
+
+#### Age differentiation profile (`age_risk_factors.py`)
+
+Alongside the score, six dimensions are banded for narrative context:
+
+| Dimension | Bands |
+|---|---|
+| Historical depth | sparse · limited · moderate · rich · extensive |
+| Financial transparency | opaque · limited · partial · transparent · comprehensive |
+| Leadership risk | founder_dependent/high · moderate · low · stable |
+| Operational maturity | immature · developing · mature · established · legacy |
+| Media velocity | unknown · low · moderate · high · critical |
+| Structural change | neutral · low · moderate · high_suspicion |
+
+The same observation is read differently by age — a name change at 18 months is normal
+repositioning; three name changes and two address changes at 20 years is a suspicion signal.
+Several inputs (leadership history, media counts, structural changes) are **currently passed as
+placeholders** from `business_stability.py` and are not yet collector-fed.
+
+---
+
+### 4. Assurity Score
+
+#### What it measures
+
+**Independent assurance** — how much externally verifiable evidence exists that a security
+programme is audited and operating. It is explicitly *not* a security score.
+
+#### Theoretical model
+
+```
+Assurity = 100 × σ( intercept + scale × Σ credits − γ × compliance_gaps )
+```
+
+where `σ(x) = 1 / (1 + e^(−x))`.
+
+**Why this axis exists.** Before it, the model expressed assurance by *subtracting* for its
+absence — `cert_posture.none_claimed` cost 8 points and fired on five of five corpus vendors. That
+is a tax on audit budget, not a measure of risk, and it fell hardest on exactly the small suppliers
+this product exists to assess fairly.
+
+**Why a sigmoid rather than a sum.** The logistic function is bounded without a cliff at either
+end and is monotone in the credit sum. The twentieth certification cannot buy what the second did
+(saturation), and no vendor is ever pinned at exactly 0 or 100 — so the axis keeps resolving
+differences at both extremes, which is precisely the defect the log-odds work exists to fix for
+Posture. Credits are additive in **log-odds** space, which is the natural space for combining
+independent pieces of evidence.
+
+**Absence never subtracts — enforced, not intended.** `_validate` rejects a negative credit at load
+time. A vendor with nothing observable sits at the intercept, which is deliberately **low rather
+than zero**, because unevidenced is not disproved and a 0 would read as *"audited and failed"*.
+
+#### Parameters (`scoring.yaml assurity`)
+
+- `enabled: true` · `intercept: −1.2` · `scale: 1.0` · `gamma: 0.8` · `min_observed_signals: 3`
+- **Published range: 23 → 97.** Floor = σ(−1.2) ≈ 0.231. Ceiling = σ(−1.2 + 4.8) ≈ 0.973.
+
+#### Credit table
+
+| Signal | Band | Credit |
+|---|---|---:|
+| `cert_posture` | `registry_corroborated` | **1.4** |
+| `cert_posture` | `claimed_unverified` | 0.2 |
+| `reporting_posture` | `substantive` | 0.9 |
+| `reporting_posture` | `partial` | 0.3 |
+| `vd_program` | `bug_bounty` | 0.8 |
+| `vd_program` | `security_txt_only` | 0.3 |
+| `program_disclosure` | `detailed_policies` | 0.6 |
+| `program_disclosure` | `marketing_only` | 0.1 |
+| `contactability` | `dpo_and_security_contact` | 0.4 |
+| `contactability` | `partial` | 0.1 |
+| `dnssec` | `valid` | 0.3 |
+| `security_txt` | `present` | 0.2 |
+| `caa` | `present` | 0.2 |
+
+The gap between `registry_corroborated` (1.4) and `claimed_unverified` (0.2) is the axis's whole
+thesis: an independently verifiable certification is worth seven times a marketing claim.
+
+#### The only subtraction
+
+A **compliance gap** (γ = 0.8 each) — the vendor asserting a framework and being observed failing a
+control within its scope. That is a statement about the reliability of their own claims, which is
+exactly what this axis measures. A compliance gap **never touches Posture**. It is high-signal
+precisely because the way to game it is to drop the claim, which is itself informative.
+
+#### Publication threshold
+
+Below **3 observed signals**, nothing is published. "2 of 3" assembled from whichever checks
+happened to return is the same false precision as a median over three peers.
+
+Note that `observed` counts signals that were **checked**, whether or not they evidenced anything —
+a checked-and-empty signal is a real observation, and is still not a subtraction.
+
+#### Age handling
+
+Age does **not** adjust the credit sum or the score. It adjusts only the reported **confidence**,
+via `longevity.confidence_adjustment` mapped from the `entity_maturity` band: startup −0.60,
+young −0.50, established/mature/veteran 0.00, unknown −0.05.
+
+> **Correction to earlier documentation.** There is no weighted-component model
+> (25/20/20/15/10/10), no "attainability" band (Full/Partial/Minimal), and no age cap on the
+> attainable score. Those described a design that was never implemented.
+
+---
+
+### 5. Longevity and Maturity
+
+#### What it measures
+
+Operating history, and — separately — **how well that history is evidenced**.
+
+#### Age bands (`longevity.age_band_from_years`)
+
+```
+< 2 → startup   |   2–5 → young   |   5–10 → established   |   10–20 → mature   |   20+ → veteran
+```
+
+`maturity.py` carries a parallel band vocabulary used by `scoring.yaml` for narrative lookup:
+`new_lt_1` · `startup_lt_2` · `young_2_5` · `established_5_10` · `mature_gt_10`.
+
+#### The maturity index — why it saturates
+
+```
+index(y) = min(1, ln(1 + y) / ln(1 + 25))          SATURATION_YEARS = 25
+```
+
+A step table could not tell an 11-year-old vendor from a 40-year-old one: everything past ten years
+was one bucket. But a linear-in-years term would make "old" the single largest term in the model.
+The **logarithmic, saturating** curve encodes the actual epistemics: year two of trading is
+enormously informative, year forty is not. A vendor trading 25 years has demonstrated continuity
+across at least two full economic cycles; one trading 40 has not demonstrated meaningfully more.
+
+#### Evidence strength — why age is discounted by source
+
+**Age is purchasable.** An aged domain costs a few hundred dollars at an expiry auction; a company
+inception date in a national register does not. Weighting every source equally would have made
+"buy an old domain" the cheapest posture uplift in the product.
+
+```
+assurance_index(y, source) = min( index(y), index(y) × evidence_strength(source) )
+```
+
+| Source | Strength | |
+|---|---:|---|
+| `gleif`, `companies_house`, `abn` | 1.00 | authoritative entity registers |
+| `wikidata` | 0.90 | curated inception date, community-maintained |
+| `firmographics`, `pdl` | 0.80 | aggregated founding year |
+| `rdap` | 0.60 | domain creation — a proxy, and a buyable one |
+| unrecognised | 0.60 | a new collector earns its weight; it does not inherit it |
+
+The discount is **one-directional**: a weak source can never buy assurance, and can never
+manufacture youth that isn't there either.
+
+#### Source priority for the date itself
+
+1. Incorporation date from entity registers (OpenCorporates, Companies House, ABR, GLEIF)
+2. Wikidata P571 (legal inception)
+3. RDAP domain creation date (discounted, free fallback)
+4. `unknown`
+
+#### Where age is allowed to reach
+
+Age reaches exactly three places, and **posture is not one of them**:
+
+1. **Confidence** — the bounded assurance multiplier (floor 0.40, ceiling 1.04)
+2. **Benchmarking** — cohort assignment and `attainable_after_years`
+3. **Business Stability** — base score and penalty/bonus multipliers
+
+There is **no published evidence that founding date predicts security posture**, which is why age
+is confined to Confidence and Benchmarking on the security side. `scoring/engine.py` carries an explicit comment recording that a previous
+revision added a table charging young vendors 6–15 posture points *where no finding had been
+observed* — a deduction with no evidence behind it, levied on a company for being new — and why it
+was removed. Two vendors with identical findings get an identical posture. That is deliberate.
+
+#### Contingency planning
+
+`contingency_plan_required` returns True for **high** criticality with a startup or young vendor,
+and for **medium** criticality with a startup — a control response to elevated base-rate exit risk,
+rather than a score deduction.
+
+---
+
+### 6. Lifecycle
+
+#### What it measures
+
+Organisational stage — and it is **context only**. It is not a score, it emits no finding, it
+writes nothing to the store, and it cannot reach the scoring engine.
+
+#### Theoretical model: Adizes corporate lifecycle
+
+`lifecycle.py` implements stages from the **Adizes corporate lifecycle** model (Adizes, 1979;
+*Corporate Lifecycles*, 1988), which characterises organisations by the changing balance of
+flexibility and control rather than by funding or headcount. Firms are most flexible and least
+controlled at birth, most controlled and least flexible in old age, and best balanced at Prime.
+
+```python
+< 1  → infancy      # under 1 year
+< 2  → go_go        # rapid growth, processes forming
+< 5  → adolescence  # structure emerging, not yet stable
+< 15 → prime        # peak balance of control and flexibility
+≥ 15 → aging        # established, accumulating path-dependency
+None → unknown
+```
+
+Derived solely from operating years (entity inception, or domain age as fallback).
+
+#### What each stage means for a buyer
+
+| Stage | Buyer-relevant reading |
+|---|---|
+| **Infancy** | Financial fragility (no revenue history), compliance immaturity (no SOC 2 observation window yet), key-person dependency. DMARC/TLS gaps are greenfield misses — hygiene not embedded in founding habits. |
+| **Go-Go** | Processes forming, financial model unproven. Gaps indicate security deprioritised during growth. SOC 2 Type 2 unlikely — insufficient observation window. |
+| **Adolescence** | Structure emerging. Cohort benchmarking against similarly-aged peers is more meaningful than comparison with incumbents. Gaps here suggest deliberate inaction rather than resource constraint. |
+| **Prime** | Established processes and governance. Watch for emerging path-dependency. Gaps are concerning — years have been available. SOC 2 absence is a choice or a programme failure. |
+| **Aging** | Accumulating path-dependency; legacy systems constrain modernisation. Gaps suggest accepted obsolescence or under-investment. |
+| **Unknown** | Cannot assess lifecycle risk. Request incorporation evidence directly. |
+
+#### Key-person risk
+
+A **flag with a stated basis**, never a score: headcount ≤ **10** (observed via Wikidata) in a
+**high-criticality** relationship. Deliberately weak — headcount is a *scale* proxy, not a
+*concentration* measure, and internal dependency concentration is not externally observable.
+
+#### Technology obsolescence framing
+
+Re-labels findings the engine **already charged for** (`tls_version`, `kev_listed_cve`) as
+path-dependency context, adding no arithmetic. The same finding is described differently by age:
+TLS 1.0 on a 2-year-old vendor is a configuration decision fixable by config change; on a
+20-year-old vendor it is likely path-dependency that may require system replacement. Deduplicated
+per unique `(signal, band_key)` so the UI does not repeat itself.
+
+> **Correction to earlier documentation.** The funding-stage model (Seed / Series A/B / Series C+ /
+> IPO), employee-count stages, product-maturity stages and market-presence tiers described
+> previously are **not implemented** and have no collector behind them. `LifecycleStage` is the
+> Adizes five-stage vocabulary above.
+
+---
+
+### Metric relationships
+
+#### Posture ↔ Confidence
+Different questions: how strong are the controls, versus how much of the expected evidence we
+found. High posture with low confidence means clean *observable* controls on thin evidence — common
+for young vendors. **A bare posture is unrepresentable; never publish one without its confidence.**
+Confidence acts on posture in one direction only: as a **ceiling**, never as a deduction.
+
+#### Posture ↔ Business Stability
+Orthogonal by construction. Business Stability signals are excluded from **both sides** of the
+posture coverage ratio, and the two context categories cannot penalise. A vendor can be sound and
+exposed, or impaired and well-controlled.
+
+#### Posture ↔ Assurity
+Complementary: implementation versus independent verification. Assurity credit can **never** buy
+back posture lost to a real finding. Keeping them apart is what stops assurance theatre from
+becoming a security score.
+
+#### Longevity → everything except Posture
+Foundational context. It sets the Confidence denominator, the Business Stability base and
+multipliers, the benchmark cohort, and the Assurity confidence adjustment. It reaches Posture
+**nowhere**.
+
+#### Business Stability ↔ Lifecycle
+Strongly correlated — both are age-anchored — but lifecycle is narrative and stability is scored.
+Lifecycle is what lets a reader interpret a stability score in context rather than as a verdict.
+
+---
+
+### Key principles
+
+1. **Never mix axes.** Each answers a different question; none may influence another's arithmetic.
+2. **Missing data reduces Confidence, never Posture.** Enforced by the fixed divisor, not by
+   convention.
+3. **Absence of evidence is not evidence of failure.** Not holding a certification is not a
+   finding. Only an *asserted-then-failed* control is.
+4. **Age-appropriate expectations.** Confidence denominators and attainability rules scale with
+   profile, so the maths handles fairness rather than a special case doing it.
+5. **Separate gates from scores.** Some conditions must **block**, not merely reduce: sanctions,
+   ambiguous entity resolution, active insolvency, dissolution. A low score clears a threshold; a
+   gate does not.
+6. **Insufficient evidence is adverse, not neutral.** A supplier nobody can see is a supplier
+   nobody has checked.
+7. **No vendor context reaches the posture arithmetic.** Sector, revenue, headcount, country,
+   ownership and age are all out. The same evidence must score the same way for everyone, or
+   comparability is gone.
+8. **Judgement is labelled as judgement.** The severity ladder, the aggregation decay and the
+   divisor are expert judgement. They are defensible and reviewable; they are not calibrated
+   against outcomes, and nothing may present them as though they were.
+
+---
+
+### API endpoints
+
+**Posture and confidence**
+- `GET /api/vendors/{ref}` — the published Score (posture, grade, confidence, categories)
+- `GET /api/vendors/{ref}/confidence` — confidence breakdown with deduction labels
+- `GET /api/vendors/{ref}/coverage` — evidence coverage analysis
+- `GET /api/vendors/{ref}/history` — prior scores
+- `GET /api/vendors/{ref}/findings`, `/evidence`, `/evidence/{evidence_id}` — the receipts
+
+**Business stability and continuity**
+- `GET /api/vendors/{ref}/stability` — score, standing, penalties, bonuses, gate status
+- `GET /api/vendors/{ref}/financial` — raw financial profile
+- `GET /api/vendors/{ref}/continuity` — registry facts and going-concern status
+
+**Assurity**
+- `GET /api/vendors/{ref}/assurity` — score, inputs, gap penalty, caveats
+- `GET /api/vendors/{ref}/evidence-request-pack` — what to ask the vendor for
+
+**Longevity and lifecycle**
+- `GET /api/vendors/{ref}/lifecycle` — stage, key-person flag, obsolescence framing
+- `GET /api/vendors/{ref}/profile` — operating years, age band, size band
+
+**Scoring**
+- `POST /api/vendors/score` · `POST /api/vendors/{ref}/rescore` — 202 + job id
+- `GET /api/jobs/{job_id}` · `GET /api/jobs/{job_id}/stream`
+
+---
+
+### Summary
+
+| Metric | Range | Aggregation | Age's role |
+|---|---|---|---|
+| **Posture** | 0–100, A–F | `100 − Σ capped penalties / 2.86`, with rank decay 0.7 | **none** |
+| **Confidence** | 0–1 | `Σ w(expected ∧ found) / Σ w(expected)` | sets the denominator |
+| **Business Stability** | 0–100 or gated | base − penalties + bonuses, age-multiplied | base score + multipliers |
+| **Assurity** | 23–97 | `100 × σ(−1.2 + Σ credits − 0.8·gaps)` | confidence only |
+| **Longevity** | bands + 0–1 index | `ln(1+y)/ln(26)`, discounted by source | is the metric |
+| **Lifecycle** | 5 Adizes stages | none — narrative only | is the metric |
+
+Each axis is computed independently by a method appropriate to what it measures, and they are
+reported side by side rather than blended. The age-based differentiation makes the treatment of
+young and small vendors fair *by construction* — through what is expected of them, not through a
+penalty applied and then apologised for.
+
+#### Open items flagged by this review
+
+1. `business_stability.age_base_scores` / `confidence_adjustments` in `scoring.yaml` are **inert** —
+   the runtime reads `longevity.py`. One of the two must be deleted or wired.
+2. A clean startup scores **20 / "ceased"** on Business Stability. The standing vocabulary and the
+   base curve need to be reconciled.
+3. Four declared financial penalties (`voluntary_arrangement`, `declining_profitability`,
+   `high_customer_concentration`, `no_recent_funding_18_months`) are **not wired**.
+4. Several `age_risk_factors` inputs are passed as placeholders from `business_stability.py`
+   (`finding_count=0`, leadership, media, structural-change fields) — the profile currently reports
+   on defaults rather than observations.
+5. `calculate_from_profile` passes `sector` as `jurisdiction`.
+6. `methodology.md` Part 1 §"Age-based base scores" documents the inert YAML values (base 70) and
+   should be corrected alongside this file.
+
+---
+
+## Part 3 · Vendor age differentiation
+
+*Key principle: a 2-year-old startup can have excellent cybersecurity controls, and a 40-year-old company can have poor security. Age affects **Business Stability and Confidence only**, never cybersecurity posture.*
+
+### Overview
+
+The OSINT-based Third-Party Risk Management (TPRM) module implements a sophisticated vendor age differentiation system that distinguishes between vendors of different ages (e.g., 2 years vs 20 years) through multiple complementary mechanisms. This system recognizes that vendor age is a contextual factor for business stability assessment rather than a direct cybersecurity penalty.
+
+**Key Principle:** A 2-year-old startup can have excellent cybersecurity controls, and a 40-year-old company can have poor security. Age affects BUSINESS STABILITY only, not cybersecurity posture.
+
+### Architecture
+
+The age differentiation system consists of three main modules:
+
+1. **`longevity.py`** - Discrete age band classification with base scores and confidence adjustments
+2. **`maturity.py`** - Continuous logarithmic maturity index with evidence strength weighting  
+3. **`business_stability.py`** - Integration of age into Business Stability scoring
+
+### Module 1: longevity.py - Age Band Classification
+
+The six age bands, their base Business Stability scores, confidence adjustments and survivorship
+bonuses are the authoritative table in [`methodology.md`](methodology.md) Part 1 §5.2.1 (not repeated
+here to avoid the two drifting apart) — `longevity.py` is the implementation of that table.
+`base_scores`: startup 70, young 85, established 90, mature 95, veteran 100, unknown 85.
+`confidence_adjustments`: startup −0.20, young −0.10, established/mature/veteran 0.00, unknown
+−0.05. `survivorship_bonuses`: mature +5, veteran +10, plus +5 for surviving a named downturn
+(2008, 2020) if the vendor was operating through it.
+
+#### Age-Specific Risk Factors
+
+Different risk factors are assessed based on age band:
+
+**Startup (<2 years):**
+- Funding runway remaining
+- Customer concentration risk
+- Founder dependency (key person risk)
+
+**Young (2-5 years):**
+- Growth sustainability
+- Market validation (product-market fit)
+- Team completeness and hiring ability
+
+**Established (5-10 years):**
+- Market position in industry
+- Operational efficiency and margin pressure
+- Scalability without breaking operations
+
+**Mature (10-20 years):**
+- Decline signals (revenue/market share trends)
+- Acquisition risk (leadership changes, PE ownership)
+- Innovation stagnation (R&D investment, product pipeline)
+
+**Veteran (20+ years):**
+- Institutional health (governance, succession planning)
+- Adaptability to market changes
+- Legacy risk (technical debt, outdated systems)
+
+### Module 2: maturity.py - Continuous Age Index
+
+#### Logarithmic Maturity Index
+
+The system uses a continuous logarithmic index that saturates at 25 years:
+
+```python
+def maturity_index(years: float | None) -> float | None:
+    """Operating history as a saturating 0-1 index."""
+    if years is None:
+        return None
+    years = max(0.0, float(years))
+    return min(1.0, math.log1p(years) / math.log1p(SATURATION_YEARS))
+```
+
+**Formula:** `index(y) = min(1, ln(1 + y) / ln(1 + 25))`
+
+**Values:**
+- 1 year → 0.21
+- 2 years → 0.34
+- 5 years → 0.55
+- 10 years → 0.74
+- 20 years → 0.93
+- 25+ years → 1.00
+
+**Rationale for Saturation at 25 Years:**
+A vendor trading 25 years has demonstrated continuity across at least two full economic cycles; one trading 40 years has not demonstrated meaningfully more. Treating 40 years as significantly higher would let "old" dominate the scoring model.
+
+#### Evidence Strength Weighting
+
+Different data sources receive different weights for age claims:
+
+```python
+EVIDENCE_STRENGTH: dict[str, float] = {
+    "gleif": 1.0,               # LEI registration — authoritative entity record
+    "companies_house": 1.0,     # UK register
+    "abn": 1.0,                 # Australian Business Register
+    "wikidata": 0.9,            # Curated inception date; community-maintained
+    "firmographics": 0.8,       # Aggregated founding year
+    "pdl": 0.8,
+    "rdap": 0.6,                # Domain creation date — proxy, and buyable
+}
+```
+
+**Rationale:** A national register records the legal entity's inception; RDAP records when somebody paid for a domain name. These are different claims, and only the first is what "operating history" means.
+
+#### Assurance Index
+
+The confidence multiplier combines maturity index with evidence strength:
+
+```python
+def assurance_index(years: float | None, source: str | None = None) -> float | None:
+    """The index used for the CONFIDENCE multiplier: operating history, discounted by evidence."""
+    index = maturity_index(years)
+    if index is None:
+        return None
+    # Discount is one-directional only - can scale down, never up
+    return min(index, round(index * evidence_strength(source), 4))
+```
+
+**Key Principle:** The discount is deliberately one-directional. It scales the index DOWN, so a weakly-evidenced forty-year-old domain earns roughly what a well-evidenced seven-year-old company earns — which is the intended answer, because an aged domain is a thing you can buy and a seven-year trading record is not.
+
+### Module 3: business_stability.py - Integration
+
+#### Age-Based Base Score Calculation
+
+The Business Stability score starts with an age-based base score:
+
+```python
+def _compute_age_base(self) -> None:
+    """Compute base score from vendor age."""
+    # Priority order for age sources:
+    # 1. incorporation_date from entity registers
+    # 2. entity_maturity from Wikidata (P571 - legal inception date)
+    # 3. entity_maturity from RDAP (domain creation date - discounted)
+    # 4. Fallback to "unknown" if no source available
+    
+    if self.profile.incorporation_date:
+        self.profile.operating_years = operating_years(self.profile.incorporation_date.value)
+    else:
+        # Fallback to Wikidata or RDAP maturity data
+        wikidata_years = getattr(self.profile, 'wikidata_years', None)
+        rdap_years = getattr(self.profile, 'rdap_years', None)
+        
+        if wikidata_years is not None:
+            self.profile.operating_years = wikidata_years
+        elif rdap_years is not None:
+            self.profile.operating_years = rdap_years
+        else:
+            self.profile.operating_years = None
+    
+    # Determine age band and base score
+    self.profile.age_band = age_band_from_years(self.profile.operating_years)
+    self._base_score = base_age_score(self.profile.age_band or "unknown")
+```
+
+#### Complete Age Modifier Application
+
+```python
+def apply_age_modifiers(
+    profile: FinancialProfile,
+    base_confidence: float,
+) -> tuple[int, float]:
+    """Apply all age-based modifiers to Business Stability score and confidence."""
+    # Calculate operating years if not already computed
+    if profile.operating_years is None and profile.incorporation_date:
+        profile.operating_years = operating_years(profile.incorporation_date.value)
+    
+    # Determine age band if not already computed
+    if profile.age_band is None:
+        profile.age_band = age_band_from_years(profile.operating_years)
+    
+    # Get base score from age band
+    age_score = base_age_score(profile.age_band or "unknown")
+    
+    # Apply confidence adjustment
+    conf_adj = confidence_adjustment(profile.age_band or "unknown")
+    adjusted_confidence = max(0.0, min(1.0, base_confidence + conf_adj))
+    
+    return age_score, adjusted_confidence
+```
+
+### Concrete Examples: 2-Year vs 20-Year Vendor
+
+#### Example 1: 2-Year-Old Vendor
+
+**Vendor Profile:**
+- Operating years: 2.0
+- Age band: "young"
+- Base Business Stability score: 85/100
+- Confidence adjustment: -10%
+- Maturity index: 0.34
+
+**Scoring Impact:**
+```python
+# Base score calculation
+base_score = base_age_score("young")  # Returns 85
+
+# Confidence calculation
+base_confidence = 0.90  # From evidence coverage
+adjusted_confidence = 0.90 + confidence_adjustment("young")  # 0.90 - 0.10 = 0.80
+
+# Risk factors assessed
+risk_factors = age_risk_factors("young")
+# Returns: growth_sustainability, market_validation, team_completeness
+
+# Benchmarking cohort
+benchmark_cohort = age_appropriate_benchmarking("young")
+# "Benchmark against other young vendors (2-5 years) with similar funding stages"
+```
+
+**Final Assessment:**
+- Business Stability starts at 85/100
+- Must prove financial health to increase score
+- 10% confidence penalty due to limited track record
+- Compared against other young vendors
+- Focus on growth sustainability and market validation
+
+#### Example 2: 20-Year-Old Vendor
+
+**Vendor Profile:**
+- Operating years: 20.0
+- Age band: "mature"
+- Base Business Stability score: 95/100
+- Confidence adjustment: 0%
+- Maturity index: 0.93
+- Survivorship bonus: +5 points
+
+**Scoring Impact:**
+```python
+# Base score calculation
+base_score = base_age_score("mature")  # Returns 95
+
+# Confidence calculation
+base_confidence = 0.90  # From evidence coverage
+adjusted_confidence = 0.90 + confidence_adjustment("mature")  # 0.90 + 0.00 = 0.90
+
+# Survivorship bonus
+bonus = survivorship_bonus("mature")  # Returns 5
+
+# Risk factors assessed
+risk_factors = age_risk_factors("mature")
+# Returns: decline_signals, acquisition_risk, innovation_stagnation
+
+# Benchmarking cohort
+benchmark_cohort = age_appropriate_benchmarking("mature")
+# "Benchmark against other mature vendors (10-20 years) in the same industry"
+```
+
+**Final Assessment:**
+- Business Stability starts at 95/100 (higher baseline)
+- +5 survivorship bonus for demonstrated staying power
+- No confidence penalty (extensive track record)
+- Compared against other mature vendors
+- Focus on decline signals and innovation stagnation
+
+#### Key Differences Summary
+
+| Aspect | 2-Year-Old Vendor | 20-Year-Old Vendor |
+|--------|------------------|-------------------|
+| **Age Band** | young | mature |
+| **Base Score** | 85/100 | 95/100 |
+| **Confidence Penalty** | -10% | 0% |
+| **Maturity Index** | 0.34 | 0.93 |
+| **Survivorship Bonus** | 0 | +5 |
+| **Risk Focus** | Growth, market fit | Decline, stagnation |
+| **Benchmarking** | Young vendors (2-5yr) | Mature vendors (10-20yr) |
+
+### Data Model Integration
+
+#### FinancialProfile Model
+
+The `FinancialProfile` model in `models.py` includes age-related fields:
+
+```python
+class FinancialProfile(BaseModel):
+    vendor_ref: str
+    
+    # Primary age source
+    incorporation_date: ProfileField | None  # Date company was legally incorporated
+    
+    # Fallback age sources when entity registers unavailable
+    wikidata_years: float | None  # Years from Wikidata (P571) - free fallback
+    rdap_years: float | None  # Years from domain registration - discounted fallback
+    
+    # Computed age fields
+    operating_years: float | None  # Years since incorporation (computed)
+    age_band: Literal["startup", "young", "established", "mature", "veteran", "unknown"] | None
+```
+
+### Design Principles
+
+#### 1. Age as Context, Not Penalty
+
+Age affects BUSINESS STABILITY only, not cybersecurity posture. A bankrupt company can have excellent security, and a secure startup can run out of cash. These are separate risk dimensions.
+
+#### 2. Survivorship Recognition
+
+The system rewards demonstrated staying power through survivorship bonuses. Companies that weather economic downturns or survive for decades have proven business models.
+
+#### 3. Evidence Quality Matters
+
+Not all age sources are equal. Entity registers (GLEIF, Companies House) receive full credit, while domain age (RDAP) is discounted because domains can be purchased on expiry auctions.
+
+#### 4. Age-Appropriate Benchmarking
+
+Young vendors are benchmarked against peers of similar age, not against established companies. This prevents unfair comparisons and ensures relevant risk assessment.
+
+#### 5. Diminishing Returns on Age
+
+The logarithmic maturity index recognizes that the difference between 1 and 5 years is meaningful, but the difference between 25 and 40 years is not. The curve saturates at 25 years.
+
+#### 6. Confidence vs. Risk
+
+Confidence adjustments reflect uncertainty in our assessment, not poor vendor performance. A young vendor with limited public information receives a confidence penalty, not a risk penalty.
+
+### Usage Examples
+
+#### Basic Age Assessment
+
+```python
+from datetime import datetime, UTC
+from app.longevity import operating_years, age_band_from_years, base_age_score
+from app.maturity import maturity_index, assurance_index
+
+# Calculate operating years
+incorporation_date = datetime(2024, 1, 1, tzinfo=UTC)
+years = operating_years(incorporation_date)  # Returns ~2.0
+
+# Determine age band
+age_band = age_band_from_years(years)  # Returns "young"
+
+# Get base score
+score = base_age_score(age_band)  # Returns 85
+
+# Calculate maturity index
+maturity = maturity_index(years)  # Returns ~0.34
+
+# Calculate assurance with evidence strength
+assurance = assurance_index(years, source="companies_house")  # Returns ~0.34
+assurance_rdap = assurance_index(years, source="rdap")  # Returns ~0.20 (discounted)
+```
+
+#### Full Business Stability Calculation
+
+```python
+from app.business_stability import BusinessStabilityScore
+from app.models import FinancialProfile
+
+# Create financial profile
+profile = FinancialProfile(
+    vendor_ref="example_vendor",
+    incorporation_date=ProfileField(
+        value=datetime(2024, 1, 1, tzinfo=UTC),
+        source="companies_house"
+    )
+)
+
+# Calculate Business Stability score
+scorer = BusinessStabilityScore(profile)
+result = scorer.compute()
+
+# Result includes:
+# - score: final Business Stability score (age-adjusted)
+# - base_score: starting score from age band
+# - age_band: vendor's age classification
+# - penalties: financial distress penalties
+# - bonuses: survivorship bonuses
+```
+
+### Integration with Benchmarking
+
+The age differentiation system integrates with the benchmarking module to ensure age-appropriate comparisons:
+
+```python
+def age_appropriate_benchmarking(age_band: AgeBand) -> str:
+    """Return benchmarking guidance based on vendor age."""
+    guidance = {
+        "startup": "Benchmark against other startups (<2 years) with similar funding stages",
+        "young": "Benchmark against other young vendors (2-5 years) with similar growth trajectories",
+        "established": "Benchmark against established vendors (5-10 years) in same industry",
+        "mature": "Benchmark against mature vendors (10-20 years) in same industry",
+        "veteran": "Benchmark against veteran vendors (20+ years) with similar market positions",
+        "unknown": "Benchmark against industry averages (age unknown)",
+    }
+    return guidance.get(age_band, "Benchmark against industry averages")
+```
+
+### References
+
+- **Research Basis:** "Liability of newness" (Stinchcombe, 1965) - established research on higher failure rates for young organizations
+- **Vendor Risk Best Practices:** Industry standard treating age as business stability factor, not security factor
+- **Regulatory Alignment:** Approach aligns with Australian regulatory guidance on transparent, defensible scoring
+- **Related Documentation:** 
+  - `methodology.md` Part 1 - Overall OSINT TPRM methodology
+  - `design_decisions.md` Part 2 - Business Stability axis design
+  - Part 1 of this document - Complete scoring model documentation
+
+### Gaps and Enhancement Opportunities
+
+Based on comprehensive vendor risk management best practices, the current implementation has several enhancement opportunities to fully leverage vendor age as a material risk differentiator:
+
+#### 1. Inherent Risk Baseline Adjustment
+
+**Current State:** Inherent risk is calculated solely from `criticality` and `data_access_scope` (see `residual_risk.py`). Age does not factor into inherent risk calculation.
+
+**Recommended Enhancement:** Apply age-based modifier to inherent risk baseline:
+- Young vendors (<3-5 years): Apply upward adjustment to inherent risk due to limited track record and elevated failure risk
+- Mature vendors (≥10-15 years): Apply downward adjustment or neutral baseline; focus on long-term patterns
+
+**Implementation Location:** `residual_risk.py` - `inherent_tier()` function
+
+#### 2. Monitoring Cadence by Age
+
+**Current State:** Monitoring cadence is determined by inherent tier (T1-T4) via `assessment_depth.py`. Age does not influence monitoring frequency.
+
+**Recommended Enhancement:** Implement age-adjusted monitoring cadence:
+- Young vendors: Higher-frequency continuous monitoring, tighter alert thresholds, shorter reassessment cycles
+- Mature vendors: Risk-based cadence scaled to tier + recent signal strength; historical stability can justify relaxed intervals
+
+**Implementation Location:** `assessment_depth.py` - Assessment plan lookup table, `monitor.py` - scheduling logic
+
+#### 3. Evidence Weighting by Vendor Age
+
+**Current State:** Evidence strength is based on source reliability (GLEIF=1.0, RDAP=0.6) but not on vendor age. (see `maturity.py`)
+
+**Recommended Enhancement:** Apply age-specific evidence weighting:
+- 20-year vendor: Weight multi-year trends more heavily; rich OSINT corpus gets higher confidence
+- 2-year vendor: Sparse data means single red flags carry higher relative weight; require stronger corroboration
+
+**Implementation Location:** `maturity.py` - Evidence strength calculation, confidence scoring
+
+#### 4. Age-Specific Residual Risk Thresholds
+
+**Current State:** Residual risk matrix uses posture bands vs inherent tiers uniformly. No age-based adjustments to residual risk thresholds.
+
+**Recommended Enhancement:** Implement age-adjusted residual risk thresholds:
+- Young vendors: Lower residual-risk acceptance bars (same posture → higher residual risk classification)
+- Mature vendors: Standard thresholds; long history supports current posture assessment
+
+**Implementation Location:** `residual_risk.py` - `_RESIDUAL` matrix lookup
+
+#### 5. Incident & Reputation Pattern Analysis by Age
+
+**Current State:** Incident scoring applies uniformly regardless of vendor age. No age-specific incident weight or pattern analysis.
+
+**Recommended Enhancement:** Age-specific incident analysis:
+- Mature vendors: Look for recurring themes, severity trends, remediation evidence over time
+- Young vendors: Treat any material incident as higher-impact (little positive counter-history); scrutinize founder/key-personnel OSINT more aggressively
+
+**Implementation Location:** Scoring configuration (`scoring.yaml`), incident collectors
+
+#### 6. Change & Continuity Monitoring by Age
+
+**Current State:** Change monitoring applies uniformly. No age-specific change focus areas.
+
+**Recommended Enhancement:** Age-specific change indicators:
+- Mature vendors: Monitor for late-stage risks (ownership changes, divestitures, key-person departures, declining sentiment)
+- Young vendors: Monitor for rapid scaling signals (headcount jumps, geographic expansion, new product lines) and acquisition/wind-down probability
+
+**Implementation Location:** `monitor.py` - change detection logic, alert thresholds
+
+#### 7. Financial Signal Focus by Age
+
+**Current State:** Financial signals apply uniformly via `business_stability.py`. Some age-specific risk factors exist but financial focus is not age-differentiated.
+
+**Recommended Enhancement:** Age-specific financial focus:
+- Mature vendors: Emphasize multi-year financial health, credit history, bankruptcy/lien records, consistent growth patterns
+- Young vendors: Prioritize recent funding rounds, burn-rate proxies, founder/background checks, early customer traction; treat limited transparency as elevated risk
+
+**Implementation Location:** `business_stability.py` - financial penalty application
+
+### Implementation Priority Matrix
+
+| Enhancement | Impact | Complexity | Priority |
+|-------------|--------|------------|----------|
+| Inherent Risk Baseline Adjustment | High | Medium | High |
+| Monitoring Cadence by Age | High | Low | High |
+| Evidence Weighting by Age | Medium | Medium | Medium |
+| Age-Specific Residual Risk Thresholds | High | Low | High |
+| Incident Pattern Analysis by Age | Medium | High | Medium |
+| Change Monitoring by Age | Medium | Medium | Medium |
+| Financial Signal Focus by Age | Low | Low | Low |
+
+### Conclusion
+
+The current vendor age differentiation system provides a solid foundation through Business Stability scoring, maturity indexing, and evidence strength weighting. However, it does not fully leverage vendor age as a material risk differentiator across all risk dimensions as recommended by best practices.
+
+The key enhancement opportunities are:
+1. **Integrate age into inherent risk calculation** - Young vendors should have higher inherent risk baselines
+2. **Implement age-based monitoring cadence** - Young vendors need more frequent monitoring
+3. **Apply age-specific evidence weighting** - Sparse data for young vendors should elevate individual findings
+4. **Adjust residual risk thresholds by age** - Lower acceptance bars for young vendors
+
+These enhancements would align the system with the principle that "a clean OSINT profile on a 2-year-old vendor is inherently less reassuring than the same profile on a 20-year-old vendor with a long, observable history."

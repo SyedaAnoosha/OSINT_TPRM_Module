@@ -14,7 +14,7 @@ suppliers, a threshold of 1 publishes a "median" over a single company, and `n=6
 baseline" reads to every human being as six real companies. The mechanism is replaced rather than
 tuned. `benchmark.py` stays in the tree for one release so stored snapshots keep deserialising.
 
-THE FIVE DECISIONS THIS PACKAGE IMPLEMENTS are recorded in `docs/benchmarking-design.md`. In short:
+THE FIVE DECISIONS THIS PACKAGE IMPLEMENTS are recorded in `docs/design_decisions.md` Part 1. In short:
 cohorts key on SUPPLIER properties only (`data_access_scope` is a relationship property and routes
 to interpretation); synthetic reference points are a HARD GATE on any percentile or quartile; member
 refs are stored for dispute and never published; and quartiles need n>=8, percentiles n>=30, with n

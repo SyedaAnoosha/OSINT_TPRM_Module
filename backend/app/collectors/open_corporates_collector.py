@@ -5,7 +5,7 @@ incorporation dates, company status, and registry numbers globally. For Business
 Stability assessment, this fills coverage gaps where jurisdiction-specific
 collectors are unavailable or fail.
 
-LEGALITY — CLEARED (`source_assessment.md`). Freemium API with 5,000 free calls/month.
+LEGALITY — CLEARED (`methodology.md` Part 3). Freemium API with 5,000 free calls/month.
 Commercial use permitted with attribution. Unset API key -> collector returns `empty`,
 lowering coverage and never posture.
 

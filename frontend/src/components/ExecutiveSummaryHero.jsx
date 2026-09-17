@@ -9,7 +9,7 @@ import { confColor, gradeColor, postureColor } from '../lib/utils.js'
 import { cn } from '../lib/utils.js'
 
 // ═══════════════════════════════════════════════════════════════════════════════════════════
-// TIER 1 — THE GLANCE ROW. docs/tprm_feedback_redesign.md §3.2/§3.3/§3.4.
+// TIER 1 — THE GLANCE ROW. design note §3.2/§3.3/§3.4.
 //
 // Everything a stakeholder needs without scrolling or clicking: vendor identity, overall grade,
 // posture + trend, confidence, assurance, Business Stability, and the inherent→residual pair.

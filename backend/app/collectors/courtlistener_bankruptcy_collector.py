@@ -5,7 +5,7 @@ For TPRM continuity assessment, this covers Chapter 7/11 bankruptcy petitions by
 This is narrow scope (bankruptcy only, not general litigation) and complements SEC EDGAR
 (which covers public companies) with coverage of private entities that file bankruptcy.
 
-LEGALITY — CLEARED (`source_assessment.md`). Free registered API token, documented, commercial
+LEGALITY — CLEARED (`methodology.md` Part 3). Free registered API token, documented, commercial
 use permitted. CORRECTED (2026-08, verified live): the `/dockets/` search endpoint requires
 authentication — a plain unauthenticated request returns HTTP 401, not a rate-limited-but-open
 response as an earlier version of this docstring claimed. Unset `courtlistener_key` -> the
@@ -45,7 +45,7 @@ from .base import Collector, CollectorContext
 _SEARCH = "https://www.courtlistener.com/api/rest/v4/dockets/"
 _HOST = "www.courtlistener.com"
 # v5.0.0 (E4/E5) renamed this category from `business_financial_stability` to `continuity_context`
-# — see change-notice-v5.md §3.4. Findings land here at `informational` bands only; they are
+# — see design note §3.4. Findings land here at `informational` bands only; they are
 # reported (app/continuity.py) and NEVER penalise posture.
 _CAT = "continuity_context"
 _SUB = "bankruptcy_petition"

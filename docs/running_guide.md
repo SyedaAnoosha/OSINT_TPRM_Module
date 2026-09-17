@@ -5,6 +5,9 @@ How to get the backend, the database and the frontend up, and what to run once t
 Everything here has been executed against this repository. Where a step is a decision rather than a
 command, the decision is stated rather than hidden behind a default.
 
+*For the fast path, see the root [`README.md`](../README.md) — same commands, without the
+rationale. Come here for the Postgres/Neon specifics, monitoring, and troubleshooting.*
+
 ---
 
 ## 0 · What you need first

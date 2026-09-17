@@ -6,7 +6,7 @@ a UK vendor, Companies House is that answer: active / dissolved / liquidation, s
 statutory register, and it exposes filed accounts and the PSC (people-with-significant-control)
 register that the FOCI roadmap needs.
 
-LEGALITY — CLEARED (`source_assessment.md`). Open Government Licence, commercial use permitted,
+LEGALITY — CLEARED (`methodology.md` Part 3). Open Government Licence, commercial use permitted,
 free API key (600 requests / 5 min). Unset key is NOT an error: the collector returns `empty`,
 lowering coverage and never posture, and the app runs unconfigured like every other keyed source.
 

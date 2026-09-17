@@ -976,7 +976,7 @@ class Score(BaseModel):
             "context reaches the arithmetic — so this is now ALWAYS None and a renderer must not "
             "show it. Retained only so Scores stored before E1 still deserialise. The sector "
             "obligation survives as a Compliance Gap finding; see "
-            "docs/compliance-gap-frameworks.md."
+            "the design notes."
         ),
     )
     recommendation: Recommendation | None = Field(

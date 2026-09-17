@@ -5,7 +5,7 @@ GLEIF plus Wikidata — global, but neither is the Australian government's own a
 company real and current?". For an Australian TPRM product assessing Australian vendors, the ABR
 is that answer: Active / Cancelled, straight from the Commonwealth register.
 
-LEGALITY — CLEAR-CONDITIONAL (`source_assessment.md`). The ABN Lookup Web Services Agreement
+LEGALITY — CLEAR-CONDITIONAL (`methodology.md` Part 3). The ABN Lookup Web Services Agreement
 permits providing "relevant extracts of the ABN Lookup Web Services to third parties" at your own
 risk, sets **no commercial bar** and **no bulk-harvest bar** (we do targeted per-vendor lookups,
 never bulk extraction), and requires only that we **not imply Commonwealth endorsement** — hence

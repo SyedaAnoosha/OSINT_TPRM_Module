@@ -4,7 +4,7 @@ WHY. The German insolvency register (Insolvenzbekanntmachungen) provides officia
 insolvency proceedings data for German companies. For Business Stability assessment,
 this detects active insolvency proceedings that should BLOCK scoring.
 
-LEGALITY — CLEARED (`source_assessment.md`). Official German government portal,
+LEGALITY — CLEARED (`methodology.md` Part 3). Official German government portal,
 free access, commercial use permitted. Rate limited to 60 requests/hour.
 
 ENTITY-LEVEL ONLY (§4.2). This reads corporate insolvency proceedings only.

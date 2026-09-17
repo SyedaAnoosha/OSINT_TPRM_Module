@@ -4,7 +4,7 @@ WHY. SEC EDGAR provides XBRL-tagged financial data in 10-K and 10-Q filings.
 For Business Stability assessment, this extracts structured financial metrics
 (revenue, debt, cash flow, equity) for trend analysis and ratio calculation.
 
-LEGALITY — CLEARED (`source_assessment.md`). Free, no API key required, commercial
+LEGALITY — CLEARED (`methodology.md` Part 3). Free, no API key required, commercial
 use permitted. Rate limit: be respectful (≤10 req/sec).
 
 ENTITY-LEVEL ONLY (§4.2). This reads corporate financial data only.
